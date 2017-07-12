@@ -1,0 +1,381 @@
+package me.carc.fakecallandsms_mvp;
+
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Telephony;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import java.util.Random;
+
+import butterknife.BindView;
+import me.carc.fakecallandsms_mvp.adapter.TabbedPagerAdapter;
+import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
+import me.carc.fakecallandsms_mvp.alarm.SmsIntentService;
+import me.carc.fakecallandsms_mvp.common.C;
+import me.carc.fakecallandsms_mvp.common.CallLogUtil;
+import me.carc.fakecallandsms_mvp.common.TinyDB;
+import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.U;
+import me.carc.fakecallandsms_mvp.fragments.FakeCallFragment;
+import me.carc.fakecallandsms_mvp.fragments.FakeSmsFragment;
+import me.carc.fakecallandsms_mvp.fragments.SettingsFragment;
+import me.carc.fakecallandsms_mvp.model.FakeContact;
+import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
+
+public class MainTabActivity extends Base implements
+        FakeCallFragment.FakeCallListener,
+        FakeSmsFragment.FakeSmsListener {
+
+    private static final String TAG = C.DEBUG + U.getTag();
+
+    public static final int PERMISSION_CONTACT_RESULT = 1500;
+    public static final int INTENT_SMS_PACKAGE = 101;
+
+
+    private ViewPager mViewPager;
+
+    TinyDB tinyDb;
+    FakeContact fakeContact;
+
+    @BindView(R.id.fabMain)
+    FloatingActionButton fab;
+
+
+    /**
+     * SMS Callbacks
+     */
+
+    @Override
+    public void onSmsContact(String name, String number, String image) {
+        fakeContact.setName(name);
+        fakeContact.setNumber(number);
+        fakeContact.setImage(image);
+    }
+
+    @Override
+    public void onSmsMessage(String msg) {
+        fakeContact.setSmsMsg(msg);
+    }
+
+    @Override
+    public void onSmsType(String location) {
+        fakeContact.setSmsType(location);
+    }
+
+    @Override
+    public void onSmsTime(long time) {
+        fakeContact.setTime(time);
+    }
+
+
+    /**
+     * Call Callbacks
+     */
+
+    @Override
+    public void onSetContactDetails(String name, String number, String image) {
+        fakeContact.setName(name);
+        fakeContact.setNumber(number);
+        fakeContact.setImage(image);
+    }
+
+    @Override
+    public void onSetDate(long time) {
+        fakeContact.setDate(time);
+    }
+
+    @Override
+    public void onSetTime(long time) {
+        fakeContact.setTime(time);
+    }
+
+    @Override
+    public void onSetRingtone(Uri ringtone) {
+        fakeContact.setRingtone(ringtone.toString());
+    }
+
+    @Override
+    public void onSetVibrate(boolean vibrate) {
+        fakeContact.setVibrate(vibrate);
+    }
+
+    @Override
+    public void onSetCallLogs(boolean log) {
+        fakeContact.setUseCallLogs(log);
+    }
+
+    @Override
+    public void onSetCallType(int type) {
+        fakeContact.setCallType(type);
+    }
+
+
+    View.OnClickListener onFabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startSend();
+        }
+    };
+
+
+    private void startSend() {
+        fakeContact.debug();
+        View v = getWindow().getDecorView().findViewById(android.R.id.content);
+
+        switch (mViewPager.getCurrentItem()) {
+            case 0:
+                Snackbar.make(v, "Starting Fake Call", Snackbar.LENGTH_LONG).show();
+
+                if (fakeContact.getCallType() == C.CALL_INCOMING) {
+                    String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
+                    fakeContact.setDuration(Integer.valueOf(constant));
+
+                    AlarmHelper.getInstance().setCallAlarmActivity(fakeContact);
+                    finish();
+                } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+
+                    Random r = new Random();
+                    int min = 1000;
+                    int max = 20000;
+                    int duration = r.nextInt(max - min + 1) + min;
+
+                    CallLogUtil.addCallToLog(
+                            getApplicationContext(),
+                            fakeContact.getName(),
+                            fakeContact.getNumber(),
+                            duration,
+                            fakeContact.getCallType(),
+                            fakeContact.getTime());
+                }
+                break;
+
+            case 1:
+
+                if (Algorithms.isEmpty(fakeContact.getNumber())
+                        || Algorithms.isEmpty(fakeContact.getSmsMsg())) {
+                    showWarningDialog("Missing Infomation", "Please check you have entered a message and selected a contact.");
+
+                } else {
+
+                    if (Telephony.Sms.getDefaultSmsPackage(MainTabActivity.this).equals(getPackageName())) {
+                        writeSms();
+                    } else {
+                        switchSmSPackage();
+                    }
+                }
+                break;
+
+            case 2:
+                showWarningDialog("Phone Call or Text Message?", "You can't start anything from the settings screen!!");
+                break;
+
+            default:
+                Snackbar.make(v, "Error: shouldn;t be here!!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+        }
+    }
+
+
+    private void switchSmSPackage() {
+
+        // Save the default sms package
+        tinyDb.putString(C.SMS_DEFAULT_PACKAGE_KEY, Telephony.Sms.getDefaultSmsPackage(this));
+
+        //Change the default sms app to my app
+        Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName());
+        startActivityForResult(intent, INTENT_SMS_PACKAGE);
+    }
+
+
+    //Write to the default sms app
+    private void writeSms() {
+
+        Intent i = new Intent(getApplicationContext(), FakeSmsReceiver.class);
+
+        i.putExtra(C.NAME, fakeContact.getName());
+        i.putExtra(C.NUMBER, fakeContact.getNumber());
+        i.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
+        i.putExtra(C.IMAGE, fakeContact.getImage());
+        i.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
+        i.putExtra(C.SMS_DEFAULT_APP, tinyDb.getString(C.SMS_DEFAULT_PACKAGE_KEY));
+
+
+
+        if (fakeContact.getTime() < System.currentTimeMillis()) {
+
+            i.setClass(this, SmsIntentService.class);
+            i.putExtra(C.TIME, fakeContact.getTime());
+            startService(i);
+
+            FakeSmsReceiver.smsNotification(this, i);
+
+        } else {
+
+            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 101, i, PendingIntent.FLAG_ONE_SHOT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, fakeContact.getTime(), pi);
+
+            Snackbar.make(findViewById(R.id.fabMain), R.string.sms_scheduled, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        fakeContact = new FakeContact();
+        tinyDb = new TinyDB(this);
+
+        if (C.HAS_M)
+            accessAllowed();
+        else
+            init();
+    }
+
+
+    /**
+     * Initialise the view - may require permissions first
+     */
+    private void init() {
+        setContentView(R.layout.activity_main_tab);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setupViewPager();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabMain);
+        fab.setOnClickListener(onFabClickListener);
+    }
+
+
+    /**
+     * Check permissions previously granted
+     */
+    private void accessAllowed() {
+        if (PackageManager.PERMISSION_GRANTED ==
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS))
+            init();
+        else
+            requestPermissions();
+    }
+
+
+    /**
+     * Request permissions if required
+     */
+    private void requestPermissions() {
+        final String[] LOCATION_PERMISSIONS = {Manifest.permission.READ_CONTACTS};
+        ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, PERMISSION_CONTACT_RESULT);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSION_CONTACT_RESULT:
+                init();
+                break;
+
+            default:
+                Log.d(TAG, "onRequestPermissionsResult: UNHANDLED CODE:: " + requestCode);
+        }
+    }
+
+
+    /**
+     * Setup the pager
+     */
+    private void setupViewPager() {
+        TabbedPagerAdapter mSectionsPagerAdapter = new TabbedPagerAdapter(getSupportFragmentManager());
+
+        mSectionsPagerAdapter.addFragment(new FakeCallFragment(), "Call");
+        mSectionsPagerAdapter.addFragment(new FakeSmsFragment(), "SMS");
+        mSectionsPagerAdapter.addFragment(new SettingsFragment(), "Settings");
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_tab, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+
+            case R.id.action_start:
+                startSend();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == INTENT_SMS_PACKAGE && resultCode == RESULT_OK) {
+
+            final String myPackageName = getPackageName();
+            if (Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
+
+                //Write to the default sms app
+                writeSms();
+            }
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(TinyDB.getTinyDB().getBoolean(C.PREF_RESET_SMS_ON_EXIT)) {
+            if (Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
+                Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+                        TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
+                startActivity(intent);
+            }
+        }
+
+        super.onDestroy();
+    }
+}

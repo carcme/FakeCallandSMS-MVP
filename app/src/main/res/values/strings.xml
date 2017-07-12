@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">Fake Call and SMS</string>
+
+
+    <string name="select_ringtone">Ringtone</string>
+    <string name="contacts">Contacts</string>
+    <string name="content_description">content description</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="ringtone_set">Ringtone Set</string>
+    <string name="unknown_caller">Unknown</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="sent">Send</string>
+    <string name="inbox">Inbox</string>
+    <string name="enter_number">Enter number</string>
+    <string name="draft">Draft</string>
+    <string name="quick_time">Quick Time</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="voice">Select Voice File</string>
+    <string name="minutes_tv">Minutes</string>
+    <string name="minutes">%1$s Minutes</string>
+    <string name="change_dial_pad_launch_code">Change Dial Pad Launch Code</string>
+    <string name="hide_the_launcher_icon">Hide the launcher icon</string>
+    <string name="reset_default_sms_application">Reset default SMS application</string>
+    <string name="application">Application</string>
+    <string name="quick_time_set_to">Quick Time set to:</string>
+    <string name="call">Call</string>
+    <string name="call_ending">Call Ending</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="set">SET</string>
+    <string name="call_logs">Call Logs</string>
+
+    <!--empty state-->
+    <string name="sms">Text Message</string>
+    <string name="seconds">seconds</string>
+    <string name="maximum_call_duration">Maximum Call Duration</string>
+
+
+    <string name="settings_title_rate">Rate</string>
+    <string name="settings_title_about">About</string>
+    <string name="settings_summary_rate">Leave a rating or some feedback.</string>
+    <string name="feedback_request_title">Send Feedback</string>
+    <string name="feedback_request_hint">Tell us where we can improve&#8230;</string>
+    <string name="ratings_request_title">Love to know what you think of the app</string>
+
+
+    <!--RATING and FEEDBACK DIALOG-->
+    <string name="feedback_request_send">Send</string>
+    <string name="feedback_request_cancel">Cancel</string>
+    <string name="feedbackChooserTitle">Send Feedback Via</string>
+    <string name="sms_scheduled">Fake SMS Scheduled</string>
+    <string name="reset_sms_application_on_exit">Reset SMS application on exit</string>
+    <string name="lib_thanks">GlowPadBackport - Incoming call library\n\nRatingDialog (modified) - Rating library from codemybrainsout</string>
+
+
+</resources>

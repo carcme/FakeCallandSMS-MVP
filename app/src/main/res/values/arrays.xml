@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="incoming_call_widget_2way_targets">
+        <item>@drawable/ic_lockscreen_answer</item>
+        <item>@null</item>
+        <item>@drawable/ic_lockscreen_decline</item>
+        <item>@null</item>"
+    </array>
+
+    <array name="incoming_call_widget_3way_targets">
+        <item>@drawable/ic_lockscreen_answer</item>
+        <item>@android:drawable/ic_dialog_email</item>
+        <item>@drawable/ic_lockscreen_decline</item>
+        <item>@null</item>"
+    </array>
+
+    <!-- Google Contracts Colours -->
+    <array name="array_GoogleContactsColors">
+        <item>@color/gcc_blue_1</item>
+        <item>@color/gcc_blue_2</item>
+        <item>@color/gcc_blue_3</item>
+        <item>@color/gcc_blue_4</item>
+        <item>@color/gcc_orange_1</item>
+        <item>@color/gcc_orange_2</item>
+        <item>@color/gcc_green_1</item>
+        <item>@color/gcc_green_2</item>
+        <item>@color/gcc_green_3</item>
+        <item>@color/gcc_purple_1</item>
+        <item>@color/gcc_purple_2</item>
+        <item>@color/gcc_purple_3</item>
+        <item>@color/gcc_red_1</item>
+        <item>@color/gcc_blue_2</item>
+    </array>
+
+</resources>

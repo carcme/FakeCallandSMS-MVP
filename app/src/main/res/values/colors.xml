@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grayMetal">#607D8B</color>
+    <color name="grayMetalDark">#455A64</color>
+    <!--<color name="colorAccent">#FF5722</color>-->
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorAccent">#4CAF50</color>
+
+
+    <color name="white">#FFF</color>
+    <color name="almostWhite">#CFD8DC</color>
+    <color name="colorEnabled">#669900</color>
+
+
+    <color name="fragment_background">@color/white</color>
+
+    <color name="controlSet">@color/colorAccent</color>
+    <color name="controlDisabled">#aaa</color>
+
+
+    <!-- Google Contracts Colours -->
+    <color name="gcc_blue_1">#039BE5</color>
+    <color name="gcc_blue_2">#3F51B5</color>
+    <color name="gcc_blue_3">#4285F4</color>
+    <color name="gcc_blue_4">#0097A7</color>
+    <color name="gcc_orange_1">#EF6C00</color>
+    <color name="gcc_orange_2">#FF5722</color>
+    <color name="gcc_green_1">#0F9D58</color>
+    <color name="gcc_green_2">#689F38</color>
+    <color name="gcc_green_3">#009688</color>
+    <color name="gcc_purple_1">#9C27B0</color>
+    <color name="gcc_purple_2">#7B1FA2</color>
+    <color name="gcc_purple_3">#673AB7</color>
+    <color name="gcc_red_1">#DB4437</color>
+
+</resources>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_standard">
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/call"
+                android:textColor="@color/colorEnabled"/>
+
+        <Button
+                android:id="@+id/voiceFileInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/voice"
+                android:textAlignment="textStart"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quick_time_set_to"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <TextView
+                    android:id="@+id/quickTimeInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    tools:text="123"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minutes_tv"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/callDurationContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maximum_call_duration"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <TextView
+                    android:id="@+id/callDurationInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    tools:text="30"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seconds"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+        </LinearLayout>
+
+
+        <include layout="@layout/page_divider"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/sms"
+                android:textColor="@color/colorEnabled"/>
+
+        <Button
+                android:id="@+id/smsAppResetBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_default_sms_application"
+                android:textAlignment="textStart"
+                style="@style/Widget.AppCompat.Button.Borderless"/>
+
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/resetSmsApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/reset_sms_application_on_exit"
+                    android:textAlignment="textStart"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <Switch
+                    android:id="@+id/resetSmsAppSW"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/resetSmsApp"
+                    android:layout_alignBottom="@+id/resetSmsApp"
+                    />
+
+        </RelativeLayout>
+
+        <include layout="@layout/page_divider"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/application"
+                android:textColor="@color/colorEnabled"/>
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/hideLauncherIconText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/hide_the_launcher_icon"
+                    android:textAlignment="textStart"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <Switch
+                    android:id="@+id/hideLauncherIconSW"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/hideLauncherIconText"
+                    android:layout_alignBottom="@+id/hideLauncherIconText"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/launchCodeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_dial_pad_launch_code"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
+
+            <TextView
+                    android:id="@+id/launchCodeInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/launchCodeText"
+                    android:layout_alignBottom="@+id/launchCodeText"
+                    android:textSize="16sp"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    tools:text="312"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

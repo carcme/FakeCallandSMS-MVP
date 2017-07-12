@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="incoming_call_widget_2way_targets">
+        <item>@drawable/ic_lockscreen_answer</item>
+        <item>@null</item>
+        <item>@drawable/ic_lockscreen_decline</item>
+        <item>@null</item>"
+    </array>
+
+    <array name="incoming_call_widget_3way_targets">
+        <item>@drawable/ic_lockscreen_answer</item>
+        <item>@android:drawable/ic_dialog_email</item>
+        <item>@drawable/ic_lockscreen_decline</item>
+        <item>@null</item>"
+    </array>
+
+</resources>

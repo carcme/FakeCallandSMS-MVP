@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+            android:title="@string/feedback_request_title"
+            android:key="feedback"
+            android:summary="@string/ratings_request_title"/>
+
+    <Preference
+            android:title="@string/settings_title_rate"
+            android:key="rate"
+            android:summary="@string/settings_summary_rate"/>
+
+    <Preference
+            android:title="@string/settings_title_about"
+            android:key="about"
+            android:summary="Open Source Libraries."
+            />
+
+</PreferenceScreen>
