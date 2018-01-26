@@ -3,13 +3,13 @@
     <color name="grayMetal">#607D8B</color>
     <color name="grayMetalDark">#455A64</color>
     <!--<color name="colorAccent">#FF5722</color>-->
-    <color name="colorPrimary">#FF5722</color>
-    <color name="colorPrimaryDark">#E64A19</color>
-    <color name="colorAccent">#4CAF50</color>
+    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimaryDark">#291f37</color>
+    <color name="colorAccent">#FF5722</color>
 
 
     <color name="white">#FFF</color>
-    <color name="almostWhite">#CFD8DC</color>
+    <color name="almostWhite">#EEE</color>
     <color name="colorEnabled">#669900</color>
 
 
@@ -18,6 +18,7 @@
     <color name="controlSet">@color/colorAccent</color>
     <color name="controlDisabled">#aaa</color>
 
+    <color name="rating_star">#FFDD00</color>
 
     <!-- Google Contracts Colours -->
     <color name="gcc_blue_1">#039BE5</color>

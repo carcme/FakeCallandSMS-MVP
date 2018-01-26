@@ -142,8 +142,8 @@ public class CallIncomingActivity extends Base {
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this);
 
-        String mContact = getIntent().getStringExtra(C.NAME);
-        String mNumber = getIntent().getStringExtra(C.NUMBER);
+        String mContact = getIntent().hasExtra(C.NAME) ? getIntent().getStringExtra(C.NAME) : "";
+        String mNumber = getIntent().hasExtra(C.NUMBER) ? getIntent().getStringExtra(C.NUMBER) : "";
 
         if (Algorithms.isEmpty(mContact) && Algorithms.isEmpty(mNumber))
             mContact = getString(R.string.unknown_caller);
@@ -179,19 +179,7 @@ public class CallIncomingActivity extends Base {
      * Create the GlowPad ringer answer display
      */
     private void setupGlowPad() {
-
-/*        // Arrange depending on the screen size
-        DisplayMetrics display = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(display);
-
-        if (display.densityDpi > DisplayMetrics.DENSITY_HIGH) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) glowPad.getLayoutParams();
-            glowPad.setTargetResources(R.array.incoming_call_widget_3way_targets);
-        }
-*/
-
         pingHandler.postDelayed(pingDisplay, C.PING_TIMEOUT);
-
         glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
             @Override
             public void onGrabbed(View v, int handle) { /*Do nothing*/ }
@@ -400,6 +388,7 @@ public class CallIncomingActivity extends Base {
                 voicePlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
                 voicePlayer.setDataSource(this, voiceURI);
                 voicePlayer.prepareAsync();
+                voicePlayer.setLooping(true);
 
                 voicePlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override

@@ -16,7 +16,6 @@ import me.carc.fakecallandsms_mvp.common.TinyDB;
 
 public class Base extends AppCompatActivity {
 
-
     protected void showLaunchIcon() {
         TinyDB.getTinyDB().putBoolean(C.PREF_SHOW_LAUNCHER_ICON, false);
 
@@ -34,11 +33,9 @@ public class Base extends AppCompatActivity {
                 .setTitle(title)
                 .setMessage(msg)
                 .show();
-
     }
 
-    protected void showAlertDialog(String title,
-                                   String message) {
+    protected void showAlertDialog(String title, String message) {
         showAlertDialog(title, message, null, null, null, null);
     }
 
@@ -73,5 +70,4 @@ public class Base extends AppCompatActivity {
 
         builder.show();
     }
-
 }

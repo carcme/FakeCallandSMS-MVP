@@ -1,11 +1,17 @@
 package me.carc.fakecallandsms_mvp.alarm;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Telephony;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 
+import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
@@ -19,14 +25,40 @@ public class SmsIntentService extends IntentService {
         super("CallIntentService");
     }
 
+    private static final int NOTIFY_ID = 1333;
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onCreate() {
+        super.onCreate();
 
-        String number = intent.getStringExtra(C.NUMBER);
-        String message = intent.getStringExtra(C.MESSAGE);
-        String where = intent.getStringExtra(C.SMS_TYPE);
+        Intent notificationIntent = new Intent(this, FakeSmsReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, "MY_CHANNEL")
+                .setSmallIcon(R.drawable.ic_sms)
+                .setContentTitle("My Awesome App")
+                .setContentText("Doing some work...")
+                .setContentIntent(pendingIntent).build();
+
+        startForeground(NOTIFY_ID, new Notification());
+    }
+
+
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+
+        if(intent == null)
+            return;
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            FakeSmsReceiver.smsNotification(getApplicationContext(), intent);
+        }
+
+        String number = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.NUMBER) : "Unknown";
+        String message = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.MESSAGE) : "Unknown";
+        String where = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.SMS_TYPE) : C.SMS_INBOX;
         long time = intent.getLongExtra(C.TIME, System.currentTimeMillis());
-
 
         //Put content values
         ContentValues values = new ContentValues();
@@ -61,6 +93,6 @@ public class SmsIntentService extends IntentService {
 //        smsPackageintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(smsPackageintent);
 
-        FakeSmsReceiver.completeWakefulIntent(intent);
+//        FakeSmsReceiver.completeWakefulIntent(intent);
     }
 }

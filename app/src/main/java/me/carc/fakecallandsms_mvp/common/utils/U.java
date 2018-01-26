@@ -3,18 +3,25 @@ package me.carc.fakecallandsms_mvp.common.utils;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+
+import com.codemybrainsout.ratingdialog.FeedbackDialog;
+import com.codemybrainsout.ratingdialog.RatingDialog;
 
 import me.carc.fakecallandsms_mvp.BuildConfig;
+import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 
 /**
  * Random Utils to help out
- *
+ * <p>
  * Created by bamptonm on 7/2/17.
  */
 
@@ -79,7 +86,7 @@ public class U {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -102,9 +109,9 @@ public class U {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -158,4 +165,82 @@ public class U {
     public static String fileNameFromUrl(String url) {
         return url.substring(url.lastIndexOf('/') + 1, url.length());
     }
+
+    public static int currentTimeInteger(long time) {
+        return (int) (time % Integer.MAX_VALUE);
+    }
+
+    public static void emailFeedbackForm(final Context ctx) {
+        final FeedbackDialog fbDialog = new FeedbackDialog.Builder(ctx)
+                .titleTextColor(R.color.black)
+                .formTitle(ctx.getString(R.string.feedback_request_title))
+                .formHint(ctx.getString(R.string.feedback_request_hint))
+                .formSubmitText(ctx.getString(R.string.feedback_request_send))
+                .formCancelText(ctx.getString(R.string.feedback_request_cancel))
+
+                .positiveButtonTextColor(R.color.white)
+                .positiveButtonBackgroundColor(R.drawable.button_selector_positive)
+
+                .negativeButtonTextColor(R.color.controlDisabled)
+                .negativeButtonBackgroundColor(R.drawable.button_selector_negative)
+
+                .onFeedbackFormSumbit(new FeedbackDialog.Builder.FeedbackDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) {
+                        Intent email = new Intent(Intent.ACTION_SEND);
+                        email.setType("message/rfc822");
+                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{"carcmedev@gmail.com"});
+                        email.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.app_name));
+                        email.putExtra(Intent.EXTRA_TEXT, feedback);
+                        ctx.startActivity(email);
+                    }
+
+                    @Override
+                    public void onFormCancel() { /* EMPTY */}
+                }).build();
+
+        fbDialog.show();
+    }
+
+    public static void showRatingForm(final Context ctx) {
+        final RatingDialog ratingDialog = new RatingDialog.Builder(ctx)
+                .icon(ContextCompat.getDrawable(ctx, R.mipmap.ic_launcher))
+                .threshold(3)
+                .title(ctx.getString(R.string.ratings_request_title))
+                .titleTextColor(R.color.black)
+                .formTitle(ctx.getString(R.string.feedback_request_title))
+                .formHint(ctx.getString(R.string.feedback_request_hint))
+                .formSubmitText(ctx.getString(R.string.feedback_request_send))
+                .formCancelText(ctx.getString(R.string.feedback_request_cancel))
+                .ratingBarColor(R.color.colorAccent)
+
+                .positiveButtonTextColor(R.color.colorAccent)
+                .positiveButtonBackgroundColor(R.drawable.button_selector_positive)
+
+                .negativeButtonTextColor(R.color.colorPrimaryDark)
+                .negativeButtonBackgroundColor(R.drawable.button_selector_negative)
+                .onThresholdCleared(new RatingDialog.Builder.RatingThresholdClearedListener() {
+                    @Override
+                    public void onThresholdCleared(RatingDialog dlg, float rating, boolean thresholdCleared) {
+
+                        final Uri marketUri = Uri.parse("market://details?id=" + ctx.getPackageName());
+                        try {
+                            ctx.startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
+                        } catch (android.content.ActivityNotFoundException ex) {
+
+                            new AlertDialog.Builder(ctx)
+                                    .setTitle("Error")
+                                    .setMessage("Couldn't find PlayStore on this device")
+                                    .show();
+                        }
+                        dlg.dismiss();
+                    }
+                })
+
+                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) { }
+                }).build();
+
+        ratingDialog.show();  }
 }

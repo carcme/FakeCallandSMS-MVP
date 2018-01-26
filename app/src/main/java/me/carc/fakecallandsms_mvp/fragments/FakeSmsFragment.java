@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,20 +31,19 @@ import butterknife.OnTextChanged;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
-import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  * Fake SMS module
- *
+ * <p>
  * Created by bamptonm on 7/3/17.
  */
 
 public class FakeSmsFragment extends Fragment {
 
-    private static final String TAG = C.DEBUG + U.getTag();
+    private static final String TAG = FakeSmsFragment.class.getName();
 
     Calendar calPicker = Calendar.getInstance();
 
@@ -109,8 +109,11 @@ public class FakeSmsFragment extends Fragment {
 
     public interface FakeSmsListener {
         void onSmsContact(String contactName, String number, String image);
+
         void onSmsMessage(String msg);
+
         void onSmsType(String location);
+
         void onSmsTime(long time);
     }
 
@@ -122,7 +125,7 @@ public class FakeSmsFragment extends Fragment {
         super.onAttach(ctx);
 
         try {
-            smsListener = (FakeSmsListener) ctx;
+            smsListener = ctx != null ? (FakeSmsListener) ctx : (FakeSmsListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(ctx.toString() + " must implement FakeCallListener callbacks");
         }
@@ -186,7 +189,7 @@ public class FakeSmsFragment extends Fragment {
 
         // reset contact button and
 //        contactName.setVisibility(View.GONE);
-        if(start > 0)
+        if (start > 0)
             contactNameTV.setText("");
         contactBtn.setText(R.string.contacts);
         ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlDisabled, 1);
@@ -251,10 +254,10 @@ public class FakeSmsFragment extends Fragment {
         ViewUtils.setButtonDrawableColor(getActivity(), toggleSent, R.color.controlDisabled, 1);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == C.PICK_CONTACT && resultCode == RESULT_OK) {
             if (data != null) {
@@ -277,7 +280,6 @@ public class FakeSmsFragment extends Fragment {
                     ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
 
                     smsListener.onSmsContact(name, number, image);
-
                 }
                 cursor.close();
             }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/pendingCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/margin_small"
+        app:cardBackgroundColor="@color/almostWhite"
+        app:cardCornerRadius="4dp">
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="Message Type"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/msgType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    tools:ignore="HardcodedText"
+                    tools:text="SMS / CALL"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="From / To"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/msgContact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    tools:text="A Test Contact"
+                    tools:ignore="HardcodedText"/>
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/smsMessageLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="Message"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/smsMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="This is a preview of your message but only on 1 line."
+                    tools:ignore="HardcodedText"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="Scheduled Date"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/msgDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    tools:text="31st August 2018"
+                    tools:ignore="HardcodedText"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:text="Scheduled Time"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:ignore="HardcodedText"/>
+
+                <TextView
+                    android:id="@+id/msgTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    tools:text="15:35"
+                    tools:ignore="HardcodedText"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
+
+

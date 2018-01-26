@@ -1,0 +1,97 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "e7a198f1f05ace83b4223188fa30c419",
+    "entities": [
+      {
+        "tableName": "FakeContact",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyID` INTEGER, `callType` INTEGER, `name` TEXT, `number` TEXT, `image` TEXT, `date` INTEGER, `time` INTEGER, `duration` INTEGER, `vibrate` INTEGER, `useCallLogs` INTEGER, `ringtone` TEXT, `smsMsg` TEXT, `smsType` TEXT, `databaseType` TEXT, PRIMARY KEY(`time`))",
+        "fields": [
+          {
+            "fieldPath": "index",
+            "columnName": "keyID",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "callType",
+            "columnName": "callType",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "vibrate",
+            "columnName": "vibrate",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "useCallLogs",
+            "columnName": "useCallLogs",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ringtone",
+            "columnName": "ringtone",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "smsMsg",
+            "columnName": "smsMsg",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "smsType",
+            "columnName": "smsType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "databaseType",
+            "columnName": "databaseType",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "time"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e7a198f1f05ace83b4223188fa30c419\")"
+    ]
+  }
+}

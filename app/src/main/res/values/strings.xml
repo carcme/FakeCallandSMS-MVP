@@ -3,6 +3,8 @@
 
 
     <string name="select_ringtone">Ringtone</string>
+    <string name="select_sms_ringtone">SMS Ringtone</string>
+    <string name="sms_ringtone">SMS Ringtone (%s)</string>
     <string name="contacts">Contacts</string>
     <string name="content_description">content description</string>
     <string name="type_your_message">Type your message</string>
@@ -11,7 +13,7 @@
     <string name="incoming_call">Incoming Call</string>
     <string name="sent">Send</string>
     <string name="inbox">Inbox</string>
-    <string name="enter_number">Enter number</string>
+    <string name="enter_number">Type number</string>
     <string name="draft">Draft</string>
     <string name="quick_time">Quick Time</string>
     <string name="vibrate">Vibrate</string>
@@ -24,6 +26,7 @@
     <string name="hide_the_launcher_icon">Hide the launcher icon</string>
     <string name="reset_default_sms_application">Reset default SMS application</string>
     <string name="application">Application</string>
+    <string name="experimental">Experimental</string>
     <string name="quick_time_set_to">Quick Time set to:</string>
     <string name="call">Call</string>
     <string name="call_ending">Call Ending</string>
@@ -42,17 +45,36 @@
     <string name="settings_title_about">About</string>
     <string name="settings_summary_rate">Leave a rating or some feedback.</string>
     <string name="feedback_request_title">Send Feedback</string>
-    <string name="feedback_request_hint">Tell us where we can improve&#8230;</string>
+    <string name="feedback_request_hint">Most Fake Call features are suggestions, let me know how to improve it more</string>
     <string name="ratings_request_title">Love to know what you think of the app</string>
+
+    <string name="sms_scheduled">Fake SMS Scheduled</string>
+    <string name="reset_sms_application_on_exit">Reset SMS application on exit</string>
+
 
 
     <!--RATING and FEEDBACK DIALOG-->
     <string name="feedback_request_send">Send</string>
     <string name="feedback_request_cancel">Cancel</string>
     <string name="feedbackChooserTitle">Send Feedback Via</string>
-    <string name="sms_scheduled">Fake SMS Scheduled</string>
-    <string name="reset_sms_application_on_exit">Reset SMS application on exit</string>
     <string name="lib_thanks">GlowPadBackport - Incoming call library\n\nRatingDialog (modified) - Rating library from codemybrainsout</string>
+
+
+    <string name="carc_app_base_url" formatted="false">https://play.google.com/store/apps/details?id=me.carc.%s</string>
+
+    <string name="appTitleBtown">B-Town | Berlin Tours and Maps</string>
+    <string name="appDescBtown">The ultimate Berlin guide.\nExplore Berlin better with B-Town!</string>
+
+    <string name="appTitleAGD">Any Given Date | Event Counter</string>
+    <string name="appDescAGB">Never miss another birthday, valentines, dinner date or meeting. Keep track of how long until your next holiday, birthday or anniversary.</string>
+
+    <string name="appTitleBlackBooks">BlackBooks Stories</string>
+    <string name="appDescBlackBooks">Brain puzzles to play with friends.\nFind the situation behind the short story with just yes and no answers</string>
+
+    <string name="wrong_screen_error_msg">You can\'t start a phone call or SMS from this screen!!</string>
+    <string name="added_db_entry">Added to Database</string>
+    <string name="close_when_call_set">Close when call set</string>
+    <string name="fake_call_started">Fake Call Started</string>
 
 
 </resources>

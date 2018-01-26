@@ -29,6 +29,9 @@ public class C {
     public static final int CALL_OUTGOING = CallLog.Calls.OUTGOING_TYPE;
     public static final int CALL_MISSED   = CallLog.Calls.MISSED_TYPE;
 
+    public static final int TYPE_CALL = 0;
+    public static final int TYPE_SMS  = 1;
+
 
     public static final boolean HAS_K = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     public static final boolean HAS_L = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
@@ -39,9 +42,10 @@ public class C {
     public static final String SMS_OUTBOX = "SMS_OUTBOX";
     public static final String SMS_DRAFT  = "SMS_DRAFT";
 
-
     public static final int PICK_CONTACT = 2000;
     public static final int PENDING_INTENT_RINGTONE = 6000;
+    public static final int PENDING_INTENT_SMS_RINGTONE = 6001;
+    public static final int NOTIFICATION_CHANGE = 6002;
 
     // CALL
     public static final String NAME     = "NAME";
@@ -64,9 +68,13 @@ public class C {
     public static final String PREF_BACKGROUND_VOICE_DISPLAY = "PREF_BACKGROUND_VOICE_DISPLAY";
     public static final String PREF_BACKGROUND_VOICE = "PREF_BACKGROUND_VOICE";
     public static final String PREF_RING_TONE = "PREF_RING_TONE";
+    public static final String PREF_SMS_RING_TONE_DISPLAY = "PREF_SMS_RING_TONE_DISPLAY";
+    public static final String PREF_SMS_RING_TONE = "PREF_SMS_RING_TONE";
     public static final String PREF_MAX_CALL_DURATION = "PREF_MAX_CALL_DURATION";
     public static final String PREF_DIAL_LAUNCHER = "PREF_DIAL_LAUNCHER";
     public static final String PREF_RESET_SMS_ON_EXIT = "PREF_RESET_SMS_ON_EXIT";
+
+    public static final String PREF_FINISH_ACTIVITY_AFTER_CALL_SET = "PREF_FINISH_ACTIVITY_AFTER_CALL_SET";
 
 
     public static final long[] VIBRATE_PATTERN = {0, 700, 1000};

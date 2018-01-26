@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.crashlytics.android.answers.Answers;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,11 +36,11 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.services.common.Crash;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
-import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 /**
@@ -47,8 +51,8 @@ import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 public class FakeCallFragment extends Fragment {
 
-    private static final String TAG = C.DEBUG + U.getTag();
-    public static final int PERMISSION_WRITE_CALL_LOG_RESULT = 1500;
+    private static final String TAG = FakeCallFragment.class.getName();
+    public static final int PERMISSION_WRITE_CALL_LOG_RESULT = 1502;
 
     final Calendar calendarInst = Calendar.getInstance();
     Calendar calPicker = Calendar.getInstance();
@@ -131,12 +135,11 @@ public class FakeCallFragment extends Fragment {
         super.onAttach(ctx);
 
         try {
-            callListener = (FakeCallListener) ctx;
+            callListener = ctx != null ? (FakeCallListener)ctx : (FakeCallListener)getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(ctx.toString() + " must implement FakeCallListener callbacks");
+            throw new ClassCastException(getActivity().toString() + " must implement FakeCallListener callbacks");
         }
     }
-
 
     @Override
     public void onDetach() {
@@ -293,7 +296,8 @@ public class FakeCallFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == C.PICK_CONTACT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
@@ -313,12 +317,19 @@ public class FakeCallFragment extends Fragment {
                 cursor.close();
             }
         } else if (requestCode == C.PENDING_INTENT_RINGTONE && resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            if (data != null) {
+                Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
-            TinyDB.getTinyDB().putString(C.PREF_RING_TONE, uri.toString());
-            callListener.onSetRingtone(uri);
-            ringtoneBtn.setText(R.string.ringtone_set);
-            ViewUtils.setButtonDrawableColor(getActivity(), ringtoneBtn, R.color.controlSet, 1);
+                if(uri != null) {
+                    TinyDB.getTinyDB().putString(C.PREF_RING_TONE, uri.toString());
+                    callListener.onSetRingtone(uri);
+                    ringtoneBtn.setText(R.string.ringtone_set);
+                    ViewUtils.setButtonDrawableColor(getActivity(), ringtoneBtn, R.color.controlSet, 1);
+                } else {
+                    Toast.makeText(getActivity(), "There was an error getting the ringtone path", Toast.LENGTH_SHORT).show();
+                    Answers.getInstance().onException(new Crash.LoggedException(TAG, "Uri path from intent failed"));
+                }
+            }
         }
     }
 }

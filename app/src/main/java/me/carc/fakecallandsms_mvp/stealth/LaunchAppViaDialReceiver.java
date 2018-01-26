@@ -40,6 +40,5 @@ public class LaunchAppViaDialReceiver extends BroadcastReceiver {
 
         } else
             Log.d("DEAD", "onReceive: Wrong code");
-
     }
 }

@@ -15,7 +15,6 @@ import java.util.Calendar;
 import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.common.C;
 
-import static me.carc.fakecallandsms_mvp.alarm.AlarmHelper.CALL_ALARM_ID;
 
 /**
  * Created by Carc.me on 18.02.16.
@@ -24,7 +23,9 @@ import static me.carc.fakecallandsms_mvp.alarm.AlarmHelper.CALL_ALARM_ID;
  */
 public class PowerSendMessage extends BroadcastReceiver {
 
-    private final String TAG = C.DEBUG;
+    public static final int POwER_MSG_ID = 777;
+
+    private final String TAG = PowerSendMessage.class.getName();
     private static int mCode = 0;
 
     @Override
@@ -86,7 +87,7 @@ public class PowerSendMessage extends BroadcastReceiver {
             Intent intentAlarm = new Intent(ctx, CallIncomingActivity.class);
 
             final PendingIntent pendingIntent = PendingIntent.getActivity(ctx,
-                    CALL_ALARM_ID, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
+                    POwER_MSG_ID, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
             
             long timeout;
 

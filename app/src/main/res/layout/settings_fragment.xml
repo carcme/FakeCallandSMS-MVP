@@ -1,188 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_standard">
+
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/margin_standard">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/call"
+            android:textColor="@color/colorEnabled"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:text="@string/call"
-                android:textColor="@color/colorEnabled"/>
-
-        <Button
+            <Button
                 android:id="@+id/voiceFileInput"
-                android:layout_width="match_parent"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/voice"
-                android:textAlignment="textStart"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:textAlignment="textStart"/>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/quick_time_set_to"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
-
-            <TextView
-                    android:id="@+id/quickTimeInput"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="16sp"
-                    tools:text="123"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/minutes_tv"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+            <ImageView
+                android:id="@+id/clearVoiceFile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:padding="@dimen/margin_small"
+                android:src="@drawable/ic_clear"/>
 
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/callDurationContainer"
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="@string/quick_time_set_to"/>
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/maximum_call_duration"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:id="@+id/quickTimeInput"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                tools:text="123"/>
 
             <TextView
-                    android:id="@+id/callDurationInput"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="16sp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    tools:text="30"/>
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minutes_tv"/>
 
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/seconds"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/callDurationContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maximum_call_duration"/>
+
+            <TextView
+                android:id="@+id/callDurationInput"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                tools:text="30"/>
+
+            <TextView
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seconds"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/closeAfterCallSet"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@null"
+                android:text="@string/close_when_call_set"
+                android:textAlignment="textStart"/>
+
+            <Switch
+                android:id="@+id/closeAfterCallSetSw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <include layout="@layout/page_divider"/>
 
         <TextView
-                android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/sms"
+            android:textColor="@color/colorEnabled"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/voiceSmsRingtone"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:text="@string/sms"
-                android:textColor="@color/colorEnabled"/>
+                android:layout_weight="1"
+                android:text="@string/select_sms_ringtone"
+                android:textAlignment="textStart"/>
+
+            <ImageView
+                android:id="@+id/clearSmsFile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:padding="@dimen/margin_small"
+                android:src="@drawable/ic_clear"/>
+
+        </LinearLayout>
 
         <Button
-                android:id="@+id/smsAppResetBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/reset_default_sms_application"
-                android:textAlignment="textStart"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:id="@+id/smsAppResetBtn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_default_sms_application"
+            android:textAlignment="textStart"/>
 
 
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                    android:id="@+id/resetSmsApp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/reset_sms_application_on_exit"
-                    android:textAlignment="textStart"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:id="@+id/resetSmsApp"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@null"
+                android:text="@string/reset_sms_application_on_exit"
+                android:textAlignment="textStart"/>
 
             <Switch
-                    android:id="@+id/resetSmsAppSW"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/resetSmsApp"
-                    android:layout_alignBottom="@+id/resetSmsApp"
-                    />
+                android:id="@+id/resetSmsAppSW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <include layout="@layout/page_divider"/>
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:text="@string/application"
-                android:textColor="@color/colorEnabled"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/experimental"
+            android:textColor="@color/colorEnabled"/>
 
-        <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                    android:id="@+id/hideLauncherIconText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/hide_the_launcher_icon"
-                    android:textAlignment="textStart"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:id="@+id/hideLauncherIconText"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@null"
+                android:text="@string/hide_the_launcher_icon"
+                android:textAlignment="textStart"/>
 
             <Switch
-                    android:id="@+id/hideLauncherIconSW"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/hideLauncherIconText"
-                    android:layout_alignBottom="@+id/hideLauncherIconText"/>
+                android:id="@+id/hideLauncherIconSW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/launchCodeText"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/change_dial_pad_launch_code"/>
+
+            <TextView
+                android:id="@+id/launchCodeInput"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:contentDescription="@null"
+                android:textSize="16sp"
+                tools:text="312"/>
 
-            <TextView
-                    android:id="@+id/launchCodeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/change_dial_pad_launch_code"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
-
-            <TextView
-                    android:id="@+id/launchCodeInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/launchCodeText"
-                    android:layout_alignBottom="@+id/launchCodeText"
-                    android:textSize="16sp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    tools:text="312"/>
-
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>

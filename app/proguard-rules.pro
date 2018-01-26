@@ -19,6 +19,9 @@
 -keep public class net.frakbot.glowpadbackport.** {public private protected *;}
 -dontwarn net.frakbot.glowpadbackport.**
 
+-dontwarn android.arch.persistence.room.paging.LimitOffsetDataSource
+
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

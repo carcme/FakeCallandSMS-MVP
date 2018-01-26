@@ -40,7 +40,8 @@
 
     <dimen name="unknown_image_heigth">150dp</dimen>
     <dimen name="unknown_image_width">150dp</dimen>
-
+    <dimen name="text_body">16sp</dimen>
+    <dimen name="text_small_body">14sp</dimen>
 
 
 </resources>

@@ -1,14 +1,15 @@
 package me.carc.fakecallandsms_mvp;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -16,46 +17,53 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codemybrainsout.ratingdialog.RatingDialog;
+
 import java.util.Random;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.carc.fakecallandsms_mvp.adapter.TabbedPagerAdapter;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
-import me.carc.fakecallandsms_mvp.alarm.SmsIntentService;
+import me.carc.fakecallandsms_mvp.app.App;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.CallLogUtil;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
 import me.carc.fakecallandsms_mvp.common.utils.U;
+import me.carc.fakecallandsms_mvp.db.AppDatabase;
+import me.carc.fakecallandsms_mvp.fragments.CarcFragment;
 import me.carc.fakecallandsms_mvp.fragments.FakeCallFragment;
 import me.carc.fakecallandsms_mvp.fragments.FakeSmsFragment;
+import me.carc.fakecallandsms_mvp.fragments.PendingFragment;
 import me.carc.fakecallandsms_mvp.fragments.SettingsFragment;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
-import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
 public class MainTabActivity extends Base implements
         FakeCallFragment.FakeCallListener,
         FakeSmsFragment.FakeSmsListener {
 
-    private static final String TAG = C.DEBUG + U.getTag();
-
+    private static final String TAG = MainTabActivity.class.getName();
+    private static final String EXTRA_RESTART_STR = "EXTRA_RESTART_STR";
     public static final int PERMISSION_CONTACT_RESULT = 1500;
     public static final int INTENT_SMS_PACKAGE = 101;
 
 
-    private ViewPager mViewPager;
-
     TinyDB tinyDb;
     FakeContact fakeContact;
 
-    @BindView(R.id.fabMain)
-    FloatingActionButton fab;
-
+    @BindView(R.id.tabs)        TabLayout tabLayout;
+    @BindView(R.id.container)   ViewPager mViewPager;
+    @BindView(R.id.fabMain)     FloatingActionButton fabMain;
+    @BindView(R.id.toolbar)     Toolbar toolbar;
 
     /**
      * SMS Callbacks
@@ -126,28 +134,24 @@ public class MainTabActivity extends Base implements
     }
 
 
-    View.OnClickListener onFabClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startSend();
-        }
-    };
-
-
-    private void startSend() {
+    @OnClick(R.id.fabMain)
+    public void startSend() {
         fakeContact.debug();
-        View v = getWindow().getDecorView().findViewById(android.R.id.content);
 
         switch (mViewPager.getCurrentItem()) {
             case 0:
-                Snackbar.make(v, "Starting Fake Call", Snackbar.LENGTH_LONG).show();
 
                 if (fakeContact.getCallType() == C.CALL_INCOMING) {
-                    String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
-                    fakeContact.setDuration(Integer.valueOf(constant));
+                    Snackbar snackbar = Snackbar.make(fabMain, R.string.fake_call_started, Snackbar.LENGTH_LONG);
+                    View view = snackbar.getView();
+                    view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
+                    snackbar.show();
 
-                    AlarmHelper.getInstance().setCallAlarmActivity(fakeContact);
-                    finish();
+                    String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
+                    fakeContact.setDuration(TextUtils.isEmpty(constant) ? C.MAX_CALL_DURATION_DEFAULT : Integer.valueOf(constant));
+
+                    addCallToDb();
+
                 } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
 
                     Random r = new Random();
@@ -162,17 +166,34 @@ public class MainTabActivity extends Base implements
                             duration,
                             fakeContact.getCallType(),
                             fakeContact.getTime());
+
+                    Snackbar snackbar = Snackbar.make(fabMain, "Call added to call history", Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.BLACK)
+                            .setAction("Show", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent showCallLog = new Intent();
+                                    showCallLog.setAction(Intent.ACTION_VIEW);
+                                    showCallLog.setType(CallLog.Calls.CONTENT_TYPE);
+                                    startActivity(showCallLog);
+                                }
+                            });
+                    View view = snackbar.getView();
+                    view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
+                    snackbar.show();
                 }
                 break;
 
             case 1:
 
-                if (Algorithms.isEmpty(fakeContact.getNumber())
-                        || Algorithms.isEmpty(fakeContact.getSmsMsg())) {
-                    showWarningDialog("Missing Infomation", "Please check you have entered a message and selected a contact.");
+                if (Algorithms.isEmpty(fakeContact.getNumber()) || Algorithms.isEmpty(fakeContact.getSmsMsg())) {
+//                    showWarningDialog("Missing Infomation", "Please check you have entered a message and selected a contact.");
+                    Snackbar snackbar = Snackbar.make(fabMain, "Please check you have entered a message and selected a contact", Snackbar.LENGTH_LONG).setAction("Action", null);
+                    View view = snackbar.getView();
+                    view.setBackgroundColor(ContextCompat.getColor(this, R.color.accent));
+                    snackbar.show();
 
                 } else {
-
                     if (Telephony.Sms.getDefaultSmsPackage(MainTabActivity.this).equals(getPackageName())) {
                         writeSms();
                     } else {
@@ -181,16 +202,66 @@ public class MainTabActivity extends Base implements
                 }
                 break;
 
-            case 2:
-                showWarningDialog("Phone Call or Text Message?", "You can't start anything from the settings screen!!");
-                break;
-
             default:
-                Snackbar.make(v, "Error: shouldn;t be here!!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar snackbar = Snackbar.make(fabMain, R.string.wrong_screen_error_msg, Snackbar.LENGTH_LONG).setAction("Action", null);
+                View view = snackbar.getView();
+                view.setBackgroundColor(ContextCompat.getColor(this, R.color.accent));
+                snackbar.show();
         }
     }
 
+    private void addCallToDb() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase db = ((App) getApplicationContext()).getDB();
+
+                fakeContact.setIndex(U.currentTimeInteger(fakeContact.getTime()));
+                fakeContact.setDatabaseType("CALL (RECEIVE)");
+                AlarmHelper.getInstance().setCallAlarmActivity(fakeContact);
+
+                db.fakeContactDao().insert(fakeContact);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addToPendingFragment(fakeContact);
+                        restartActivity(R.string.fake_call_started);
+                    }
+                });
+            }
+        });
+    }
+
+    private void addSmsToDb() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase db = ((App) getApplicationContext()).getDB();
+
+                fakeContact.setIndex(U.currentTimeInteger(fakeContact.getTime()));
+                fakeContact.setDatabaseType("SMS (RECEIVE)");
+                AlarmHelper.getInstance().setSmsAlarmActivity(fakeContact);
+
+                db.fakeContactDao().insert(fakeContact);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addToPendingFragment(fakeContact);
+                        restartActivity(R.string.sms_scheduled);
+                    }
+                });
+            }
+        });
+    }
+
+    private void restartActivity(@StringRes int stringRes) {
+        Intent intent = new Intent(MainTabActivity.this, MainTabActivity.class);
+        intent.putExtra(EXTRA_RESTART_STR, stringRes);
+        finish();
+        startActivity(intent);
+    }
 
     private void switchSmSPackage() {
 
@@ -206,41 +277,13 @@ public class MainTabActivity extends Base implements
 
     //Write to the default sms app
     private void writeSms() {
-
-        Intent i = new Intent(getApplicationContext(), FakeSmsReceiver.class);
-
-        i.putExtra(C.NAME, fakeContact.getName());
-        i.putExtra(C.NUMBER, fakeContact.getNumber());
-        i.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
-        i.putExtra(C.IMAGE, fakeContact.getImage());
-        i.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
-        i.putExtra(C.SMS_DEFAULT_APP, tinyDb.getString(C.SMS_DEFAULT_PACKAGE_KEY));
-
-
-
-        if (fakeContact.getTime() < System.currentTimeMillis()) {
-
-            i.setClass(this, SmsIntentService.class);
-            i.putExtra(C.TIME, fakeContact.getTime());
-            startService(i);
-
-            FakeSmsReceiver.smsNotification(this, i);
-
-        } else {
-
-            PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(), 101, i, PendingIntent.FLAG_ONE_SHOT);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, fakeContact.getTime(), pi);
-
-            Snackbar.make(findViewById(R.id.fabMain), R.string.sms_scheduled, Snackbar.LENGTH_LONG).show();
-        }
+        addSmsToDb();
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         fakeContact = new FakeContact();
         tinyDb = new TinyDB(this);
 
@@ -248,24 +291,74 @@ public class MainTabActivity extends Base implements
             accessAllowed();
         else
             init();
-    }
 
+        if(getIntent().hasExtra(EXTRA_RESTART_STR)) {
+            int stringId = getIntent().getIntExtra(EXTRA_RESTART_STR, R.string.fake_call_started);
+
+            Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);
+            View view = snackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
+            snackbar.show();
+        }
+    }
 
     /**
      * Initialise the view - may require permissions first
      */
     private void init() {
         setContentView(R.layout.activity_main_tab);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setupViewPager();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabMain);
-        fab.setOnClickListener(onFabClickListener);
+        showRatingDialog();
     }
 
+    private void showRatingDialog() {
+        final RatingDialog ratingDialog = new RatingDialog.Builder(this)
+                .icon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher))
+                .session(7)
+                .threshold(3)
+                .title(getString(R.string.rating_dialog_experience))
+                .titleTextColor(R.color.black)
+                .positiveButtonText("Not Now")
+                .negativeButtonText("Never")
+                .positiveButtonTextColor(R.color.white)
+                .negativeButtonTextColor(R.color.grey_500)
+                .formTitle("Submit Feedback")
+                .formHint(getString(R.string.rating_dialog_suggestions))
+                .formSubmitText("Submit")
+                .formCancelText("Cancel")
+                .ratingBarColor(R.color.rating_star)
+                .onThresholdFailed(new RatingDialog.Builder.RatingThresholdFailedListener() {
+                    @Override
+                    public void onThresholdFailed(RatingDialog ratingDialog, float rating, boolean thresholdCleared) {
+                        feedbackForm();
+                        ratingDialog.dismiss();
+                    }
+                })
+                .onRatingChanged(new RatingDialog.Builder.RatingDialogListener() {
+                    @Override
+                    public void onRatingSelected(float rating, boolean thresholdCleared) {
+
+                    }
+                })
+                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) {
+
+                    }
+                }).build();
+
+        ratingDialog.show();
+    }
+
+
+    private void feedbackForm() {
+        U.emailFeedbackForm(this);
+   }
 
     /**
      * Check permissions previously granted
@@ -297,10 +390,14 @@ public class MainTabActivity extends Base implements
                 break;
 
             default:
-                Log.d(TAG, "onRequestPermissionsResult: UNHANDLED CODE:: " + requestCode);
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
+    private void addToPendingFragment(FakeContact contact) {
+        PendingFragment pending = (PendingFragment)((TabbedPagerAdapter)mViewPager.getAdapter()).getItem(2);
+        pending.addNewPending(contact);
+    }
 
     /**
      * Setup the pager
@@ -310,15 +407,43 @@ public class MainTabActivity extends Base implements
 
         mSectionsPagerAdapter.addFragment(new FakeCallFragment(), "Call");
         mSectionsPagerAdapter.addFragment(new FakeSmsFragment(), "SMS");
+        mSectionsPagerAdapter.addFragment(new PendingFragment(), "Schedule");
         mSectionsPagerAdapter.addFragment(new SettingsFragment(), "Settings");
+        mSectionsPagerAdapter.addFragment(new CarcFragment(), "Extras");
+
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount());
+
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(onPagerChangedListener);
     }
+
+
+    private ViewPager.SimpleOnPageChangeListener onPagerChangedListener = new ViewPager.SimpleOnPageChangeListener() {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            int pos = mViewPager.getCurrentItem();
+            if (pos == 0 || pos == 1)
+                fabMain.show();
+            else
+                fabMain.hide();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+        }
+
+        public void onPageSelected(int pos) {
+            super.onPageSelected(pos);
+        }
+    };
 
 
     @Override
@@ -346,6 +471,7 @@ public class MainTabActivity extends Base implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == INTENT_SMS_PACKAGE && resultCode == RESULT_OK) {
 
@@ -367,7 +493,7 @@ public class MainTabActivity extends Base implements
 
     @Override
     protected void onDestroy() {
-        if(TinyDB.getTinyDB().getBoolean(C.PREF_RESET_SMS_ON_EXIT)) {
+        if (TinyDB.getTinyDB().getBoolean(C.PREF_RESET_SMS_ON_EXIT)) {
             if (Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
                 Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
                 intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,

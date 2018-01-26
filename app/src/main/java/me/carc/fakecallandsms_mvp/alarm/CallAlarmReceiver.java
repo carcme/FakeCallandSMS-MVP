@@ -23,29 +23,14 @@ public class CallAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctx, Intent intent) {
 
-//        sendNotification(ctx);
-
-
-
         CarcWakeLockHolder wl = new CarcWakeLockHolder(ctx);
         wl.aquireWakeLock();
 
-
-
-/*
-
-        Intent startCallIntent = new Intent(ctx, CallIncomingActivity.class);
-        startCallIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startCallIntent.putExtras(intent.getExtras());
-        ctx.startActivity(startCallIntent);
-*/
-
-
         Intent callIntentService = new Intent(ctx, CallIncomingActivity.class);
-        callIntentService.putExtras(intent.getExtras());
+        if(intent != null)
+            callIntentService.putExtras(intent.getExtras());
         callIntentService.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(callIntentService);
-//        startWakefulService(ctx, callIntentService);
 
         sendNotification(ctx);
 

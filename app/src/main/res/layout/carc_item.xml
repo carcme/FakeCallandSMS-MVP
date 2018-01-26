@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="6dp"
+    card_view:cardCornerRadius="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/appImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="App image for Carc "
+            android:scaleType="centerCrop"
+            tools:src="@drawable/app_image_btown"/>
+
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/appImage"
+            android:fontFamily="serif"
+            android:maxLines="2"
+            android:textSize="@dimen/text_body"
+            tools:text="Dr. Doctor Artz"/>
+
+        <TextView
+            android:id="@+id/appDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appTitle"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/appImage"
+            android:maxLines="4"
+            android:textSize="@dimen/text_small_body"
+            tools:text="Address Strasse, 10115, Berlin and some more tec   xt fdfas sd sa das d s a da s s s ss"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
