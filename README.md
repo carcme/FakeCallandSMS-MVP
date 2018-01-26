@@ -23,3 +23,6 @@ App is on the [Play Store](https://play.google.com/store/apps/details?id=me.carc
 #### Features
 - [x] Fake Call
 - [x] Fake SMS
+- [x] Tailor every aspect of the call or SMS
+- [x] Schedule call or SMS to any date or time you want
+- [x] Remove previously scheduled events
