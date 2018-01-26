@@ -7,7 +7,7 @@ fake call and sms application. todo: convert to mvp
 ### An excuse at your fingertips
 
 
-App is on the [Play Store](https://play.google.com/store/apps/details?id=me.carc.fakecallandsms_mvp). 
+App is on the [Play Store](https://play.google.com/store/apps/details?id=me.carc.fakecallandsms_mvp). Screen shots are out of date, colours have changed and new tabs are not shown.
 
 [Home Page](https://carcmedev.github.io/moustache). Page needs updating... this is an older version.
 
