@@ -1,7 +1,3 @@
-# FakeCallandSMS-MVP
-fake call and sms application. todo: convert to mvp
-
-
 # Fake Call and SMS
 
 ### An excuse at your fingertips
