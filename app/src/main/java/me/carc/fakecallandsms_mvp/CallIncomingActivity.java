@@ -43,7 +43,7 @@ import me.carc.fakecallandsms_mvp.alarm.CarcWakeLockHolder;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.CallLogUtil;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 
 public class CallIncomingActivity extends Base {
@@ -145,13 +145,13 @@ public class CallIncomingActivity extends Base {
         String mContact = getIntent().hasExtra(C.NAME) ? getIntent().getStringExtra(C.NAME) : "";
         String mNumber = getIntent().hasExtra(C.NUMBER) ? getIntent().getStringExtra(C.NUMBER) : "";
 
-        if (Algorithms.isEmpty(mContact) && Algorithms.isEmpty(mNumber))
+        if (Common.isEmpty(mContact) && Common.isEmpty(mNumber))
             mContact = getString(R.string.unknown_caller);
 
         nBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
         nBuilder.setSmallIcon(R.drawable.ic_call, 1);
         nBuilder.setContentTitle("Incoming Call");
-        nBuilder.setContentText(!Algorithms.isEmpty(mContact) ? mContact : mNumber);
+        nBuilder.setContentText(!Common.isEmpty(mContact) ? mContact : mNumber);
         nBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         nBuilder.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
         nBuilder.setOnlyAlertOnce(true);
@@ -275,12 +275,12 @@ public class CallIncomingActivity extends Base {
         String name = getIntent().getStringExtra(C.NAME);
         String number = getIntent().getStringExtra(C.NUMBER);
 
-        if (!Algorithms.isEmpty(name))
+        if (!Common.isEmpty(name))
             callerName.setText(name);
         else
             callerName.setText(R.string.unknown_caller);
 
-        if (!Algorithms.isEmpty(number))
+        if (!Common.isEmpty(number))
             callerNumber.setText(number);
     }
 
@@ -378,7 +378,7 @@ public class CallIncomingActivity extends Base {
     private void startVoice() {
         String voice = tinyDb.getString(C.PREF_BACKGROUND_VOICE);
 
-        if (!Algorithms.isEmpty(voice)) {
+        if (!Common.isEmpty(voice)) {
 
             Uri voiceURI = Uri.parse(voice);
 

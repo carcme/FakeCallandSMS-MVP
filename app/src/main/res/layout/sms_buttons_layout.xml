@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/custom_border"
+    android:orientation="horizontal">
+
+
+    <ToggleButton
+        android:id="@+id/toggleInbox"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        tools:checked="true"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_inbox"
+        android:drawablePadding="@dimen/margin_small"
+        android:textColor="@color/controlDisabled"
+        android:textOn="@string/inbox"
+        android:textSize="16sp"/>
+
+    <ToggleButton
+        android:id="@+id/toggleSent"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        tools:checked="true"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_send"
+        android:drawablePadding="@dimen/margin_small"
+        android:textColor="@color/controlDisabled"
+        android:textOn="@string/sent"
+        android:textSize="16sp"/>
+
+
+    <ToggleButton
+        android:id="@+id/toggleDraft"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        tools:checked="true"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_draft"
+        android:drawablePadding="@dimen/margin_small"
+        android:textColor="@color/controlDisabled"
+        android:textOn="@string/draft"
+        android:textSize="16sp"/>
+</LinearLayout>

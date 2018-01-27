@@ -28,11 +28,12 @@ import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.alarm.SmsIntentService;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 
 /**
+ * Catch the sms alarm expire
  * Created by bamptonm on 7/4/17.
  */
 
@@ -87,7 +88,7 @@ public class FakeSmsReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= 26) {
             Notification.Builder nBuilder = new Notification.Builder(context, NotificationUtils.ANDROID_CHANNEL_ID);
             if(icon != null) nBuilder.setLargeIcon(FakeSmsReceiver.getCircleBitmap(icon));
-            if (Algorithms.isEmpty(name))
+            if (Common.isEmpty(name))
                 nBuilder.setContentTitle(number);
             else
                 nBuilder.setContentTitle(name);
@@ -118,7 +119,7 @@ public class FakeSmsReceiver extends BroadcastReceiver {
         }else {
             NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context, "MY_CHANNEL");
             if(icon != null) nBuilder.setLargeIcon(FakeSmsReceiver.getCircleBitmap(icon));
-            if (Algorithms.isEmpty(name))
+            if (Common.isEmpty(name))
                 nBuilder.setContentTitle(number);
             else
                 nBuilder.setContentTitle(name);

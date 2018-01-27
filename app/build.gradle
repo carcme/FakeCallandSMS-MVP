@@ -23,8 +23,8 @@ android {
         applicationId "me.carc.fakecallandsms_mvp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
-        versionName "1.0.0"
+        versionCode 12
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -70,15 +70,12 @@ dependencies {
 
     compile 'net.frakbot.glowpadbackport:glowpadbackport:2.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    androidTestCompile 'com.android.support:support-annotations:26+'
+    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;
     }
 
-
     compile "android.arch.persistence.room:runtime:$rootProject.roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
-
-
 }

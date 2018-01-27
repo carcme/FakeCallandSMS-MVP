@@ -3,10 +3,9 @@
     <color name="grayMetal">#607D8B</color>
     <color name="grayMetalDark">#455A64</color>
     <!--<color name="colorAccent">#FF5722</color>-->
-    <color name="colorPrimary">#263238</color>
-    <color name="colorPrimaryDark">#291f37</color>
+    <color name="colorPrimary">#37474F</color>
+    <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#FF5722</color>
-
 
     <color name="white">#FFF</color>
     <color name="almostWhite">#EEE</color>

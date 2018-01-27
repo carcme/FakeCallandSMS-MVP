@@ -42,7 +42,7 @@ import io.fabric.sdk.android.services.common.Crash;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
@@ -50,6 +50,7 @@ import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getName();
+    public static final String TAG_ID = "SettingsFragment";
 
     public static final int PERMISSION_STORAGE_RESULT = 1501;
     private static final int VOICE_FILE_SELECT = 1002;
@@ -94,7 +95,7 @@ public class SettingsFragment extends Fragment {
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.alert_layout, (ViewGroup) getView(), false);
         // Set up the input
         ((TextView) viewInflated.findViewById(R.id.text)).setText(text);
-        final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+        final EditText input = viewInflated.findViewById(R.id.input);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         builder.setView(viewInflated);
 
@@ -161,6 +162,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setRetainInstance(true);
 
         setDefaultValues();
 
@@ -175,7 +177,7 @@ public class SettingsFragment extends Fragment {
 
         // DIAL PAD CODE
         String code = db.getString(C.PREF_DIAL_LAUNCHER);
-        if (Algorithms.isEmpty(code)) {
+        if (Common.isEmpty(code)) {
             launchCodeInput.setHint(C.DIAL_PAD_LAUNCH_DEF_CODE);
         } else {
             launchCodeInput.setEnabled(true);
@@ -353,7 +355,7 @@ public class SettingsFragment extends Fragment {
                     String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
                     String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
-                    if(Algorithms.isEmpty(artist) && Algorithms.isEmpty(title))
+                    if(Common.isEmpty(artist) && Common.isEmpty(title))
                         voiceFileInput.setText(U.fileNameFromUrl(path));
                     else
                         voiceFileInput.setText(artist + " | " + title);

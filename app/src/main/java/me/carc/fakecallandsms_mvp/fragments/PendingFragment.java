@@ -32,6 +32,7 @@ import me.carc.fakecallandsms_mvp.model.FakeContact;
 public class PendingFragment extends Fragment {
 
     private static final String TAG = PendingFragment.class.getName();
+    public static final String TAG_ID = "PendingFragment";
 
     private PendingAdapter adapter;
 
@@ -52,6 +53,7 @@ public class PendingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.pending_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setRetainInstance(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

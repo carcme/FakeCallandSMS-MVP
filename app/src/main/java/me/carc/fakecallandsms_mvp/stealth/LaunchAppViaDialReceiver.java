@@ -9,7 +9,7 @@ import android.widget.Toast;
 import me.carc.fakecallandsms_mvp.MainTabActivity;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 
 /**
  * Launch from the dial pad
@@ -26,7 +26,7 @@ public class LaunchAppViaDialReceiver extends BroadcastReceiver {
         String dialPadNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
         String dialCode = db.getString(C.PREF_DIAL_LAUNCHER);
 
-        if(Algorithms.isEmpty(dialCode))
+        if(Common.isEmpty(dialCode))
             dialCode = C.DIAL_PAD_LAUNCH_DEF_CODE;
 
         if (dialPadNumber.equals(dialCode)) {

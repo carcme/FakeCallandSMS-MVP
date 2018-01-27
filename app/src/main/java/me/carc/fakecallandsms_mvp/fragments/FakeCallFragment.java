@@ -52,6 +52,8 @@ import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 public class FakeCallFragment extends Fragment {
 
     private static final String TAG = FakeCallFragment.class.getName();
+    public static final String TAG_ID = "FakeCallFragment";
+
     public static final int PERMISSION_WRITE_CALL_LOG_RESULT = 1502;
 
     final Calendar calendarInst = Calendar.getInstance();
@@ -137,7 +139,7 @@ public class FakeCallFragment extends Fragment {
         try {
             callListener = ctx != null ? (FakeCallListener)ctx : (FakeCallListener)getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement FakeCallListener callbacks");
+            throw new ClassCastException(TAG + " must implement FakeCallListener callbacks");
         }
     }
 
@@ -152,6 +154,7 @@ public class FakeCallFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fakecall_square_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setRetainInstance(true);
 
         setDefaultValues();
 

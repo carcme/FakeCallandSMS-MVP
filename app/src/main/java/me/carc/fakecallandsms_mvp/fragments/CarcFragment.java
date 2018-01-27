@@ -1,5 +1,6 @@
 package me.carc.fakecallandsms_mvp.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +29,8 @@ import me.carc.fakecallandsms_mvp.model.CarcAppsMenu;
 public class CarcFragment extends Fragment {
 
     private static final String TAG = CarcFragment.class.getName();
+    public static final String TAG_ID = "CarcFragment";
+
     private final static String MARKET_REF = "&referrer=utm_source%3Dme.carc.fakecallandsms_mvp";
 
     public interface ClickListener {
@@ -40,8 +44,17 @@ public class CarcFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.carc_fragment, container, false);
+
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppThemeDark);
+        // clone the inflater using the ContextThemeWrapper
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        // inflate the layout using the cloned inflater, not default inflater
+        View rootView = localInflater.inflate(R.layout.carc_fragment, container, false);
+
+//        View rootView = inflater.inflate(R.layout.carc_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setRetainInstance(true);
+
 
         CarcAppsAdapter adapter = new CarcAppsAdapter(buildMenuItems(), new ClickListener() {
             @Override

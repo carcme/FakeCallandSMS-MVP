@@ -53,7 +53,7 @@ public class FakeContact {
         this.smsType = C.SMS_INBOX;
         this.callType = C.CALL_INCOMING;
         this.date = 0;
-        this.time = 0;
+        this.time = System.currentTimeMillis();
     }
 
     public FakeContact(int index, int callType, String name, String number, String image, long date, long time,

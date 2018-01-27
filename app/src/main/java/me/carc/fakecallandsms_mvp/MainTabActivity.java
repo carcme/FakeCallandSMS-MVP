@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codemybrainsout.ratingdialog.RatingDialog;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -37,7 +40,7 @@ import me.carc.fakecallandsms_mvp.app.App;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.CallLogUtil;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Algorithms;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.db.AppDatabase;
 import me.carc.fakecallandsms_mvp.fragments.CarcFragment;
@@ -60,10 +63,15 @@ public class MainTabActivity extends Base implements
     TinyDB tinyDb;
     FakeContact fakeContact;
 
-    @BindView(R.id.tabs)        TabLayout tabLayout;
-    @BindView(R.id.container)   ViewPager mViewPager;
-    @BindView(R.id.fabMain)     FloatingActionButton fabMain;
-    @BindView(R.id.toolbar)     Toolbar toolbar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
+    @BindView(R.id.fabMain)
+    FloatingActionButton fabMain;
+    @Nullable
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     /**
      * SMS Callbacks
@@ -71,6 +79,10 @@ public class MainTabActivity extends Base implements
 
     @Override
     public void onSmsContact(String name, String number, String image) {
+        if(fakeContact == null) {
+            Answers.getInstance().logCustom(new CustomEvent("onSmsContact:: FakeContact is null"));
+            fakeContact = new FakeContact();
+        }
         fakeContact.setName(name);
         fakeContact.setNumber(number);
         fakeContact.setImage(image);
@@ -98,6 +110,10 @@ public class MainTabActivity extends Base implements
 
     @Override
     public void onSetContactDetails(String name, String number, String image) {
+        if(fakeContact == null) {
+            Answers.getInstance().logCustom(new CustomEvent("onSetContactDetails:: FakeContact is null"));
+            fakeContact = new FakeContact();
+        }
         fakeContact.setName(name);
         fakeContact.setNumber(number);
         fakeContact.setImage(image);
@@ -133,7 +149,6 @@ public class MainTabActivity extends Base implements
         fakeContact.setCallType(type);
     }
 
-
     @OnClick(R.id.fabMain)
     public void startSend() {
         fakeContact.debug();
@@ -152,41 +167,14 @@ public class MainTabActivity extends Base implements
 
                     addCallToDb();
 
-                } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
-
-                    Random r = new Random();
-                    int min = 1000;
-                    int max = 20000;
-                    int duration = r.nextInt(max - min + 1) + min;
-
-                    CallLogUtil.addCallToLog(
-                            getApplicationContext(),
-                            fakeContact.getName(),
-                            fakeContact.getNumber(),
-                            duration,
-                            fakeContact.getCallType(),
-                            fakeContact.getTime());
-
-                    Snackbar snackbar = Snackbar.make(fabMain, "Call added to call history", Snackbar.LENGTH_LONG)
-                            .setActionTextColor(Color.BLACK)
-                            .setAction("Show", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent showCallLog = new Intent();
-                                    showCallLog.setAction(Intent.ACTION_VIEW);
-                                    showCallLog.setType(CallLog.Calls.CONTENT_TYPE);
-                                    startActivity(showCallLog);
-                                }
-                            });
-                    View view = snackbar.getView();
-                    view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
-                    snackbar.show();
+                } else {
+                    generateCallLog();
                 }
                 break;
 
             case 1:
 
-                if (Algorithms.isEmpty(fakeContact.getNumber()) || Algorithms.isEmpty(fakeContact.getSmsMsg())) {
+                if (Common.isEmpty(fakeContact.getNumber()) || Common.isEmpty(fakeContact.getSmsMsg())) {
 //                    showWarningDialog("Missing Infomation", "Please check you have entered a message and selected a contact.");
                     Snackbar snackbar = Snackbar.make(fabMain, "Please check you have entered a message and selected a contact", Snackbar.LENGTH_LONG).setAction("Action", null);
                     View view = snackbar.getView();
@@ -207,6 +195,44 @@ public class MainTabActivity extends Base implements
                 View view = snackbar.getView();
                 view.setBackgroundColor(ContextCompat.getColor(this, R.color.accent));
                 snackbar.show();
+        }
+    }
+
+    private void generateCallLog() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+            Random r = new Random();
+            int min = 4000;
+            int max = 30000;
+            int duration = r.nextInt(max - min + 1) + min;
+
+            if(fakeContact.getTime() == 0)
+                fakeContact.setTime(System.currentTimeMillis());
+
+            CallLogUtil.addCallToLog(
+                    getApplicationContext(),
+                    fakeContact.getName(),
+                    fakeContact.getNumber(),
+                    duration,
+                    fakeContact.getCallType(),
+                    fakeContact.getTime());
+
+            Snackbar snackbar = Snackbar.make(fabMain, "Call added to call history", Snackbar.LENGTH_LONG)
+                    .setActionTextColor(Color.BLACK)
+                    .setAction("Show", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent showCallLog = new Intent();
+                            showCallLog.setAction(Intent.ACTION_VIEW);
+                            showCallLog.setType(CallLog.Calls.CONTENT_TYPE);
+                            startActivity(showCallLog);
+                        }
+                    });
+            View view = snackbar.getView();
+            view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
+            snackbar.show();
+        } else {
+            final String[] LOCATION_PERMISSIONS = {Manifest.permission.WRITE_CALL_LOG};
+            ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, FakeCallFragment.PERMISSION_WRITE_CALL_LOG_RESULT);
         }
     }
 
@@ -292,7 +318,7 @@ public class MainTabActivity extends Base implements
         else
             init();
 
-        if(getIntent().hasExtra(EXTRA_RESTART_STR)) {
+        if (getIntent().hasExtra(EXTRA_RESTART_STR)) {
             int stringId = getIntent().getIntExtra(EXTRA_RESTART_STR, R.string.fake_call_started);
 
             Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);
@@ -358,7 +384,7 @@ public class MainTabActivity extends Base implements
 
     private void feedbackForm() {
         U.emailFeedbackForm(this);
-   }
+    }
 
     /**
      * Check permissions previously granted
@@ -389,13 +415,17 @@ public class MainTabActivity extends Base implements
                 init();
                 break;
 
+            case FakeCallFragment.PERMISSION_WRITE_CALL_LOG_RESULT:
+                generateCallLog();
+                break;
+
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
     private void addToPendingFragment(FakeContact contact) {
-        PendingFragment pending = (PendingFragment)((TabbedPagerAdapter)mViewPager.getAdapter()).getItem(2);
+        PendingFragment pending = (PendingFragment) ((TabbedPagerAdapter) mViewPager.getAdapter()).getItem(2);
         pending.addNewPending(contact);
     }
 
@@ -410,7 +440,6 @@ public class MainTabActivity extends Base implements
         mSectionsPagerAdapter.addFragment(new PendingFragment(), "Schedule");
         mSectionsPagerAdapter.addFragment(new SettingsFragment(), "Settings");
         mSectionsPagerAdapter.addFragment(new CarcFragment(), "Extras");
-
 
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);

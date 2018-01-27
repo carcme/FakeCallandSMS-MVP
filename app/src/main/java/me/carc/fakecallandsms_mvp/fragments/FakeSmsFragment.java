@@ -44,6 +44,7 @@ import static android.app.Activity.RESULT_OK;
 public class FakeSmsFragment extends Fragment {
 
     private static final String TAG = FakeSmsFragment.class.getName();
+    public static final String TAG_ID = "FakeSmsFragment";
 
     Calendar calPicker = Calendar.getInstance();
 
@@ -59,8 +60,9 @@ public class FakeSmsFragment extends Fragment {
     @BindView(R.id.smsCounter)
     TextView smsCounter;
 
+
     @BindView(R.id.contactBtn)
-    Button contactBtn;
+    View contactBtn;
 
     @BindView(R.id.toggleInbox)
     ToggleButton toggleInbox;
@@ -127,7 +129,7 @@ public class FakeSmsFragment extends Fragment {
         try {
             smsListener = ctx != null ? (FakeSmsListener) ctx : (FakeSmsListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(ctx.toString() + " must implement FakeCallListener callbacks");
+            throw new ClassCastException(TAG + " must implement FakeCallListener callbacks");
         }
     }
 
@@ -143,6 +145,7 @@ public class FakeSmsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fakesms_square_fragment, container, false);
         ButterKnife.bind(this, rootView);
+        setRetainInstance(true);
 
         // Init default setting
         toggleInbox.setChecked(true);
@@ -191,8 +194,8 @@ public class FakeSmsFragment extends Fragment {
 //        contactName.setVisibility(View.GONE);
         if (start > 0)
             contactNameTV.setText("");
-        contactBtn.setText(R.string.contacts);
-        ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlDisabled, 1);
+        //contactBtn.setText(R.string.contacts);
+//        ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlDisabled, 1);
 
         smsListener.onSmsContact("", msg.toString(), "");
     }
@@ -276,8 +279,8 @@ public class FakeSmsFragment extends Fragment {
                     smsNumber.setText(number);
 
                     // show contact has been set
-                    contactBtn.setText(R.string.set);
-                    ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
+//                    contactBtn.setText(R.string.set);
+//                    ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
 
                     smsListener.onSmsContact(name, number, image);
                 }

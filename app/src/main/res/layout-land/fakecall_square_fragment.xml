@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/contactBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_weight="1"
+                android:background="@drawable/custom_border"
+                android:contentDescription="@string/content_description"
+                android:drawableTop="@drawable/ic_person"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/contacts"
+                android:textColor="@color/controlDisabled"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/ringtoneBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/custom_border"
+                android:drawableTop="@drawable/ic_music_lib"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/select_ringtone"
+                android:textColor="@color/controlDisabled"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/dateBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_weight="1"
+                android:background="@drawable/custom_border"
+                android:drawableTop="@drawable/ic_date"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/date"
+                android:textColor="@color/controlDisabled"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/timeBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_weight="1"
+                android:background="@drawable/custom_border"
+                android:drawableTop="@drawable/ic_alarm"
+                android:padding="@dimen/margin_standard"
+                android:text="@string/time"
+                android:textColor="@color/controlDisabled"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:background="@drawable/custom_border"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:id="@+id/callTypeRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_small">
+
+                <RadioButton
+                    android:id="@+id/incomingRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:drawableTop="@drawable/ic_call_in"
+                    android:text="Incoming"
+                    android:textColor="@color/controlDisabled"
+                    android:textSize="16sp"/>
+
+                <RadioButton
+
+                    android:id="@+id/outgoingRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_call_out"
+                    android:text="Outgoing"
+                    android:textColor="@color/controlDisabled"
+                    android:textSize="16sp"/>
+
+                <RadioButton
+                    android:id="@+id/missedRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_call_missed"
+                    android:text="Missed"
+                    android:textColor="@color/controlDisabled"
+                    android:textSize="16sp"/>
+            </RadioGroup>
+
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/divider"
+                  android:layout_width="1dp"
+                  android:layout_height="match_parent"
+                  android:background="@color/colorAccent"/>
+
+            <ToggleButton
+                android:id="@+id/quickTimeBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_add"
+                android:textColor="@color/controlDisabled"
+                android:textOff="@string/quick_time"
+                android:textSize="16sp"/>
+
+
+            <ToggleButton
+                android:id="@+id/toggleVibrate"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_vibrate"
+                android:textColor="@color/controlDisabled"
+                android:textOff="@string/vibrate"
+                android:textSize="16sp"/>
+
+            <ToggleButton
+                android:id="@+id/toggleLogs"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:drawableTop="@drawable/ic_time"
+                android:textColor="@color/controlDisabled"
+                android:textOff="@string/call_logs"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
