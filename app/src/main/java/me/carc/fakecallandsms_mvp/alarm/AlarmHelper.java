@@ -10,6 +10,7 @@ import java.util.Calendar;
 import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
+import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
 import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
@@ -44,13 +45,20 @@ public class AlarmHelper {
 //        Intent intentAlarm = new Intent(mContext, me.carc.fakecallandsms_mvp.CallIncomingActivity.class);
 
         Intent intentAlarm = getCallIntent();
-        intentAlarm.putExtra(C.NAME, contact.getName());
-        intentAlarm.putExtra(C.NUMBER, contact.getNumber());
-        intentAlarm.putExtra(C.IMAGE, contact.getImage());
-        intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
-        intentAlarm.putExtra(C.DURATION, contact.getDuration());
-        intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
-        intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
+        if(!Common.isEmpty(contact.getName()))
+            intentAlarm.putExtra(C.NAME, contact.getName());
+        if(!Common.isEmpty(contact.getNumber()))
+            intentAlarm.putExtra(C.NUMBER, contact.getNumber());
+        if(!Common.isEmpty(contact.getImage()))
+            intentAlarm.putExtra(C.IMAGE, contact.getImage());
+        if(contact.isVibrate())
+            intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
+        if(contact.getDuration() > 0)
+            intentAlarm.putExtra(C.DURATION, contact.getDuration());
+        if(!contact.useCallLogs())
+            intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
+        if(!Common.isEmpty(contact.getRingtone()))
+            intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(mContext, contact.getIndex(), intentAlarm,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
@@ -71,7 +79,7 @@ public class AlarmHelper {
         // send notification now
         if (contact.getTime() < System.currentTimeMillis()) {
             intentSms.setClass(mContext, SmsIntentService.class);
-            intentSms.putExtra(C.TIME, contact.getTime());
+            intentSms.putExtra(C.TIME, contact.getTime() != 0 ? contact.getTime() : System.currentTimeMillis());
             mContext.startService(intentSms);
 
             FakeSmsReceiver.smsNotification(mContext, intentSms);

@@ -20,7 +20,6 @@ public class CallAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
-
         CarcWakeLockHolder wl = new CarcWakeLockHolder(ctx);
         wl.aquireWakeLock();
 

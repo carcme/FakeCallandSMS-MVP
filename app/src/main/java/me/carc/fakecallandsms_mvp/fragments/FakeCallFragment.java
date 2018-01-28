@@ -229,7 +229,8 @@ public class FakeCallFragment extends Fragment {
             dateBtn.setText(R.string.date);
             ViewUtils.setButtonDrawableColor(getActivity(), dateBtn, R.color.controlDisabled, 1);
 
-            long add7Mins = calendarInst.getTime().getTime() + (C.MINUTE_MILLIS * 7);
+            String quickTimeStr = TinyDB.getTinyDB().getString(C.PREF_QUICK_TIME, String.valueOf(C.QUICK_TIME_DEFAULT));
+            long add7Mins = calendarInst.getTime().getTime() + (C.MINUTE_MILLIS * Integer.valueOf(quickTimeStr));
             callListener.onSetTime(add7Mins);
             callListener.onSetDate(0);
 
@@ -305,8 +306,7 @@ public class FakeCallFragment extends Fragment {
         if (requestCode == C.PICK_CONTACT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
-                assert cursor != null;
-                if (cursor.moveToFirst()) {
+                if (cursor != null && cursor.moveToFirst()) {
                     // Fetch other Contact details to use
                     String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -316,8 +316,8 @@ public class FakeCallFragment extends Fragment {
                     ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
 
                     callListener.onSetContactDetails(name, number, image);
+                    cursor.close();
                 }
-                cursor.close();
             }
         } else if (requestCode == C.PENDING_INTENT_RINGTONE && resultCode == Activity.RESULT_OK) {
             if (data != null) {

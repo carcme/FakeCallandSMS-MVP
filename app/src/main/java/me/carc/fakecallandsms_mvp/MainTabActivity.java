@@ -157,11 +157,6 @@ public class MainTabActivity extends Base implements
             case 0:
 
                 if (fakeContact.getCallType() == C.CALL_INCOMING) {
-                    Snackbar snackbar = Snackbar.make(fabMain, R.string.fake_call_started, Snackbar.LENGTH_LONG);
-                    View view = snackbar.getView();
-                    view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
-                    snackbar.show();
-
                     String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
                     fakeContact.setDuration(TextUtils.isEmpty(constant) ? C.MAX_CALL_DURATION_DEFAULT : Integer.valueOf(constant));
 
@@ -175,7 +170,6 @@ public class MainTabActivity extends Base implements
             case 1:
 
                 if (Common.isEmpty(fakeContact.getNumber()) || Common.isEmpty(fakeContact.getSmsMsg())) {
-//                    showWarningDialog("Missing Infomation", "Please check you have entered a message and selected a contact.");
                     Snackbar snackbar = Snackbar.make(fabMain, "Please check you have entered a message and selected a contact", Snackbar.LENGTH_LONG).setAction("Action", null);
                     View view = snackbar.getView();
                     view.setBackgroundColor(ContextCompat.getColor(this, R.color.accent));
@@ -205,16 +199,13 @@ public class MainTabActivity extends Base implements
             int max = 30000;
             int duration = r.nextInt(max - min + 1) + min;
 
-            if(fakeContact.getTime() == 0)
-                fakeContact.setTime(System.currentTimeMillis());
-
             CallLogUtil.addCallToLog(
                     getApplicationContext(),
-                    fakeContact.getName(),
-                    fakeContact.getNumber(),
+                    Common.isEmpty(fakeContact.getName()) ? "Unknown" : fakeContact.getName(),
+                    Common.isEmpty(fakeContact.getNumber()) ? "Unknown" : fakeContact.getNumber(),
                     duration,
                     fakeContact.getCallType(),
-                    fakeContact.getTime());
+                    fakeContact.getTime() != 0 ? fakeContact.getTime() : System.currentTimeMillis());
 
             Snackbar snackbar = Snackbar.make(fabMain, "Call added to call history", Snackbar.LENGTH_LONG)
                     .setActionTextColor(Color.BLACK)
@@ -317,8 +308,13 @@ public class MainTabActivity extends Base implements
             accessAllowed();
         else
             init();
+    }
 
-        if (getIntent().hasExtra(EXTRA_RESTART_STR)) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().hasExtra(EXTRA_RESTART_STR)) {
             int stringId = getIntent().getIntExtra(EXTRA_RESTART_STR, R.string.fake_call_started);
 
             Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);

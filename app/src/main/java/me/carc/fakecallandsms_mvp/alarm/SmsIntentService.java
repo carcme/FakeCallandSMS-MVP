@@ -2,16 +2,13 @@ package me.carc.fakecallandsms_mvp.alarm;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 
-import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
@@ -30,20 +27,8 @@ public class SmsIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Intent notificationIntent = new Intent(this, FakeSmsReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this, "MY_CHANNEL")
-                .setSmallIcon(R.drawable.ic_sms)
-                .setContentTitle("My Awesome App")
-                .setContentText("Doing some work...")
-                .setContentIntent(pendingIntent).build();
-
         startForeground(NOTIFY_ID, new Notification());
     }
-
-
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -51,9 +36,8 @@ public class SmsIntentService extends IntentService {
         if(intent == null)
             return;
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26)
             FakeSmsReceiver.smsNotification(getApplicationContext(), intent);
-        }
 
         String number = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.NUMBER) : "Unknown";
         String message = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.MESSAGE) : "Unknown";

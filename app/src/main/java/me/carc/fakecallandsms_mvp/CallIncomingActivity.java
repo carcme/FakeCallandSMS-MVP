@@ -245,7 +245,6 @@ public class CallIncomingActivity extends Base {
 
         if (photoUri != null) {
             imageContact.setVisibility(View.VISIBLE);
-
             imageContact.setImageURI(Uri.parse(photoUri));
 
         } else {
@@ -335,11 +334,6 @@ public class CallIncomingActivity extends Base {
         } catch (Exception e) {
             Toast.makeText(this, "Have you selected a ring tone?", Toast.LENGTH_LONG).show();
         }
-
-        int constant = C.QUICK_TIME_DEFAULT;
-        String defaultValue = String.valueOf(constant);
-        tinyDb.getString(C.PREF_QUICK_TIME, defaultValue);
-
         hangupHandler.postDelayed(hangup, getIntent().getLongExtra(C.DURATION, C.MAX_CALL_DURATION_DEFAULT * C.MINUTE_MILLIS));
     }
 
@@ -421,7 +415,6 @@ public class CallIncomingActivity extends Base {
         if (voicePlayer != null && voicePlayer.isPlaying()) {
             voicePlayer.stop();
         }
-
     }
 
     private void returnToMain() {
@@ -450,7 +443,6 @@ public class CallIncomingActivity extends Base {
     @Override
     public void onDetachedFromWindow() {
         stopVoice();
-
         super.onDetachedFromWindow();
     }
 
@@ -461,9 +453,8 @@ public class CallIncomingActivity extends Base {
      */
     private void logCalls(int callType) {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED)
             return;
-        }
 
         CallLogUtil.addCallToLog(
                 getApplicationContext(),
