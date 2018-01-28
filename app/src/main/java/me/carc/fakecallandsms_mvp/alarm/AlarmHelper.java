@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
+import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
@@ -86,20 +87,20 @@ public class AlarmHelper {
 
     private Intent getCallIntent() {
         Intent intentAlarm = new Intent();
-        intentAlarm.setClassName("me.carc.fakecallandsms_mvp", "me.carc.fakecallandsms_mvp.CallIncomingActivity");
+        intentAlarm.setClassName(mContext.getPackageName(), CallIncomingActivity.class.getName());
         return intentAlarm;
     }
 
     private Intent getSmsIntent(FakeContact fakeContact) {
-
-        Intent i = new Intent(mContext.getApplicationContext(), FakeSmsReceiver.class);
-        i.putExtra(C.NAME, fakeContact.getName());
-        i.putExtra(C.NUMBER, fakeContact.getNumber());
-        i.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
-        i.putExtra(C.IMAGE, fakeContact.getImage());
-        i.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
-        i.putExtra(C.SMS_DEFAULT_APP, TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
-        return i;
+        Intent intentSMS = new Intent();
+        intentSMS.setClassName(mContext.getPackageName(), FakeSmsReceiver.class.getName());
+        intentSMS.putExtra(C.NAME, fakeContact.getName());
+        intentSMS.putExtra(C.NUMBER, fakeContact.getNumber());
+        intentSMS.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
+        intentSMS.putExtra(C.IMAGE, fakeContact.getImage());
+        intentSMS.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
+        intentSMS.putExtra(C.SMS_DEFAULT_APP, TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
+        return intentSMS;
     }
 
     public void removeAlarm(int id, FakeContact contact) {

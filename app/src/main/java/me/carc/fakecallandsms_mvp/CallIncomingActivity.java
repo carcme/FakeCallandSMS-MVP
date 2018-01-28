@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
@@ -440,9 +439,9 @@ public class CallIncomingActivity extends Base {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(CallIncomingActivity.this, MainTabActivity.class);
+//                Intent intent = new Intent(CallIncomingActivity.this, MainTabActivity.class);
                 finish();
-                startActivity(intent);
+//                startActivity(intent);
             }
         }, SPLASH_DISPLAY_LENGTH);
     }

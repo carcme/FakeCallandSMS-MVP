@@ -10,15 +10,13 @@ import android.support.v7.app.NotificationCompat;
 
 import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.R;
-import me.carc.fakecallandsms_mvp.common.C;
-import me.carc.fakecallandsms_mvp.common.utils.U;
 
 /**
  * Catch an alarm and pass to intent service
  */
 public class CallAlarmReceiver extends BroadcastReceiver {
 
-    private static final String TAG = C.DEBUG + U.getTag();
+    private static final String TAG = CallAlarmReceiver.class.getName();
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
@@ -33,7 +31,6 @@ public class CallAlarmReceiver extends BroadcastReceiver {
         ctx.startActivity(callIntentService);
 
         sendNotification(ctx);
-
     }
 
     private void sendNotification(Context context) {
