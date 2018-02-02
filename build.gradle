@@ -38,7 +38,7 @@ ext {
     gsonVersion = '2.7'
     roomVersion = '1.0.0-alpha7'
 
-    butterKnifeVersion = '8.5.1'
+    butterKnifeVersion = '8.8.1'
     placeholderviewVersion = '0.6.1'
 
     //Test dependencies

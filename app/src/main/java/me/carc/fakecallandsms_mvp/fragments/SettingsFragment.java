@@ -172,7 +172,6 @@ public class SettingsFragment extends Fragment {
     private void setDefaultValues() {
 
         TinyDB db = TinyDB.getTinyDB();
-        int constant;
         String defaultValue;
 
         // DIAL PAD CODE
@@ -195,13 +194,11 @@ public class SettingsFragment extends Fragment {
             ViewUtils.setButtonDrawableColor(getActivity(), voiceSmsRingtone, R.color.controlSet, 1);
 
         /// CALL DURATION
-        constant = C.MAX_CALL_DURATION_DEFAULT;
-        defaultValue = String.valueOf(constant);
+        defaultValue = String.valueOf(C.MAX_CALL_DURATION_DEFAULT);
         callDurationInput.setText(db.getString(C.PREF_MAX_CALL_DURATION, defaultValue));
 
         // QUICK TIME
-        constant = C.QUICK_TIME_DEFAULT;
-        defaultValue = String.valueOf(constant);
+        defaultValue = String.valueOf(C.QUICK_TIME_DEFAULT);
         quickTimeInput.setText(db.getString(C.PREF_QUICK_TIME, defaultValue));
 
 
@@ -309,9 +306,14 @@ public class SettingsFragment extends Fragment {
 
     @OnTextChanged(R.id.quickTimeInput)
     void onQuickTimeTextChanged(CharSequence msg, int start) {
-//        TinyDB.getTinyDB().putString(C.PREF_QUICK_TIME, msg.toString());
+        if(msg.length() == 0 || Integer.valueOf(msg.toString()) == 0) {
+            String currentValue = TinyDB.getTinyDB().getString(C.PREF_QUICK_TIME, String.valueOf(C.QUICK_TIME_DEFAULT));
+            if(currentValue.equals("0"))
+                currentValue = String.valueOf(C.QUICK_TIME_DEFAULT);
+            quickTimeInput.setText(currentValue);
+        } else
+            TinyDB.getTinyDB().putString(C.PREF_QUICK_TIME, msg.toString());
     }
-
 
     @OnTextChanged(R.id.launchCodeInput)
     void onLaunchCodeTextChanged(CharSequence msg, int start) {
@@ -345,6 +347,11 @@ public class SettingsFragment extends Fragment {
             case VOICE_FILE_SELECT:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     String path = U.getPath(getActivity(), Uri.parse(data.getDataString()));
+
+                    if(TextUtils.isEmpty(path)) {
+                        Toast.makeText(getActivity(), "Can not read file path!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     Uri uri = Uri.parse(data.getDataString());
 

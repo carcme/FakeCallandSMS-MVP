@@ -23,8 +23,8 @@ android {
         applicationId "me.carc.fakecallandsms_mvp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.0.3"
+        versionCode 15
+        versionName "1.0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -64,6 +64,7 @@ dependencies {
     // code generator for view
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+//    apt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"

@@ -71,6 +71,7 @@ public class CarcFragment extends Fragment {
 
     private List<CarcAppsMenu> buildMenuItems() {
         List<CarcAppsMenu> items = new LinkedList<>();
+        items.add(CarcAppsMenu.ITIMER);
         items.add(CarcAppsMenu.AGD);
         items.add(CarcAppsMenu.BTOWN);
         items.add(CarcAppsMenu.BBOOKS);

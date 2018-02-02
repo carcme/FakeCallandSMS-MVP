@@ -18,7 +18,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.crashlytics.android.answers.Answers;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import io.fabric.sdk.android.services.common.Crash;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
@@ -265,26 +269,25 @@ public class FakeSmsFragment extends Fragment {
         if (requestCode == C.PICK_CONTACT && resultCode == RESULT_OK) {
             if (data != null) {
                 Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
-                assert cursor != null;
-                if (cursor.moveToFirst()) {
-                    // Fetch other Contact details to use
-                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+                if(cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        // Fetch other Contact details to use
+                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
 
-                    // show the contact name
-                    contactNameTV.setText(name);
+                        // show the contact name
+                        contactNameTV.setText(name);
 
-                    // set the contact number
-                    smsNumber.setText(number);
-
-                    // show contact has been set
-//                    contactBtn.setText(R.string.set);
-//                    ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
-
-                    smsListener.onSmsContact(name, number, image);
+                        // set the contact number
+                        smsNumber.setText(number);
+                        smsListener.onSmsContact(name, number, image);
+                    }
+                    cursor.close();
+                } else {
+                    Toast.makeText(getActivity(), "There was an error getting the Contact information", Toast.LENGTH_SHORT).show();
+                    Answers.getInstance().onException(new Crash.LoggedException(TAG, "cursor not NULL but can not moveToFirst()"));
                 }
-                cursor.close();
             }
         }
     }

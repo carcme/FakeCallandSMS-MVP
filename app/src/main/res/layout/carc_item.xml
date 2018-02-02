@@ -41,9 +41,9 @@
             android:id="@+id/appDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/appImage"
             android:layout_below="@id/appTitle"
             android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/appImage"
             android:maxLines="4"
             android:textSize="@dimen/text_small_body"
             tools:text="Address Strasse, 10115, Berlin and some more tec   xt fdfas sd sa das d s a da s s s ss"/>

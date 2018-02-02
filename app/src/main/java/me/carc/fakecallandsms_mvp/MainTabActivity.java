@@ -301,6 +301,10 @@ public class MainTabActivity extends Base implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_tab);
+        ButterKnife.setDebug(true);
+        ButterKnife.bind(this);
+
         fakeContact = new FakeContact();
         tinyDb = new TinyDB(this);
 
@@ -315,7 +319,11 @@ public class MainTabActivity extends Base implements
         super.onResume();
 
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().hasExtra(EXTRA_RESTART_STR)) {
+            getIntent().removeExtra(EXTRA_RESTART_STR);
             int stringId = getIntent().getIntExtra(EXTRA_RESTART_STR, R.string.fake_call_started);
+
+            if(fabMain == null)
+                Log.e(TAG, "onResume: Butterknife didn't work... fabMain is null");
 
             Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);
             View view = snackbar.getView();
@@ -328,13 +336,8 @@ public class MainTabActivity extends Base implements
      * Initialise the view - may require permissions first
      */
     private void init() {
-        setContentView(R.layout.activity_main_tab);
-        ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
-
         setupViewPager();
-
         showRatingDialog();
     }
 

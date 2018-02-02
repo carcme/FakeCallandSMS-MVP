@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,6 +231,10 @@ public class FakeCallFragment extends Fragment {
             ViewUtils.setButtonDrawableColor(getActivity(), dateBtn, R.color.controlDisabled, 1);
 
             String quickTimeStr = TinyDB.getTinyDB().getString(C.PREF_QUICK_TIME, String.valueOf(C.QUICK_TIME_DEFAULT));
+            if(TextUtils.isEmpty(quickTimeStr)) {
+                TinyDB.getTinyDB().putString(C.PREF_QUICK_TIME, String.valueOf(C.QUICK_TIME_DEFAULT));
+                quickTimeStr = String.valueOf(C.QUICK_TIME_DEFAULT);
+            }
             long add7Mins = calendarInst.getTime().getTime() + (C.MINUTE_MILLIS * Integer.valueOf(quickTimeStr));
             callListener.onSetTime(add7Mins);
             callListener.onSetDate(0);

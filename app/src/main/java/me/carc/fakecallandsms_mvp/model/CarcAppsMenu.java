@@ -9,6 +9,8 @@ import me.carc.fakecallandsms_mvp.R;
  */
 
 public enum CarcAppsMenu {
+
+    ITIMER(R.drawable.app_image_interval_timer, R.string.appTitleITimer, R.string.appDescITimer, "carcintervaltimer"),
     BTOWN(R.drawable.app_image_btown, R.string.appTitleBtown, R.string.appDescBtown, "btown"),
     AGD(R.drawable.app_image_agd, R.string.appTitleAGD, R.string.appDescAGB, "anygivendate"),
     BBOOKS(R.drawable.app_image_blackbooks, R.string.appTitleBlackBooks, R.string.appDescBlackBooks, "blackbooks");
