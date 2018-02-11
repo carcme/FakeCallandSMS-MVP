@@ -46,7 +46,10 @@
     <string name="settings_summary_rate">Leave a rating or some feedback.</string>
     <string name="feedback_request_title">Send Feedback</string>
     <string name="feedback_request_hint">Most Fake Call features are suggestions, let me know how to improve it more</string>
-    <string name="ratings_request_title">Love to know what you think of the app</string>
+    <string name="ratings_request_title">Ratings really matter… would you leave some stars?</string>
+
+    <string name="feature_request_title">Unsupported Feature</string>
+    <string name="feature_request">\'%s\' feature not available on this device. Please check and send the following information</string>
 
     <string name="sms_scheduled">Fake SMS Scheduled</string>
     <string name="reset_sms_application_on_exit">Reset SMS application on exit</string>
@@ -57,7 +60,14 @@
     <string name="feedback_request_send">Send</string>
     <string name="feedback_request_cancel">Cancel</string>
     <string name="feedbackChooserTitle">Send Feedback Via</string>
-    <string name="lib_thanks">GlowPadBackport - Incoming call library\n\nRatingDialog (modified) - Rating library from codemybrainsout</string>
+    <string name="lib_thanks">Butter Knife\n  - Android views Binding Library
+        \n\n
+        GlowPadBackport\n  - Incoming call library
+        \n\n
+        RatingDialog (modified)\n  - Rating library from codemybrainsout
+        \n\n
+        ckChangeLog\n  - Android Library to display a Change Log
+    </string>
 
 
     <string name="carc_app_base_url" formatted="false">https://play.google.com/store/apps/details?id=me.carc.%s</string>
@@ -76,8 +86,14 @@
 
     <string name="wrong_screen_error_msg">You can\'t start a phone call or SMS from this screen!!</string>
     <string name="added_db_entry">Added to Database</string>
-    <string name="close_when_call_set">Close when call set</string>
+    <string name="close_when_call_set">Close when call or SMS set</string>
     <string name="fake_call_started">Fake Call Started</string>
 
+
+    <!--CHANGELOG STATIC STRINGS-->
+    <string name="changelog_full_title">Change Log</string>
+    <string name="changelog_title">What\'s New</string>
+    <string name="changelog_ok_button">OK</string>
+    <string name="changelog_show_full">More…</string>
 
 </resources>

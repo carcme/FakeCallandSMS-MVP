@@ -23,8 +23,8 @@ android {
         applicationId "me.carc.fakecallandsms_mvp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "1.0.5"
+        versionCode 19
+        versionName "1.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -79,4 +79,8 @@ dependencies {
 
     compile "android.arch.persistence.room:runtime:$rootProject.roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+
+
+    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
+
 }

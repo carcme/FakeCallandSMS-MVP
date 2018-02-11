@@ -69,7 +69,7 @@ public class AlarmHelper {
         if (contact.getTime() > now)
             setAlarm(mContext, contact.getTime(), pendingIntent);
         else
-            setAlarm(mContext, now + 2000, pendingIntent);
+            setAlarm(mContext, now + 3000, pendingIntent);
     }
 
     public void setSmsAlarmActivity(FakeContact contact) {

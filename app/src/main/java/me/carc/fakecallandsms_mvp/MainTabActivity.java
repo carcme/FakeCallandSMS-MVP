@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.cketti.library.changelog.ChangeLog;
 import me.carc.fakecallandsms_mvp.adapter.TabbedPagerAdapter;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
 import me.carc.fakecallandsms_mvp.app.App;
@@ -151,7 +152,7 @@ public class MainTabActivity extends Base implements
 
     @OnClick(R.id.fabMain)
     public void startSend() {
-        fakeContact.debug();
+        Log.i(TAG, "startSend: "+fakeContact.debug());
 
         switch (mViewPager.getCurrentItem()) {
             case 0:
@@ -235,14 +236,15 @@ public class MainTabActivity extends Base implements
 
                 fakeContact.setIndex(U.currentTimeInteger(fakeContact.getTime()));
                 fakeContact.setDatabaseType("CALL (RECEIVE)");
-                AlarmHelper.getInstance().setCallAlarmActivity(fakeContact);
 
-                db.fakeContactDao().insert(fakeContact);
+                if(fakeContact.getTime() > 0)
+                    db.fakeContactDao().insert(fakeContact);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         addToPendingFragment(fakeContact);
+                        AlarmHelper.getInstance().setCallAlarmActivity(fakeContact);
                         restartActivity(R.string.fake_call_started);
                     }
                 });
@@ -274,10 +276,12 @@ public class MainTabActivity extends Base implements
     }
 
     private void restartActivity(@StringRes int stringRes) {
-        Intent intent = new Intent(MainTabActivity.this, MainTabActivity.class);
-        intent.putExtra(EXTRA_RESTART_STR, stringRes);
         finish();
-        startActivity(intent);
+        if(!TinyDB.getTinyDB().getBoolean(C.PREF_FINISH_ACTIVITY_AFTER_CALL_SET)) {
+            Intent intent = new Intent(MainTabActivity.this, MainTabActivity.class);
+            intent.putExtra(EXTRA_RESTART_STR, stringRes);
+            startActivity(intent);
+        }
     }
 
     private void switchSmSPackage() {
@@ -324,12 +328,19 @@ public class MainTabActivity extends Base implements
 
             if(fabMain == null)
                 Log.e(TAG, "onResume: Butterknife didn't work... fabMain is null");
-
-            Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);
-            View view = snackbar.getView();
-            view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
-            snackbar.show();
+            else {
+                Snackbar snackbar = Snackbar.make(fabMain, stringId, Snackbar.LENGTH_LONG);
+                View view = snackbar.getView();
+                view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
+                snackbar.show();
+            }
         }
+
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+            cl.getLogDialog().show();
+        }
+//        else if(BuildConfig.DEBUG) cl.getLogDialog().show();
     }
 
     /**
@@ -415,7 +426,23 @@ public class MainTabActivity extends Base implements
                 break;
 
             case FakeCallFragment.PERMISSION_WRITE_CALL_LOG_RESULT:
-                generateCallLog();
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        generateCallLog();
+                    } else {
+                        Snackbar snackbar = Snackbar.make(fabMain, "Permission required to add to Call Logs", Snackbar.LENGTH_LONG)
+                                .setActionTextColor(Color.BLACK)
+                                .setAction("Retry", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        generateCallLog();
+                                    }
+                                });
+                        View view = snackbar.getView();
+                        view.setBackgroundColor(ContextCompat.getColor(this, R.color.accent));
+                        snackbar.show();
+                    }
+                }
                 break;
 
             default:

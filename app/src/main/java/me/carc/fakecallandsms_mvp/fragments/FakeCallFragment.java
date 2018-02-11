@@ -42,6 +42,7 @@ import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
+import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 /**
@@ -54,6 +55,20 @@ public class FakeCallFragment extends Fragment {
 
     private static final String TAG = FakeCallFragment.class.getName();
     public static final String TAG_ID = "FakeCallFragment";
+
+
+    public interface FakeCallListener {
+        void onSetContactDetails(String contactName, String number, String image);
+        void onSetRingtone(Uri ringtone);
+        void onSetVibrate(boolean vibrate);
+        void onSetCallLogs(boolean vibrate);
+        void onSetDate(long time);
+        void onSetCallType(int type);
+        void onSetTime(long time);
+    }
+
+    private FakeCallListener callListener;
+
 
     public static final int PERMISSION_WRITE_CALL_LOG_RESULT = 1502;
 
@@ -120,19 +135,6 @@ public class FakeCallFragment extends Fragment {
     };
 
 
-    public interface FakeCallListener {
-        void onSetContactDetails(String contactName, String number, String image);
-        void onSetRingtone(Uri ringtone);
-        void onSetVibrate(boolean vibrate);
-        void onSetCallLogs(boolean vibrate);
-        void onSetDate(long time);
-        void onSetCallType(int type);
-        void onSetTime(long time);
-    }
-
-    private FakeCallListener callListener;
-
-
     @Override
     public void onAttach(Context ctx) {
         super.onAttach(ctx);
@@ -177,9 +179,19 @@ public class FakeCallFragment extends Fragment {
 
     @OnClick(R.id.contactBtn)
     void onContactSelectButton() {
-        Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        i.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
-        startActivityForResult(i, C.PICK_CONTACT);
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        if(U.isIntentAvailable(getActivity(), intent)) {
+            intent.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
+            startActivityForResult(intent, C.PICK_CONTACT);
+        } else {
+            intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            if(U.isIntentAvailable(getActivity(), intent)) {
+                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                startActivityForResult(intent, C.PICK_CONTACT);
+            } else {
+                U.featureRequest(getActivity(), "Contact");
+            }
+        }
     }
 
 
@@ -238,7 +250,7 @@ public class FakeCallFragment extends Fragment {
             long add7Mins = calendarInst.getTime().getTime() + (C.MINUTE_MILLIS * Integer.valueOf(quickTimeStr));
             callListener.onSetTime(add7Mins);
             callListener.onSetDate(0);
-
+            quickTimeBtn.setTextOn(String.format(getString(R.string.minutes), quickTimeStr));
         } else {
             ViewUtils.setButtonDrawableColor(getActivity(), quickTimeBtn, R.color.controlDisabled, 1);
             callListener.onSetTime(0);

@@ -43,6 +43,7 @@ public class C {
     public static final String SMS_DRAFT  = "SMS_DRAFT";
 
     public static final int PICK_CONTACT = 2000;
+    public static final int PICK_CONTACT_OLD = 2001;
     public static final int PENDING_INTENT_RINGTONE = 6000;
     public static final int PENDING_INTENT_SMS_RINGTONE = 6001;
     public static final int NOTIFICATION_CHANGE = 6002;

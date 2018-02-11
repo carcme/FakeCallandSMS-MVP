@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
+import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.db.AppDatabase;
 
@@ -32,8 +33,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        /*if (!C.DEBUG_ENABLED) */
-        Fabric.with(this, new Crashlytics());
+        if (!C.DEBUG_ENABLED) Fabric.with(this, new Crashlytics());
 
         if (TinyDB.getTinyDB() == null) new TinyDB(this);
 

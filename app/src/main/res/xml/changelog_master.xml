@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+
+    <release version="1.0.9" versioncode="19" >
+        <change>Fixed: Cleaned up outstanding bug list</change>
+        <change>Fixed: Crash loop when declining the Call Log permission</change>
+        <change>Feature Request (Queen Squishy): Contacts didn't work with certain device - attempted to provide alternative</change>
+    </release>
+
+    <release version="1.0.6" versioncode="16" >
+        <change>Fixed: QuickTime setting causing crash</change>
+        <change>Fixed: Add option to close app after setting Call or SMS</change>
+        <change>Default start timeout changed from 2 seconds to 3 seconds. Let me know via the feedback if you want to be able to configure this yourself</change>
+        <change>Added change notifications (this screen)</change>
+    </release>
+
+    <release version="1.0.5" versioncode="15" >
+        <change>Fixed: A bug causing crash with the QuickTime setting</change>
+        <change>Feature Request (Hank Rowland): Support scheduled call and SMS</change>
+        <change>Feature Request (Bloodys Spammers): Enhance screen shots on Play Store</change>
+    </release>
+
+</changelog>

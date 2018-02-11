@@ -35,6 +35,7 @@ import io.fabric.sdk.android.services.common.Crash;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
+import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
 
 import static android.app.Activity.RESULT_OK;
@@ -207,9 +208,19 @@ public class FakeSmsFragment extends Fragment {
 
     @OnClick(R.id.contactBtn)
     void onContactSelectButton() {
-        Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        i.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
-        startActivityForResult(i, C.PICK_CONTACT);
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        if(U.isIntentAvailable(getActivity(), intent)) {
+            intent.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
+            startActivityForResult(intent, C.PICK_CONTACT);
+        } else {
+            intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            if(U.isIntentAvailable(getActivity(), intent)) {
+                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                startActivityForResult(intent, C.PICK_CONTACT);
+            } else {
+                U.featureRequest(getActivity(), "Contact");
+            }
+        }
     }
 
 
@@ -272,16 +283,21 @@ public class FakeSmsFragment extends Fragment {
                 if(cursor != null) {
                     if (cursor.moveToFirst()) {
                         // Fetch other Contact details to use
-                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+                        try {
+                            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                            String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
 
-                        // show the contact name
-                        contactNameTV.setText(name);
+                            // show the contact name
+                            contactNameTV.setText(name);
 
-                        // set the contact number
-                        smsNumber.setText(number);
-                        smsListener.onSmsContact(name, number, image);
+                            // set the contact number
+                            smsNumber.setText(number);
+                            smsListener.onSmsContact(name, number, image);
+                        } catch (IllegalStateException e) {
+                            Toast.makeText(getActivity(), "This contact is not valid", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     cursor.close();
                 } else {

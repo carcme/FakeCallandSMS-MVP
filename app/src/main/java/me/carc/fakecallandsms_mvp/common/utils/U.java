@@ -4,8 +4,11 @@ package me.carc.fakecallandsms_mvp.common.utils;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -14,6 +17,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.codemybrainsout.ratingdialog.FeedbackDialog;
 import com.codemybrainsout.ratingdialog.RatingDialog;
+
+import java.util.List;
 
 import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
@@ -105,6 +110,13 @@ public class U {
         return null;
     }
 
+    public static boolean isIntentAvailable(Context context, Intent intent) {
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
+
     /**
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
@@ -170,6 +182,46 @@ public class U {
         return (int) (time % Integer.MAX_VALUE);
     }
 
+
+    public static void featureRequest(final Context ctx, String hint) {
+
+        String text = String.format(ctx.getString(R.string.feature_request), hint)
+                + "\n\nManufacturer: " + Build.MANUFACTURER
+                + "\nModel: " + Build.MODEL
+                + "\nVersion: " + Build.VERSION.SDK_INT
+                + "\nRelease: " + Build.VERSION.RELEASE;
+
+        final FeedbackDialog fbDialog = new FeedbackDialog.Builder(ctx)
+                .titleTextColor(R.color.black)
+                .formTitle(ctx.getString(R.string.feature_request_title))
+                .formText(text)
+                .formSubmitText(ctx.getString(R.string.feedback_request_send))
+                .formCancelText(ctx.getString(R.string.feedback_request_cancel))
+
+                .positiveButtonTextColor(R.color.white)
+                .positiveButtonBackgroundColor(R.drawable.button_selector_positive)
+
+                .negativeButtonTextColor(R.color.controlDisabled)
+                .negativeButtonBackgroundColor(R.drawable.button_selector_negative)
+
+                .onFeedbackFormSumbit(new FeedbackDialog.Builder.FeedbackDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) {
+                        Intent email = new Intent(Intent.ACTION_SEND);
+                        email.setType("message/rfc822");
+                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{"carcmedev@gmail.com"});
+                        email.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.app_name));
+                        email.putExtra(Intent.EXTRA_TEXT, feedback);
+                        ctx.startActivity(email);
+                    }
+
+                    @Override
+                    public void onFormCancel() { /* EMPTY */}
+                }).build();
+
+        fbDialog.show();
+    }
+
     public static void emailFeedbackForm(final Context ctx) {
         final FeedbackDialog fbDialog = new FeedbackDialog.Builder(ctx)
                 .titleTextColor(R.color.black)
@@ -201,6 +253,9 @@ public class U {
 
         fbDialog.show();
     }
+
+
+
 
     public static void showRatingForm(final Context ctx) {
         final RatingDialog ratingDialog = new RatingDialog.Builder(ctx)
@@ -239,8 +294,10 @@ public class U {
 
                 .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
                     @Override
-                    public void onFormSubmitted(String feedback) { }
+                    public void onFormSubmitted(String feedback) {
+                    }
                 }).build();
 
-        ratingDialog.show();  }
+        ratingDialog.show();
+    }
 }
