@@ -56,6 +56,7 @@ public class FeedbackDialog extends AppCompatDialog implements View.OnClickListe
         tvSubmit.setText(builder.submitText);
         tvCancel.setText(builder.cancelText);
         etFeedback.setHint(builder.feedbackFormHint);
+        etFeedback.setText(builder.formText);
 
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
@@ -131,7 +132,7 @@ public class FeedbackDialog extends AppCompatDialog implements View.OnClickListe
     public static class Builder {
 
         private final Context context;
-        private String formTitle, submitText, cancelText, feedbackFormHint;
+        private String formTitle, formText, submitText, cancelText, feedbackFormHint;
         private boolean allowEmpty;
         private int positiveTextColor, negativeTextColor, titleTextColor, feedBackTextColor;
         private int positiveBackgroundColor, negativeBackgroundColor;
@@ -192,6 +193,11 @@ public class FeedbackDialog extends AppCompatDialog implements View.OnClickListe
 
         public Builder formHint(String formHint) {
             this.feedbackFormHint = formHint;
+            return this;
+        }
+
+        public Builder formText(String formText) {
+            this.formText = formText;
             return this;
         }
 
