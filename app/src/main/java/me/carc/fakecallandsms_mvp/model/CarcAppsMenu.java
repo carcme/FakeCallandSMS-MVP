@@ -10,6 +10,7 @@ import me.carc.fakecallandsms_mvp.R;
 
 public enum CarcAppsMenu {
 
+    THISAPP(R.mipmap.ic_launcher, R.string.app_name_share, R.string.app_name_desc, ""),
     ITIMER(R.drawable.app_image_interval_timer, R.string.appTitleITimer, R.string.appDescITimer, "carcintervaltimer"),
     BTOWN(R.drawable.app_image_btown, R.string.appTitleBtown, R.string.appDescBtown, "btown"),
     AGD(R.drawable.app_image_agd, R.string.appTitleAGD, R.string.appDescAGB, "anygivendate"),

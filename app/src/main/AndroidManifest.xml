@@ -154,6 +154,17 @@
             </intent-filter>
         </service>
 
+
+        <provider
+            android:name=".common.utils.GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fbef5068aff924f588f1045c445fae0a1e2eaa4a" />

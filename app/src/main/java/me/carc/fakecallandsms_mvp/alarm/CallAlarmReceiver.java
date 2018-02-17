@@ -10,6 +10,7 @@ import android.support.v7.app.NotificationCompat;
 
 import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.R;
+import me.carc.fakecallandsms_mvp.common.C;
 
 /**
  * Catch an alarm and pass to intent service
@@ -24,8 +25,30 @@ public class CallAlarmReceiver extends BroadcastReceiver {
         wl.aquireWakeLock();
 
         Intent callIntentService = new Intent(ctx, CallIncomingActivity.class);
-        if(intent != null)
-            callIntentService.putExtras(intent.getExtras());
+        if(intent != null && intent.getExtras() != null) {
+            if(intent.hasExtra(C.NAME))
+                callIntentService.putExtra(C.NAME, intent.getStringExtra(C.NAME));
+            if(intent.hasExtra(C.NUMBER))
+                callIntentService.putExtra(C.NUMBER, intent.getStringExtra(C.NUMBER));
+
+            if(intent.hasExtra(C.IMAGE))
+                callIntentService.putExtra(C.IMAGE, intent.getStringExtra(C.IMAGE));
+
+            if(intent.hasExtra(C.VIBRATE))
+                callIntentService.putExtra(C.VIBRATE, intent.getBooleanExtra(C.VIBRATE, false));
+
+            if(intent.hasExtra(C.DURATION))
+                callIntentService.putExtra(C.DURATION, intent.getLongExtra(C.DURATION, C.MAX_CALL_DURATION_DEFAULT));
+
+            if(intent.hasExtra(C.CALLLOGS))
+                callIntentService.putExtra(C.CALLLOGS, intent.getBooleanExtra(C.CALLLOGS, false));
+
+            if(intent.hasExtra(C.RINGTONE))
+                callIntentService.putExtra(C.RINGTONE, intent.getStringExtra(C.RINGTONE));
+
+//            callIntentService.putExtras(intent.getExtras());
+        }
+
         callIntentService.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(callIntentService);
 

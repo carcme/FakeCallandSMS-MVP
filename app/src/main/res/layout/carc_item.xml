@@ -25,7 +25,7 @@
             android:layout_marginEnd="10dp"
             android:contentDescription="App image for Carc "
             android:scaleType="centerCrop"
-            tools:src="@drawable/app_image_btown"/>
+            tools:src="@mipmap/ic_launcher"/>
 
         <TextView
             android:id="@+id/appTitle"

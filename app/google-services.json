@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "592418280339",
+    "firebase_url": "https://fakecallandsms-mvp.firebaseio.com",
+    "project_id": "fakecallandsms-mvp",
+    "storage_bucket": "fakecallandsms-mvp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592418280339:android:aab8fca6c8a5da5e",
+        "android_client_info": {
+          "package_name": "me.carc.fakecallandsms_mvp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592418280339-ghoqminjqv0ng99ug7ipiv25tuma7c34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.carc.fakecallandsms_mvp",
+            "certificate_hash": "f24799dec44c4c12d09ceb2a519a07e93da41e3a"
+          }
+        },
+        {
+          "client_id": "592418280339-knk4867aejasegmd3crdhretd543rlm6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDt_Kc0i8ozKrTfLSfGGqmnV9C6D3bIPWE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592418280339-knk4867aejasegmd3crdhretd543rlm6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

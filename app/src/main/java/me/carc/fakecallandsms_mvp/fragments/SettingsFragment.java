@@ -233,10 +233,10 @@ public class SettingsFragment extends Fragment {
 
     @OnClick(R.id.smsAppResetBtn)
     void resetSMSApp() {
-        if (Telephony.Sms.getDefaultSmsPackage(getActivity()).equals(getActivity().getPackageName())) {
+        String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
+        if (defaultSMS != null && Telephony.Sms.getDefaultSmsPackage(getActivity()).equals(getActivity().getPackageName())) {
             Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
-                    TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
+            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSMS);
             startActivity(intent);
         }
     }
@@ -346,31 +346,35 @@ public class SettingsFragment extends Fragment {
         switch (requestCode) {
             case VOICE_FILE_SELECT:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    String path = U.getPath(getActivity(), Uri.parse(data.getDataString()));
+                    try {
+                        String path = U.getPath(getActivity(), Uri.parse(data.getDataString()));
 
-                    if(TextUtils.isEmpty(path)) {
-                        Toast.makeText(getActivity(), "Can not read file path!", Toast.LENGTH_SHORT).show();
-                        return;
+                        if (TextUtils.isEmpty(path)) {
+                            Toast.makeText(getActivity(), "Can not read file path!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        Uri uri = Uri.parse(data.getDataString());
+
+                        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
+                        mmr.setDataSource(getActivity(), uri);
+
+                        String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                        String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+
+                        if (Common.isEmpty(artist) && Common.isEmpty(title))
+                            voiceFileInput.setText(U.fileNameFromUrl(path));
+                        else
+                            voiceFileInput.setText(artist + " | " + title);
+
+                        TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE_DISPLAY, voiceFileInput.getText().toString());
+                        TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE, path);
+
+                        ViewUtils.setButtonDrawableColor(getActivity(), voiceFileInput, R.color.controlSet, 1);
+                    } catch (RuntimeException rte ) {
+                        Toast.makeText(getActivity(), "Encountered an error parsing the voice file. Please try a different file", Toast.LENGTH_SHORT).show();
                     }
-
-                    Uri uri = Uri.parse(data.getDataString());
-
-                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-
-                    mmr.setDataSource(getActivity(), uri);
-
-                    String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-                    String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-
-                    if(Common.isEmpty(artist) && Common.isEmpty(title))
-                        voiceFileInput.setText(U.fileNameFromUrl(path));
-                    else
-                        voiceFileInput.setText(artist + " | " + title);
-
-                    TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE_DISPLAY, voiceFileInput.getText().toString());
-                    TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE, path);
-
-                    ViewUtils.setButtonDrawableColor(getActivity(), voiceFileInput, R.color.controlSet, 1);
                 }
                 break;
 
@@ -426,8 +430,6 @@ public class SettingsFragment extends Fragment {
         } catch (Exception e) {
             smsToneDisplayText = String.format(getString(R.string.sms_ringtone), "Unknown Title");
         }
-
-
 
         TinyDB.getTinyDB().putString(C.PREF_SMS_RING_TONE, uri.toString());
         TinyDB.getTinyDB().putString(C.PREF_SMS_RING_TONE_DISPLAY, smsToneDisplayText);

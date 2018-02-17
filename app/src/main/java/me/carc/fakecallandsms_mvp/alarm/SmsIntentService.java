@@ -40,14 +40,12 @@ public class SmsIntentService extends IntentService {
             FakeSmsReceiver.smsNotification(getApplicationContext(), intent);
 
         String number = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.NUMBER) : "Unknown";
-        String message = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.MESSAGE) : "Unknown";
-        String where = intent.hasExtra(C.NUMBER) ? intent.getStringExtra(C.SMS_TYPE) : C.SMS_INBOX;
-        long time = intent.getLongExtra(C.TIME, System.currentTimeMillis());
+        String message = intent.hasExtra(C.MESSAGE) ? intent.getStringExtra(C.MESSAGE) : "Unknown";
+        String where = intent.hasExtra(C.SMS_TYPE) ? intent.getStringExtra(C.SMS_TYPE) : C.SMS_INBOX;
 
         //Put content values
         ContentValues values = new ContentValues();
         values.put(Telephony.Sms.ADDRESS, number);
-        values.put(Telephony.Sms.DATE, time);
         values.put(Telephony.Sms.BODY, message);
 
         //Insert the message
@@ -69,14 +67,5 @@ public class SmsIntentService extends IntentService {
         } else {
             getContentResolver().insert(Uri.parse("content://sms/sent"), values);
         }
-
-//        //Change my sms app to the last default sms
-//        Intent smsPackageintent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-//        //Get default sms app
-//        smsPackageintent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultApp);
-//        smsPackageintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(smsPackageintent);
-
-//        FakeSmsReceiver.completeWakefulIntent(intent);
     }
 }

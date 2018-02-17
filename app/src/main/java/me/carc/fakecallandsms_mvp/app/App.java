@@ -2,6 +2,7 @@ package me.carc.fakecallandsms_mvp.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
+import android.os.StrictMode;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -33,7 +34,18 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (!C.DEBUG_ENABLED) Fabric.with(this, new Crashlytics());
+
+        // Crashlytyics #51 - FileUriExposedException: file:///xxx.mp3 exposed beyond app through Notification.sound
+        // See this to do it properly with FileProvider
+        // https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(C.DEBUG_ENABLED)
+                .build();
+        Fabric.with(fabric);
 
         if (TinyDB.getTinyDB() == null) new TinyDB(this);
 

@@ -46,8 +46,16 @@ public class FakeSmsReceiver extends BroadcastReceiver {
 
         // Insert the sms to the sms database
         Intent insertSmsIntent = new Intent(context, SmsIntentService.class);
-        if(intent != null)
-            insertSmsIntent.putExtras(intent.getExtras());
+        if(intent != null) {
+            if(intent.hasExtra(C.NUMBER))
+                insertSmsIntent.putExtra(C.NUMBER, intent.getStringExtra(C.NUMBER));
+            if(intent.hasExtra(C.MESSAGE))
+                insertSmsIntent.putExtra(C.MESSAGE, intent.getStringExtra(C.MESSAGE));
+            if(intent.hasExtra(C.IMAGE))
+                insertSmsIntent.putExtra(C.IMAGE, intent.getStringExtra(C.IMAGE));
+            if(intent.hasExtra(C.SMS_TYPE))
+                insertSmsIntent.putExtra(C.SMS_TYPE, intent.getStringExtra(C.SMS_TYPE));
+        }
         insertSmsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextCompat.startForegroundService(context, insertSmsIntent);
 

@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class CarcFragment extends Fragment {
     public static final String TAG_ID = "CarcFragment";
 
     private final static String MARKET_REF = "&referrer=utm_source%3Dme.carc.fakecallandsms_mvp";
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public interface ClickListener {
         void onClick(CarcAppsMenu item);
@@ -54,12 +58,26 @@ public class CarcFragment extends Fragment {
 //        View rootView = inflater.inflate(R.layout.carc_fragment, container, false);
         ButterKnife.bind(this, rootView);
         setRetainInstance(true);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
 
         CarcAppsAdapter adapter = new CarcAppsAdapter(buildMenuItems(), new ClickListener() {
             @Override
             public void onClick(CarcAppsMenu item) {
-                startActivity(openPlayStore(true, item.getUrlExtension()));
+                if(TextUtils.isEmpty(item.getUrlExtension())){
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+                    intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=" + getActivity().getPackageName());
+                    intent.setType("text/plain");
+                    startActivity(Intent.createChooser(intent, getString(R.string.settings_title_share)));
+
+                    Bundle params = new Bundle();
+                    params.putString("ACTION", "Share FakeCall");
+                    FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.SHARE, params);
+
+                } else
+                    startActivity(openPlayStore(true, item.getUrlExtension()));
             }
         });
 
@@ -71,9 +89,10 @@ public class CarcFragment extends Fragment {
 
     private List<CarcAppsMenu> buildMenuItems() {
         List<CarcAppsMenu> items = new LinkedList<>();
+        items.add(CarcAppsMenu.THISAPP);
         items.add(CarcAppsMenu.ITIMER);
-        items.add(CarcAppsMenu.AGD);
         items.add(CarcAppsMenu.BTOWN);
+        items.add(CarcAppsMenu.AGD);
         items.add(CarcAppsMenu.BBOOKS);
 
         return items;
@@ -86,6 +105,11 @@ public class CarcFragment extends Fragment {
     }
 
     private Intent openPlayStore(boolean openInBrowser, String urlExt) {
+        // Firebase Analytics
+        Bundle params = new Bundle();
+        params.putString("app_name", urlExt);
+        mFirebaseAnalytics.logEvent("Launch_Extra", params);
+
         Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getMarketUrl(urlExt)));
         if (isIntentAvailable(marketIntent)) {
             return marketIntent;
@@ -93,6 +117,7 @@ public class CarcFragment extends Fragment {
         if (openInBrowser) {
             return openLink(getMarketUrl(urlExt));
         }
+
         return marketIntent;
     }
 

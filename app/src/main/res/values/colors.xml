@@ -11,6 +11,7 @@
     <color name="almostWhite">#EEE</color>
     <color name="colorEnabled">#669900</color>
 
+    <color name="color_tinted">#A0FFFFFF</color>
 
     <color name="fragment_background">@color/white</color>
 

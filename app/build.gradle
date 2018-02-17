@@ -23,8 +23,8 @@ android {
         applicationId "me.carc.fakecallandsms_mvp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "1.0.9"
+        versionCode 25
+        versionName "1.0.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -69,8 +69,6 @@ dependencies {
     // dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 
-    compile 'net.frakbot.glowpadbackport:glowpadbackport:2.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
@@ -81,6 +79,11 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
 
 
-    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
 
+    compile 'net.frakbot.glowpadbackport:glowpadbackport:2.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    compile 'com.google.firebase:firebase-core:10.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'

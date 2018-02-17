@@ -7,9 +7,14 @@
             android:summary="@string/ratings_request_title"/>
 
     <Preference
-            android:title="@string/settings_title_rate"
-            android:key="rate"
-            android:summary="@string/settings_summary_rate"/>
+        android:title="@string/settings_title_rate"
+        android:key="rate"
+        android:summary="@string/settings_summary_rate"/>
+
+    <Preference
+        android:title="@string/settings_title_share"
+        android:key="share"
+        android:summary="@string/settings_summary_share"/>
 
     <Preference
             android:title="@string/settings_title_about"

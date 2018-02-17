@@ -50,7 +50,7 @@ public class U {
         return tag;
     }
 
-    public static String getPath(final Context context, final Uri uri) {
+    public static String getPath(final Context context, final Uri uri) throws RuntimeException{
 
         // DocumentProvider
         if (C.HAS_K && DocumentsContract.isDocumentUri(context, uri)) {

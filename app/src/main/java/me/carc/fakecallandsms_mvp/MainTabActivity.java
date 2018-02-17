@@ -27,6 +27,7 @@ import android.view.View;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -50,6 +51,7 @@ import me.carc.fakecallandsms_mvp.fragments.FakeSmsFragment;
 import me.carc.fakecallandsms_mvp.fragments.PendingFragment;
 import me.carc.fakecallandsms_mvp.fragments.SettingsFragment;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
+import me.carc.fakecallandsms_mvp.sms.HeadlessSmsSendService;
 
 public class MainTabActivity extends Base implements
         FakeCallFragment.FakeCallListener,
@@ -59,7 +61,7 @@ public class MainTabActivity extends Base implements
     private static final String EXTRA_RESTART_STR = "EXTRA_RESTART_STR";
     public static final int PERMISSION_CONTACT_RESULT = 1500;
     public static final int INTENT_SMS_PACKAGE = 101;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     TinyDB tinyDb;
     FakeContact fakeContact;
@@ -157,15 +159,24 @@ public class MainTabActivity extends Base implements
         switch (mViewPager.getCurrentItem()) {
             case 0:
 
+                Intent intent = new Intent(this, HeadlessSmsSendService.class);
+                intent.putExtra("Command", mViewPager.getCurrentItem());
+                startService(intent);
+
                 if (fakeContact.getCallType() == C.CALL_INCOMING) {
                     String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
                     fakeContact.setDuration(TextUtils.isEmpty(constant) ? C.MAX_CALL_DURATION_DEFAULT : Integer.valueOf(constant));
 
                     addCallToDb();
 
+                    Bundle params = new Bundle();
+                    params.putString("ACTION", "generate Telephone Call");
+                    mFirebaseAnalytics.logEvent("App_Usage", params);
+
                 } else {
                     generateCallLog();
                 }
+
                 break;
 
             case 1:
@@ -177,7 +188,8 @@ public class MainTabActivity extends Base implements
                     snackbar.show();
 
                 } else {
-                    if (Telephony.Sms.getDefaultSmsPackage(MainTabActivity.this).equals(getPackageName())) {
+                    String defaultSMSPackage = Telephony.Sms.getDefaultSmsPackage(MainTabActivity.this);
+                    if (defaultSMSPackage != null && defaultSMSPackage.equals(getPackageName())) {
                         writeSms();
                     } else {
                         switchSmSPackage();
@@ -222,6 +234,11 @@ public class MainTabActivity extends Base implements
             View view = snackbar.getView();
             view.setBackgroundColor(ContextCompat.getColor(this, R.color.gcc_green_1));
             snackbar.show();
+
+            Bundle params = new Bundle();
+            params.putString("ACTION", "generate Call Log");
+            mFirebaseAnalytics.logEvent("App_Usage", params);
+
         } else {
             final String[] LOCATION_PERMISSIONS = {Manifest.permission.WRITE_CALL_LOG};
             ActivityCompat.requestPermissions(this, LOCATION_PERMISSIONS, FakeCallFragment.PERMISSION_WRITE_CALL_LOG_RESULT);
@@ -285,9 +302,9 @@ public class MainTabActivity extends Base implements
     }
 
     private void switchSmSPackage() {
-
         // Save the default sms package
-        tinyDb.putString(C.SMS_DEFAULT_PACKAGE_KEY, Telephony.Sms.getDefaultSmsPackage(this));
+        if(Telephony.Sms.getDefaultSmsPackage(this) != null)
+            tinyDb.putString(C.SMS_DEFAULT_PACKAGE_KEY, Telephony.Sms.getDefaultSmsPackage(this));
 
         //Change the default sms app to my app
         Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
@@ -298,6 +315,10 @@ public class MainTabActivity extends Base implements
 
     //Write to the default sms app
     private void writeSms() {
+        Bundle params = new Bundle();
+        params.putString("ACTION", "Send SMS");
+        mFirebaseAnalytics.logEvent("App_Usage", params);
+
         addSmsToDb();
     }
 
@@ -308,6 +329,8 @@ public class MainTabActivity extends Base implements
         setContentView(R.layout.activity_main_tab);
         ButterKnife.setDebug(true);
         ButterKnife.bind(this);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         fakeContact = new FakeContact();
         tinyDb = new TinyDB(this);
@@ -549,14 +572,13 @@ public class MainTabActivity extends Base implements
     @Override
     protected void onDestroy() {
         if (TinyDB.getTinyDB().getBoolean(C.PREF_RESET_SMS_ON_EXIT)) {
-            if (Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
+            String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
+            if (defaultSMS != null && Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
                 Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
-                        TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
+                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSMS);
                 startActivity(intent);
             }
         }
-
         super.onDestroy();
     }
 }

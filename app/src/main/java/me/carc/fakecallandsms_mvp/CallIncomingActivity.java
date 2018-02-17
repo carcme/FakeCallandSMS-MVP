@@ -118,8 +118,7 @@ public class CallIncomingActivity extends Base {
         setContentView(R.layout.fakecall_incoming_layout);
         ButterKnife.bind(this);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
+        if (getIntent().getExtras() == null) {
             Log.d(TAG, "onCreate: No Contact Info Receieved");
             finish();
         }
@@ -172,6 +171,8 @@ public class CallIncomingActivity extends Base {
         color = r.nextInt(max - min + 1) + min;
 
         callInfoLayout.setBackgroundColor(ContextCompat.getColor(this, colors.getResourceId(color, R.color.gcc_orange_2)));
+
+        colors.recycle();
     }
 
     /**

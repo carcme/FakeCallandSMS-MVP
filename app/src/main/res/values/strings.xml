@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Fake Call and SMS</string>
+    <string name="app_name_share">Share Fake Call and SMS</string>
+    <string name="app_name_desc">Share Fake Call and SMS with friends and give them \"An excuse at their fingertips\"</string>
 
 
     <string name="select_ringtone">Ringtone</string>
@@ -40,6 +42,9 @@
     <string name="seconds">seconds</string>
     <string name="maximum_call_duration">Maximum Call Duration</string>
 
+
+    <string name="settings_title_share">Share</string>
+    <string name="settings_summary_share">Share the app with friends.</string>
 
     <string name="settings_title_rate">Rate</string>
     <string name="settings_title_about">About</string>

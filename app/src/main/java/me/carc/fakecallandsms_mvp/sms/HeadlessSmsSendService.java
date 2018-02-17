@@ -7,9 +7,9 @@ import android.telephony.TelephonyManager;
 
 import me.carc.fakecallandsms_mvp.alarm.SmsIntentService;
 import me.carc.fakecallandsms_mvp.common.C;
-import me.carc.fakecallandsms_mvp.common.utils.U;
 
 /**
+ * // TODO: 13/02/2018
  * Created by bamptonm on 7/4/17.
  */
 
@@ -18,15 +18,12 @@ public class HeadlessSmsSendService extends IntentService {
     private static final String TAG = HeadlessSmsSendService.class.getName();
 
     public HeadlessSmsSendService() {
-        super(HeadlessSmsSendService.class.getName());
-
+        super(TAG);
         setIntentRedelivery(true);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
-        U.featureRequest(getApplicationContext(), "Headless SMS");
 
         if(C.DEBUG_ENABLED) {
             String action = intent.getAction();

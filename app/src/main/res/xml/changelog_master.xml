@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
 
+    <release version="1.0.14" versioncode="24" >
+        <change>Fixed: Crash: Support for tablet where no default SMS package is available (something I'd overlooked previously) I have no device to test this so contact me via feedback if there is an issue</change>
+    </release>
+
+    <release version="1.0.12" versioncode="22" >
+        <change>Feature Request: (Karl Heinz) Added the option to share the app</change>
+        <change>Added some crash reporting and analysis to help me improve the app. Use the feedback to ask for new features</change>
+        <change>Small clean up for rushed previous release</change>
+    </release>
+
+    <release version="1.0.11" versioncode="21" >
+        <change>I left some test code in that made the app do nothing except stop it from working :/ Thankyou for the feedback Reyna</change>
+    </release>
+
+    <release version="1.0.10" versioncode="20" >
+        <change>Fix more bugs... should just hire RentoKill :/ </change>
+    </release>
+
     <release version="1.0.9" versioncode="19" >
         <change>Fixed: Cleaned up outstanding bug list</change>
         <change>Fixed: Crash loop when declining the Call Log permission</change>

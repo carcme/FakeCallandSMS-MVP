@@ -39,26 +39,18 @@ public class AlarmHelper {
         alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
     }
 
-
     public void setCallAlarmActivity(FakeContact contact) {
         // Setup the alarm with the new incoming call
 //        Intent intentAlarm = new Intent(mContext, me.carc.fakecallandsms_mvp.CallIncomingActivity.class);
 
         Intent intentAlarm = getCallIntent();
-        if(!Common.isEmpty(contact.getName()))
-            intentAlarm.putExtra(C.NAME, contact.getName());
-        if(!Common.isEmpty(contact.getNumber()))
-            intentAlarm.putExtra(C.NUMBER, contact.getNumber());
-        if(!Common.isEmpty(contact.getImage()))
-            intentAlarm.putExtra(C.IMAGE, contact.getImage());
-        if(contact.isVibrate())
-            intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
-        if(contact.getDuration() > 0)
-            intentAlarm.putExtra(C.DURATION, contact.getDuration());
-        if(!contact.useCallLogs())
-            intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
-        if(!Common.isEmpty(contact.getRingtone()))
-            intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
+        if(!Common.isEmpty(contact.getName()))      intentAlarm.putExtra(C.NAME, contact.getName());
+        if(!Common.isEmpty(contact.getNumber()))    intentAlarm.putExtra(C.NUMBER, contact.getNumber());
+        if(!Common.isEmpty(contact.getImage()))     intentAlarm.putExtra(C.IMAGE, contact.getImage());
+        if(contact.isVibrate())                     intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
+        if(contact.getDuration() > 0)               intentAlarm.putExtra(C.DURATION, contact.getDuration());
+        if(!contact.useCallLogs())                  intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
+        if(!Common.isEmpty(contact.getRingtone()))  intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(mContext, contact.getIndex(), intentAlarm,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
@@ -100,14 +92,16 @@ public class AlarmHelper {
     }
 
     private Intent getSmsIntent(FakeContact fakeContact) {
+        String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
+
         Intent intentSMS = new Intent();
         intentSMS.setClassName(mContext.getPackageName(), FakeSmsReceiver.class.getName());
-        intentSMS.putExtra(C.NAME, fakeContact.getName());
-        intentSMS.putExtra(C.NUMBER, fakeContact.getNumber());
-        intentSMS.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
-        intentSMS.putExtra(C.IMAGE, fakeContact.getImage());
-        intentSMS.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
-        intentSMS.putExtra(C.SMS_DEFAULT_APP, TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY));
+        if(fakeContact.getName() != null)       intentSMS.putExtra(C.NAME, fakeContact.getName());
+        if(fakeContact.getNumber() != null)     intentSMS.putExtra(C.NUMBER, fakeContact.getNumber());
+        if(fakeContact.getSmsMsg() != null)     intentSMS.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
+        if(fakeContact.getImage() != null)      intentSMS.putExtra(C.IMAGE, fakeContact.getImage());
+        if(fakeContact.getSmsType() != null)    intentSMS.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
+        if(defaultSMS != null)                  intentSMS.putExtra(C.SMS_DEFAULT_APP, defaultSMS);
         return intentSMS;
     }
 
