@@ -51,7 +51,6 @@ import me.carc.fakecallandsms_mvp.fragments.FakeSmsFragment;
 import me.carc.fakecallandsms_mvp.fragments.PendingFragment;
 import me.carc.fakecallandsms_mvp.fragments.SettingsFragment;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
-import me.carc.fakecallandsms_mvp.sms.HeadlessSmsSendService;
 
 public class MainTabActivity extends Base implements
         FakeCallFragment.FakeCallListener,
@@ -158,10 +157,6 @@ public class MainTabActivity extends Base implements
 
         switch (mViewPager.getCurrentItem()) {
             case 0:
-
-                Intent intent = new Intent(this, HeadlessSmsSendService.class);
-                intent.putExtra("Command", mViewPager.getCurrentItem());
-                startService(intent);
 
                 if (fakeContact.getCallType() == C.CALL_INCOMING) {
                     String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
