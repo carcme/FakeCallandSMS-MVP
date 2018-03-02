@@ -213,11 +213,11 @@ public class FakeSmsFragment extends Fragment {
             intent.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
             startActivityForResult(intent, C.PICK_CONTACT);
         } else {
-            intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            if(U.isIntentAvailable(getActivity(), intent)) {
+            try {
+                intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                 startActivityForResult(intent, C.PICK_CONTACT);
-            } else {
+            } catch (Exception e) {
                 U.featureRequest(getActivity(), "Contact");
             }
         }

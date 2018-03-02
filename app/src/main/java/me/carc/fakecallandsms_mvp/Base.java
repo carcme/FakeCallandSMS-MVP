@@ -63,6 +63,7 @@ public class Base extends AppCompatActivity {
 
         if (positiveText == null)
             positiveText = getString(android.R.string.ok);
+
         builder.setPositiveButton(positiveText, onPositiveButtonClickListener);
 
         if (negativeText != null)

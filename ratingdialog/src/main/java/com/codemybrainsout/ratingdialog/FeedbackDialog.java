@@ -125,7 +125,6 @@ public class FeedbackDialog extends AppCompatDialog implements View.OnClickListe
 
     @Override
     public void show() {
-
         super.show();
     }
 

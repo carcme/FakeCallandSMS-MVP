@@ -157,7 +157,6 @@ public class MainTabActivity extends Base implements
 
         switch (mViewPager.getCurrentItem()) {
             case 0:
-
                 if (fakeContact.getCallType() == C.CALL_INCOMING) {
                     String constant = tinyDb.getString(C.PREF_MAX_CALL_DURATION, String.valueOf(C.MAX_CALL_DURATION_DEFAULT));
                     fakeContact.setDuration(TextUtils.isEmpty(constant) ? C.MAX_CALL_DURATION_DEFAULT : Integer.valueOf(constant));
@@ -175,7 +174,6 @@ public class MainTabActivity extends Base implements
                 break;
 
             case 1:
-
                 if (Common.isEmpty(fakeContact.getNumber()) || Common.isEmpty(fakeContact.getSmsMsg())) {
                     Snackbar snackbar = Snackbar.make(fabMain, "Please check you have entered a message and selected a contact", Snackbar.LENGTH_LONG).setAction("Action", null);
                     View view = snackbar.getView();
