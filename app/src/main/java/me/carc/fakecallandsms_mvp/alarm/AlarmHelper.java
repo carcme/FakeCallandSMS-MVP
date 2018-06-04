@@ -4,13 +4,15 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.text.TextUtils;
 
 import java.util.Calendar;
 
 import me.carc.fakecallandsms_mvp.CallIncomingActivity;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
 import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
@@ -44,15 +46,15 @@ public class AlarmHelper {
 //        Intent intentAlarm = new Intent(mContext, me.carc.fakecallandsms_mvp.CallIncomingActivity.class);
 
         Intent intentAlarm = getCallIntent();
-        if(!Common.isEmpty(contact.getName()))      intentAlarm.putExtra(C.NAME, contact.getName());
-        if(!Common.isEmpty(contact.getNumber()))    intentAlarm.putExtra(C.NUMBER, contact.getNumber());
-        if(!Common.isEmpty(contact.getImage()))     intentAlarm.putExtra(C.IMAGE, contact.getImage());
-        if(contact.isVibrate())                     intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
-        if(contact.getDuration() > 0)               intentAlarm.putExtra(C.DURATION, contact.getDuration());
-        if(!contact.useCallLogs())                  intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
-        if(!Common.isEmpty(contact.getRingtone()))  intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
+        if (!TextUtils.isEmpty(contact.getName())) intentAlarm.putExtra(C.NAME, contact.getName());
+        if (!TextUtils.isEmpty(contact.getNumber())) intentAlarm.putExtra(C.NUMBER, contact.getNumber());
+        if (!TextUtils.isEmpty(contact.getImage())) intentAlarm.putExtra(C.IMAGE, contact.getImage());
+        if (contact.isVibrate()) intentAlarm.putExtra(C.VIBRATE, contact.isVibrate());
+        if (contact.getDuration() > 0) intentAlarm.putExtra(C.DURATION, contact.getDuration());
+        if (!contact.useCallLogs()) intentAlarm.putExtra(C.CALLLOGS, contact.useCallLogs());
+        if (!TextUtils.isEmpty(contact.getRingtone())) intentAlarm.putExtra(C.RINGTONE, contact.getRingtone());
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(mContext, contact.getIndex(), intentAlarm,
+        final PendingIntent pendingIntent = PendingIntent.getActivity(mContext.getApplicationContext(), contact.getIndex(), intentAlarm,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
         // if time has already occured while user is dithering, add 2secs and start alarm
@@ -96,21 +98,33 @@ public class AlarmHelper {
 
         Intent intentSMS = new Intent();
         intentSMS.setClassName(mContext.getPackageName(), FakeSmsReceiver.class.getName());
-        if(fakeContact.getName() != null)       intentSMS.putExtra(C.NAME, fakeContact.getName());
-        if(fakeContact.getNumber() != null)     intentSMS.putExtra(C.NUMBER, fakeContact.getNumber());
-        if(fakeContact.getSmsMsg() != null)     intentSMS.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
-        if(fakeContact.getImage() != null)      intentSMS.putExtra(C.IMAGE, fakeContact.getImage());
-        if(fakeContact.getSmsType() != null)    intentSMS.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
-        if(defaultSMS != null)                  intentSMS.putExtra(C.SMS_DEFAULT_APP, defaultSMS);
+        if (fakeContact.getName() != null) intentSMS.putExtra(C.NAME, fakeContact.getName());
+        if (fakeContact.getNumber() != null) intentSMS.putExtra(C.NUMBER, fakeContact.getNumber());
+        if (fakeContact.getSmsMsg() != null) intentSMS.putExtra(C.MESSAGE, fakeContact.getSmsMsg());
+        if (fakeContact.getImage() != null) intentSMS.putExtra(C.IMAGE, fakeContact.getImage());
+        if (fakeContact.getSmsType() != null) intentSMS.putExtra(C.SMS_TYPE, fakeContact.getSmsType());
+
+        if (fakeContact.isMMS()) {
+            intentSMS.putExtra(C.MMS_IMAGE_PATH, fakeContact.getAttachmentPath());
+            intentSMS.putExtra(C.MMS_SUBJECT, fakeContact.getMmsSubject());
+        }
+
+        if (defaultSMS != null) intentSMS.putExtra(C.SMS_DEFAULT_APP, defaultSMS);
+
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/Download/download.jpeg");
+
+        intentSMS.putExtra(Intent.EXTRA_STREAM, "file:/" + uri);
+        intentSMS.setType("image/jpeg");
+
         return intentSMS;
     }
 
     public void removeAlarm(int id, FakeContact contact) {
         PendingIntent pendingIntent;
         int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT;
-        if(id == C.TYPE_CALL) {
+        if (id == C.TYPE_CALL) {
             pendingIntent = PendingIntent.getActivity(mContext, contact.getIndex(), getCallIntent(), flags);
-        } else if(id == C.TYPE_SMS) {
+        } else if (id == C.TYPE_SMS) {
             pendingIntent = PendingIntent.getBroadcast(mContext.getApplicationContext(), contact.getIndex(), getSmsIntent(contact), flags);
         } else {
             throw new RuntimeException(TAG + " - Shouldn't be here");
@@ -121,15 +135,15 @@ public class AlarmHelper {
 
     private static void setAlarm(Context context, long time, PendingIntent pendingIntent) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        if (C.HAS_M)
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        else if(C.HAS_L)
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        else
-            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        if (alarmManager != null) {
+            if (C.HAS_M)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            else if (C.HAS_L)
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            else
+                alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        }
     }
-
 
 
     private void setAlarmClock(long delta, PendingIntent pi) {

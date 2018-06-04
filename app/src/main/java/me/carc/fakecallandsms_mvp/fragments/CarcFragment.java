@@ -1,5 +1,6 @@
 package me.carc.fakecallandsms_mvp.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,8 +16,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class CarcFragment extends Fragment {
 
     private final static String MARKET_REF = "&referrer=utm_source%3Dme.carc.fakecallandsms_mvp";
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+//    private FirebaseAnalytics mFirebaseAnalytics;
 
     public interface ClickListener {
         void onClick(CarcAppsMenu item);
@@ -49,7 +48,7 @@ public class CarcFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppThemeDark);
+        @SuppressLint("RestrictedApi") final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppThemeDark);
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         // inflate the layout using the cloned inflater, not default inflater
@@ -58,7 +57,7 @@ public class CarcFragment extends Fragment {
 //        View rootView = inflater.inflate(R.layout.carc_fragment, container, false);
         ButterKnife.bind(this, rootView);
         setRetainInstance(true);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
 
         CarcAppsAdapter adapter = new CarcAppsAdapter(buildMenuItems(), new ClickListener() {
@@ -72,9 +71,9 @@ public class CarcFragment extends Fragment {
                     intent.setType("text/plain");
                     startActivity(Intent.createChooser(intent, getString(R.string.settings_title_share)));
 
-                    Bundle params = new Bundle();
-                    params.putString("ACTION", "Share FakeCall");
-                    FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.SHARE, params);
+//                    Bundle params = new Bundle();
+//                    params.putString("ACTION", "Share FakeCall");
+//                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, params);
 
                 } else
                     startActivity(openPlayStore(true, item.getUrlExtension()));
@@ -90,10 +89,10 @@ public class CarcFragment extends Fragment {
     private List<CarcAppsMenu> buildMenuItems() {
         List<CarcAppsMenu> items = new LinkedList<>();
         items.add(CarcAppsMenu.THISAPP);
-        items.add(CarcAppsMenu.ITIMER);
         items.add(CarcAppsMenu.BTOWN);
-        items.add(CarcAppsMenu.AGD);
         items.add(CarcAppsMenu.BBOOKS);
+        items.add(CarcAppsMenu.ITIMER);
+        items.add(CarcAppsMenu.AGD);
 
         return items;
     }
@@ -106,9 +105,9 @@ public class CarcFragment extends Fragment {
 
     private Intent openPlayStore(boolean openInBrowser, String urlExt) {
         // Firebase Analytics
-        Bundle params = new Bundle();
-        params.putString("app_name", urlExt);
-        mFirebaseAnalytics.logEvent("Launch_Extra", params);
+//        Bundle params = new Bundle();
+//        params.putString("app_name", urlExt);
+//        mFirebaseAnalytics.logEvent("Launch_Extra", params);
 
         Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getMarketUrl(urlExt)));
         if (isIntentAvailable(marketIntent)) {

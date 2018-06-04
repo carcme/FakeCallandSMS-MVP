@@ -20,6 +20,18 @@
 
     <color name="rating_star">#FFDD00</color>
 
+    <color name="transparent">#00000000</color>
+    <color name="tintLight">#22000000</color>
+    <color name="tintStandard">#80000000</color>
+    <color name="tintDark">#A0000000</color>
+
+    <color name="author_background">#66000000</color>
+    <color name="grey_ripple">#8ddd</color>
+    <color name="placeholder">#ddd</color>
+    <color name="page_margin">#eee</color>
+    <color name="primary_light">#CFD8DC</color>
+
+
     <!-- Google Contracts Colours -->
     <color name="gcc_blue_1">#039BE5</color>
     <color name="gcc_blue_2">#3F51B5</color>

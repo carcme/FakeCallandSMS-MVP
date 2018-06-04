@@ -1,0 +1,104 @@
+<!--
+  ~ Copyright (C) 2016 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<layout>
+
+    <data>
+
+        <variable
+                name="data"
+                type="me.carc.fakecallandsms_mvp.fragments.cloud.data.model.Photo"/>
+    </data>
+
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:targetApi="LOLLIPOP">
+
+        <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/img_desc"
+                android:transitionName="@{@string/transition_photo + data.id}"
+                tools:ignore="Suspicious0dp"
+                />
+
+        <RelativeLayout
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:transitionGroup="false"
+                >
+
+            <TextView
+                    android:id="@+id/author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text='@{data.author}'
+                    android:lines="1"
+                    android:layout_alignParentBottom="true"
+                    android:paddingTop="@dimen/margin_standard"
+                    android:paddingBottom="@dimen/margin_standard"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingEnd="@dimen/margin_standard"
+                    android:background="@color/author_background"
+                    android:textColor="@color/almostWhite"
+                    android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                    android:transitionName="@{@string/transition_author + data.id}"
+                    android:onClick="authorTextBack"
+                    tools:text="test text"
+                    />
+
+            <ImageButton
+                    android:id="@+id/toggleFavourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/add_to_favourites"
+                    android:layout_alignTop="@+id/author"
+                    android:layout_alignBottom="@+id/author"
+                    android:layout_toStartOf="@+id/navBack"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingEnd="@dimen/margin_standard"
+                    android:background="@color/transparent"
+                    android:src="@drawable/ic_heart"
+                    android:onClick="toggleFavorite"
+                    />
+
+            <ImageButton
+                    android:id="@+id/navBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/previous_screen"
+                    android:layout_alignTop="@+id/author"
+                    android:layout_alignBottom="@+id/author"
+                    android:layout_alignParentEnd="true"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingEnd="@dimen/margin_standard"
+                    android:background="@color/transparent"
+                    android:src="@drawable/ic_arrow_back"
+                    android:onClick="authorTextBack"
+                    />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

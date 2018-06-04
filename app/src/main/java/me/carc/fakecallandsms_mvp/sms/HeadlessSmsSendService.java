@@ -1,22 +1,23 @@
 package me.carc.fakecallandsms_mvp.sms;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.telephony.TelephonyManager;
-
-import me.carc.fakecallandsms_mvp.alarm.SmsIntentService;
-import me.carc.fakecallandsms_mvp.common.C;
+import android.os.IBinder;
 
 /**
  * // TODO: 13/02/2018
  * Created by bamptonm on 7/4/17.
  */
 
-public class HeadlessSmsSendService extends IntentService {
+public class HeadlessSmsSendService extends Service {
 
     private static final String TAG = HeadlessSmsSendService.class.getName();
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+/*
     public HeadlessSmsSendService() {
         super(TAG);
         setIntentRedelivery(true);
@@ -45,4 +46,5 @@ public class HeadlessSmsSendService extends IntentService {
             FakeSmsReceiver.smsNotification(getApplicationContext(), intentSms);
         }
     }
+*/
 }

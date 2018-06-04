@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.Keep;
+import android.text.TextUtils;
 
 import me.carc.fakecallandsms_mvp.common.C;
 
@@ -43,6 +44,12 @@ public class FakeContact {
     private String smsMsg;
     @ColumnInfo(name = "smsType")
     private String smsType = "";
+
+
+    @ColumnInfo(name = "mmsSubject")
+    private String mmsSubject;
+    @ColumnInfo(name = "attachmentPath")
+    private String attachmentPath;
 
     @ColumnInfo(name = "databaseType")
     private String databaseType;
@@ -173,6 +180,24 @@ public class FakeContact {
         this.smsType = smsType;
     }
 
+
+    public boolean isMMS() {
+        return !(TextUtils.isEmpty(attachmentPath) && TextUtils.isEmpty(mmsSubject));
+    }
+
+    public String getMmsSubject() {
+        return mmsSubject;
+    }
+    public void setMmsSubject(String mmsSubject) {
+        this.mmsSubject = mmsSubject;
+    }
+
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
 
     /**
      * Database HELPER

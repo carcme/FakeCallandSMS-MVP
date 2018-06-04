@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/activatedBackgroundIndicator"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_tiny"
+        android:paddingBottom="@dimen/margin_tiny"
+        android:paddingEnd="@dimen/margin_standard"
+        >
+
+    <ImageView
+            android:id="@+id/thumbnail"
+            android:contentDescription="@string/img_desc"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="center"
+            android:visibility="gone"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/thumbnail">
+
+        <TextView
+                android:id="@+id/eventTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_tiny"
+                android:paddingEnd="@dimen/margin_tiny"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/md_grey_800"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                />
+
+        <TextView
+                android:id="@+id/timeTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/eventTxt"
+                android:paddingStart="@dimen/margin_tiny"
+                android:paddingEnd="@dimen/margin_tiny"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/md_grey_800"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                />
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/recycler_cloud_grid"/>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <Toolbar
+            android:id="@+id/cloud_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:navigationIcon="@drawable/ic_backburger"
+            android:title="@string/cloud_photos_toolbar_title"
+            app:layout_scrollFlags="scroll|enterAlways"
+            />
+
+        <!--
+                <Toolbar
+                    android:id="@+id/cloud_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:actionBarSize"
+                    android:navigationIcon="@drawable/ic_arrow_back"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        -->
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/toggleFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/margin_standard"
+        android:src="@drawable/ic_column_single"
+        app:borderWidth="0dp"
+        app:layout_behavior="me.carc.fakecallandsms_mvp.widgets.ScrollingFABBehavior"/>
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+

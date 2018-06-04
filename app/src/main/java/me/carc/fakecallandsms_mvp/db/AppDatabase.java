@@ -12,7 +12,7 @@ import me.carc.fakecallandsms_mvp.model.FakeContact;
  * Created by bamptonm on 04/10/2017.
  */
 
-@Database(entities = {FakeContact.class}, version = 1)
+@Database(entities = {FakeContact.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract FakeContactDao fakeContactDao();
 }

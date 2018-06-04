@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -14,15 +15,17 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.codemybrainsout.ratingdialog.FeedbackDialog;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
-import me.carc.fakecallandsms_mvp.common.C;
 
 /**
  * Random Utils to help out
@@ -50,10 +53,37 @@ public class U {
         return tag;
     }
 
-    public static String getPath(final Context context, final Uri uri) throws RuntimeException{
+    /**
+     * Static method to convert a bitmap into a byte array to easily send it over http
+     *
+     * @param image is the image to convert
+     * @return a byte array of the image data
+     */
+    public static byte[] bitmapToByteArray(Bitmap image) {
+
+        byte[] output = new byte[0];
+        if (image == null) {
+            Log.v(U.class.getName(), "image is null, returning byte array of size 0");
+            return output;
+        }
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            image.compress(Bitmap.CompressFormat.JPEG, 90, stream);
+            output = stream.toByteArray();
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException ignored) {
+            }
+        }
+        return output;
+    }
+
+
+    public static String getPath(final Context context, final Uri uri) throws RuntimeException {
 
         // DocumentProvider
-        if (C.HAS_K && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -127,7 +157,7 @@ public class U {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -189,7 +219,9 @@ public class U {
                 + "\n\nManufacturer: " + Build.MANUFACTURER
                 + "\nModel: " + Build.MODEL
                 + "\nVersion: " + Build.VERSION.SDK_INT
-                + "\nRelease: " + Build.VERSION.RELEASE;
+                + "\nRelease: " + Build.VERSION.RELEASE
+                + "\nRooted: " + AndroidUtils.isRooted()
+                /*+ "\nGooglePlayServicesAvailable: " + AndroidUtils.isGooglePlayServicesAvailable(ctx.getApplicationContext())*/;
 
         final FeedbackDialog fbDialog = new FeedbackDialog.Builder(ctx)
                 .titleTextColor(R.color.black)
@@ -253,8 +285,6 @@ public class U {
 
         fbDialog.show();
     }
-
-
 
 
     public static void showRatingForm(final Context ctx) {

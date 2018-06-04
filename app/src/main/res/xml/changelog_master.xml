@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
 
+    <release version="1.0.22" versioncode="32" >
+        <change>Bug Fix: Thanks to Hank Rowland for pointing out that the Gallery could not be accessed</change>
+    </release>
+
+    <release version="1.0.20" versioncode="30" >
+        <change>Feature Request: (Hank Rowland) Added MMS image attachments. Use your Gallery, Camera or browse the Cloud for images. SMS or MMS is sent depending on what you want to include in the message</change>
+        <change>Added a sanity check in settings... some people used values like 9999999999999999999999999 which caused a crash :/</change>
+        <change>Added contact image in SMS tab (if you have an image associated with a contact)</change>
+    </release>
+
+    <release version="1.0.15" versioncode="25" >
+        <change>Fix maybe: Crash: Try and catch error when picking a contact. I do not have the correct phone so working out the fix is a bit hit and miss</change>
+    </release>
+
     <release version="1.0.14" versioncode="24" >
-        <change>Fixed: Crash: Support for tablet where no default SMS package is available (something I'd overlooked previously) I have no device to test this so contact me via feedback if there is an issue</change>
+        <change>Fixed: Crash: Support for tablet where no default SMS package is available (something I overlooked previously) I have no device to test this so contact me via feedback if there is an issue</change>
     </release>
 
     <release version="1.0.12" versioncode="22" >
@@ -22,7 +36,7 @@
     <release version="1.0.9" versioncode="19" >
         <change>Fixed: Cleaned up outstanding bug list</change>
         <change>Fixed: Crash loop when declining the Call Log permission</change>
-        <change>Feature Request (Queen Squishy): Contacts didn't work with certain device - attempted to provide alternative</change>
+        <change>Feature Request (Queen Squishy): Contacts did not work with certain device - attempted to provide alternative</change>
     </release>
 
     <release version="1.0.6" versioncode="16" >

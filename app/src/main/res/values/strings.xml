@@ -3,15 +3,23 @@
     <string name="app_name_share">Share Fake Call and SMS</string>
     <string name="app_name_desc">Share Fake Call and SMS with friends and give them \"An excuse at their fingertips\"</string>
 
+    <string name="file_provider" templateMergeStrategy="preserve" translatable="false">me.carc.fakecallandsms_mvp.fileprovider</string>
+
+    <string name="img_desc" translatable="false">Images</string>
+    <string name="img_desc_mms" translatable="false">MMS attached image</string>
 
     <string name="select_ringtone">Ringtone</string>
     <string name="select_sms_ringtone">SMS Ringtone</string>
     <string name="sms_ringtone">SMS Ringtone (%s)</string>
     <string name="contacts">Contacts</string>
+    <string name="mms_subject">MMS Subject</string>
+    <string name="attachment">Attach</string>
     <string name="content_description">content description</string>
     <string name="type_your_message">Type your message</string>
+    <string name="add_subject">Add MMS subject</string>
     <string name="ringtone_set">Ringtone Set</string>
     <string name="unknown_caller">Unknown</string>
+    <string name="unknown_caller2">Unknown Caller</string>
     <string name="incoming_call">Incoming Call</string>
     <string name="sent">Send</string>
     <string name="inbox">Inbox</string>
@@ -48,13 +56,14 @@
 
     <string name="settings_title_rate">Rate</string>
     <string name="settings_title_about">About</string>
+    <string name="settings_title_change_log">View change log</string>
     <string name="settings_summary_rate">Leave a rating or some feedback.</string>
     <string name="feedback_request_title">Send Feedback</string>
     <string name="feedback_request_hint">Most Fake Call features are suggestions, let me know how to improve it more</string>
     <string name="ratings_request_title">Ratings really matter… would you leave some stars?</string>
 
     <string name="feature_request_title">Unsupported Feature</string>
-    <string name="feature_request">\'%s\' feature not available on this device. Please check and send the following information</string>
+    <string name="feature_request">\'%s\':: feature not available on this device. Please send the following information and I\'ll see if I can fix this :)</string>
 
     <string name="sms_scheduled">Fake SMS Scheduled</string>
     <string name="reset_sms_application_on_exit">Reset SMS application on exit</string>
@@ -89,10 +98,12 @@
     <string name="appTitleBlackBooks">BlackBooks Stories</string>
     <string name="appDescBlackBooks">Brain puzzles to play with friends.\nFind the situation behind the short story with just yes and no answers</string>
 
-    <string name="wrong_screen_error_msg">You can\'t start a phone call or SMS from this screen!!</string>
+    <string name="error_wrong_screen">You can\'t start a phone call or SMS from this screen!!</string>
     <string name="added_db_entry">Added to Database</string>
     <string name="close_when_call_set">Close when call or SMS set</string>
     <string name="fake_call_started">Fake Call Started</string>
+
+    <string name="no_media">Error: can not access your Gallery.</string>
 
 
     <!--CHANGELOG STATIC STRINGS-->
@@ -100,5 +111,29 @@
     <string name="changelog_title">What\'s New</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">More…</string>
+    <string name="coming_soon_content">Favorite list and Category menu</string>
+
+
+    <string name="single_grid_text">Single</string>
+    <string name="grid_grid_text">Grid</string>
+
+    <string name="menu_shuffle">Shuffle</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_remove">Remove</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_share_via">Share via…</string>
+    <string name="menu_facebook">Facebook</string>
+    <string name="menu_twitter">Twitter</string>
+    <string name="menu_slide_show">Slide show</string>
+    <string name="add_to_favourites">Add to favourites</string>
+    <string name="previous_screen">Previous screen</string>
+    <string name="error_sms_params">Please check you have entered a message and selected a contact</string>
+    <string name="added_call_history">Added to call history</string>
+    <string name="shared_string_unknown">Unknown</string>
+    <string name="system_default">System Default</string>
+    <string name="favourite">Favourite</string>
+    <string name="artist_title_divider">%s | %s</string>
+    <string name="cloud_photos_toolbar_title">Unsplash It</string>
 
 </resources>

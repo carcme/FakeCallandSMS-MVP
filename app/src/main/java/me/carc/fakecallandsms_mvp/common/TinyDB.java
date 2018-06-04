@@ -1,7 +1,5 @@
 package me.carc.fakecallandsms_mvp.common;
 
-import com.google.gson.Gson;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,12 +10,16 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+
+import me.carc.fakecallandsms_mvp.fragments.cloud.data.model.Photo;
 
 /**
  * Created by Carc.me on 06.04.16.
@@ -156,7 +158,7 @@ public class TinyDB {
             return false;
 
         boolean fileCreated = false;
-        boolean bitmapCompressed = false;
+        boolean bitmapCompressed;
         boolean streamClosed = false;
 
         File imageFile = new File(fullPath);
@@ -360,6 +362,20 @@ public class TinyDB {
     	return objects;
     }
 
+    public ArrayList<Photo> getListPhoto(String key) {
+        Gson gson = new Gson();
+
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<Photo> objects = new ArrayList<>();
+
+        for(String jObjString : objStrings){
+            Photo value  = gson.fromJson(jObjString,  Photo.class);
+            objects.add(value);
+        }
+        return objects;
+    }
+
     public Object getObject(String key, Class<?> classOfT){
 
         String json = getString(key);
@@ -501,6 +517,16 @@ public class TinyDB {
     		objStrings.add(gson.toJson(obj));
     	}
     	putListString(key, objStrings);
+    }
+
+    public void putListPhoto(String key, ArrayList<Photo> objArray){
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<>();
+        for(Photo obj : objArray){
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
     }
 
     /**

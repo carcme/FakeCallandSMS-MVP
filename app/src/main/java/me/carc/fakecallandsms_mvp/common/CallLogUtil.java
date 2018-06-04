@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.provider.CallLog;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import me.carc.fakecallandsms_mvp.R;
 
@@ -20,15 +21,13 @@ public class CallLogUtil {
     @RequiresPermission(Manifest.permission.WRITE_CALL_LOG)
     public static void addCallToLog(Context ctx, String contact, String number, long duration, int type, long time) {
 
-        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED)
             return;
-        }
 
         if (contact == null && number == null)
             contact = ctx.getString(R.string.unknown_caller);
 
         ContentValues values = new ContentValues();
-
         values.put(CallLog.Calls.NUMBER, number != null ? number : contact);
         values.put(CallLog.Calls.DATE, time);
         values.put(CallLog.Calls.DURATION, (duration / 1000));
@@ -38,6 +37,10 @@ public class CallLogUtil {
         values.put(CallLog.Calls.CACHED_NUMBER_TYPE, 0);
         values.put(CallLog.Calls.CACHED_NUMBER_LABEL, "");
 
-        ctx.getApplicationContext().getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
+        try {
+            ctx.getApplicationContext().getContentResolver().insert(CallLog.Calls.CONTENT_URI, values);
+        }catch(IllegalArgumentException e) {
+            Log.w(CallLogUtil.class.getName(), "Cannot insert call log entry. Probably not a phone", e);
+        }
     }
 }

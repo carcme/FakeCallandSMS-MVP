@@ -19,49 +19,24 @@
     <uses-permission android:name="android.permission.WRITE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 
     <application
-            android:allowBackup="true"
-            android:name=".app.App"
-            android:icon="@mipmap/ic_launcher"
+        android:name=".app.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".MainTabActivity"
+            android:excludeFromRecents="false"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <activity
-                android:name=".SplashActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-
-        <activity-alias
-                android:name=".Launcher"
-                android:excludeFromRecents="true"
-                android:screenOrientation="portrait"
-                android:targetActivity=".SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity-alias>
-
-
-        <receiver
-                android:name=".stealth.LaunchAppViaDialReceiver"
-                android:enabled="true"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
-            </intent-filter>
-        </receiver>
-
-        <activity
-                android:name=".MainTabActivity"
-                android:label="@string/app_name"
-                android:excludeFromRecents="false"
-                android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -81,11 +56,33 @@
             </intent-filter>
         </activity>
 
+        <activity-alias
+            android:name=".Launcher"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:targetActivity=".MainTabActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+
+        <receiver
+            android:name=".stealth.LaunchAppViaDialReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+            </intent-filter>
+        </receiver>
+
         <activity
-                android:name="me.carc.fakecallandsms_mvp.CallIncomingActivity"
-                android:theme="@style/AppTheme.NoActionBar"
-                android:excludeFromRecents="true"
-                android:screenOrientation="portrait">
+            android:name="me.carc.fakecallandsms_mvp.CallIncomingActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
@@ -93,21 +90,30 @@
 
 
         <activity
-                android:name=".SettingsActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/SettingsTheme"/>
+            android:name=".SettingsActivity"
+            android:theme="@style/SettingsTheme"/>
+
+        <activity
+            android:name=".fragments.cloud.CloudGridActivity"
+            android:theme="@style/AppTheme.CloudGrid">
+        </activity>
+
+
+        <activity
+            android:name=".fragments.cloud.CloudDetailActivity"
+            android:theme="@style/AppTheme.CloudDetails"/>
 
 
         <service
-                android:enabled="true"
-                android:name="me.carc.fakecallandsms_mvp.alarm.SmsIntentService"/>
+            android:name="me.carc.fakecallandsms_mvp.alarm.SmsIntentService"
+            android:enabled="true"/>
 
 
         <receiver
-                android:name=".alarm.CallAlarmReceiver"
-                android:enabled="true"
-                android:exported="true"
-                android:permission="me.carc.fakecallandsms_mvp.alarm.ALARM_RECIEVED">
+            android:name=".alarm.CallAlarmReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="me.carc.fakecallandsms_mvp.alarm.ALARM_RECIEVED">
             <intent-filter android:priority="1">
                 <action android:name="me.carc.fakecallandsms_mvp.alarm.ALARM_RECIEVED"/>
             </intent-filter>
@@ -118,10 +124,10 @@
 
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
         <receiver
-                android:name=".sms.FakeSmsReceiver"
-                android:enabled="true"
-                android:exported="true"
-                android:permission="android.permission.BROADCAST_SMS">
+            android:name=".sms.FakeSmsReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER"/>
             </intent-filter>
@@ -130,8 +136,8 @@
 
         <!-- BroadcastReceiver that listens for incoming MMS messages -->
         <receiver
-                android:name=".sms.MmsReceiver"
-                android:permission="android.permission.BROADCAST_WAP_PUSH">
+            android:name=".sms.MmsReceiver"
+            android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER"/>
                 <data android:mimeType="application/vnd.wap.mms-message"/>
@@ -140,9 +146,9 @@
 
         <!-- Service that delivers messages from the phone "quick response" -->
         <service
-                android:name=".sms.HeadlessSmsSendService"
-                android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
-                android:exported="true">
+            android:name=".sms.HeadlessSmsSendService"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -156,8 +162,8 @@
 
 
         <provider
-            android:name=".common.utils.GenericFileProvider"
-            android:authorities="${applicationId}.my.package.name.provider"
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/file_provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -165,10 +171,21 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
+        <!--
+                <provider
+                    android:name=".common.utils.GenericFileProvider"
+                    android:authorities="${applicationId}.my.package.name.provider"
+                    android:exported="false"
+                    android:grantUriPermissions="true">
+                    <meta-data
+                        android:name="android.support.FILE_PROVIDER_PATHS"
+                        android:resource="@xml/provider_paths"/>
+                </provider>
+        -->
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="fbef5068aff924f588f1045c445fae0a1e2eaa4a" />
+            android:value="fbef5068aff924f588f1045c445fae0a1e2eaa4a"/>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

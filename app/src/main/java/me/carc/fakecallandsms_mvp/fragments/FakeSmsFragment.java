@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 
 import java.text.SimpleDateFormat;
@@ -32,11 +37,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import io.fabric.sdk.android.services.common.Crash;
+import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
+import me.carc.fakecallandsms_mvp.common.utils.AndroidUtils;
 import me.carc.fakecallandsms_mvp.common.utils.CalendarHelper;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
+import me.carc.fakecallandsms_mvp.widgets.CircularBitmapImageViewTarget;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,36 +61,23 @@ public class FakeSmsFragment extends Fragment {
 
     Calendar calPicker = Calendar.getInstance();
 
-    @BindView(R.id.smsMsg)
-    EditText smsMsg;
+    @BindView(R.id.smsMsg) EditText smsMsg;
+    @BindView(R.id.attachmentBtn) ImageView attachmentBtn;
+    @BindView(R.id.attachmentLoading) ContentLoadingProgressBar attachmentLoading;
 
-    @BindView(R.id.smsNumber)
-    EditText smsNumber;
+    @BindView(R.id.smsNumber) EditText smsNumber;
+    @BindView(R.id.contactNameTV) TextView contactNameTV;
+    @BindView(R.id.smsCounter) TextView smsCounter;
+    @BindView(R.id.contactBtn) ImageView contactBtn;
+    @BindView(R.id.toggleInbox) ToggleButton toggleInbox;
+    @BindView(R.id.toggleSent) ToggleButton toggleSent;
+    @BindView(R.id.toggleDraft) ToggleButton toggleDraft;
+    @BindView(R.id.dateBtn) Button dateBtn;
+    @BindView(R.id.timeBtn) Button timeBtn;
 
-    @BindView(R.id.contactNameTV)
-    TextView contactNameTV;
+    @BindView(R.id.smsSendOpts) LinearLayout smsSendOpts;
 
-    @BindView(R.id.smsCounter)
-    TextView smsCounter;
-
-
-    @BindView(R.id.contactBtn)
-    View contactBtn;
-
-    @BindView(R.id.toggleInbox)
-    ToggleButton toggleInbox;
-
-    @BindView(R.id.toggleSent)
-    ToggleButton toggleSent;
-
-    @BindView(R.id.toggleDraft)
-    ToggleButton toggleDraft;
-
-    @BindView(R.id.dateBtn)
-    Button dateBtn;
-
-    @BindView(R.id.timeBtn)
-    Button timeBtn;
+    @BindView(R.id.mmsSubject) EditText mmsSubject;
 
 
     public DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
@@ -103,7 +98,7 @@ public class FakeSmsFragment extends Fragment {
             calPicker.set(Calendar.SECOND, 0);
 
             // format the time
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             String time = sdf.format(calPicker.getTime());
             // set the button
             timeBtn.setText(time);
@@ -116,12 +111,11 @@ public class FakeSmsFragment extends Fragment {
 
     public interface FakeSmsListener {
         void onSmsContact(String contactName, String number, String image);
-
+        void onMmsSubject(String subject);
         void onSmsMessage(String msg);
-
         void onSmsType(String location);
-
         void onSmsTime(long time);
+        void attachmentReference(ImageView imageButton, ContentLoadingProgressBar progressBar);
     }
 
     private FakeSmsListener smsListener;
@@ -151,10 +145,10 @@ public class FakeSmsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fakesms_square_fragment, container, false);
         ButterKnife.bind(this, rootView);
         setRetainInstance(true);
-
-        // Init default setting
         toggleInbox.setChecked(true);
         ViewUtils.setButtonDrawableColor(getActivity(), toggleInbox, R.color.controlSet, 1);
+
+        smsListener.attachmentReference(attachmentBtn, attachmentLoading);
 
         return rootView;
     }
@@ -173,12 +167,16 @@ public class FakeSmsFragment extends Fragment {
 
 
     private void setDateButton() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", Locale.getDefault());
         String date = sdf.format(calPicker.getTime());
         dateBtn.setText(date);
         ViewUtils.setButtonDrawableColor(getActivity(), dateBtn, R.color.controlSet, 1);
     }
 
+    @OnTextChanged(R.id.mmsSubject)
+    void onSubjectTextChanged(CharSequence subject, int start) {
+        smsListener.onMmsSubject(subject.toString());
+    }
 
     @OnTextChanged(R.id.smsMsg)
     void onMsgTextChanged(CharSequence msg) {
@@ -191,6 +189,16 @@ public class FakeSmsFragment extends Fragment {
         smsListener.onSmsMessage(msg.toString());
     }
 
+    @OnClick(R.id.attachmentBtn)
+    void attachImage() {
+        AndroidUtils.hideSoftKeyboard(getActivity(), attachmentBtn);
+
+        ImageSourceFragment imageSrc = new ImageSourceFragment();
+        this.getFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, imageSrc, ImageSourceFragment.TAG_ID)
+                .addToBackStack(ImageSourceFragment.TAG_ID)
+                .commit();
+    }
 
     @OnTextChanged(R.id.smsNumber)
     void onNumberTextChanged(CharSequence msg, int start) {
@@ -206,7 +214,7 @@ public class FakeSmsFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.contactBtn)
+    @OnClick({R.id.contactBtn, R.id.contactNameTV})
     void onContactSelectButton() {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
         if(U.isIntentAvailable(getActivity(), intent)) {
@@ -278,7 +286,7 @@ public class FakeSmsFragment extends Fragment {
         Log.i(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == C.PICK_CONTACT && resultCode == RESULT_OK) {
-            if (data != null) {
+            if (data != null && data.getData() != null) {
                 Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
                 if(cursor != null) {
                     if (cursor.moveToFirst()) {
@@ -287,6 +295,18 @@ public class FakeSmsFragment extends Fragment {
                             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                             String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+
+                            if(!TextUtils.isEmpty(image)) {
+                                Glide.with(this)
+                                        .load(image)
+                                        .asBitmap()
+                                        .centerCrop()
+                                        .error(R.drawable.ic_person)
+                                        .into(new CircularBitmapImageViewTarget(getActivity(), contactBtn));
+                           } else {
+                                contactBtn.setImageResource(R.drawable.ic_person);
+                                contactBtn.setScaleType(ImageView.ScaleType.CENTER);
+                            }
 
                             // show the contact name
                             contactNameTV.setText(name);
@@ -297,12 +317,12 @@ public class FakeSmsFragment extends Fragment {
                         } catch (IllegalStateException e) {
                             Toast.makeText(getActivity(), "This contact is not valid", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                     cursor.close();
                 } else {
                     Toast.makeText(getActivity(), "There was an error getting the Contact information", Toast.LENGTH_SHORT).show();
-                    Answers.getInstance().onException(new Crash.LoggedException(TAG, "cursor not NULL but can not moveToFirst()"));
+                    if(BuildConfig.USE_CRASHLYTICS)
+                        Answers.getInstance().onException(new Crash.LoggedException(TAG, "cursor not NULL but can not moveToFirst()"));
                 }
             }
         }

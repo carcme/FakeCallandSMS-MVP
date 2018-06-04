@@ -19,7 +19,7 @@
             <solid android:color="#99cc00"/>
             <size
                 android:width="@dimen/incoming_call_widget_circle_size"
-                android:height="@dimen/incoming_call_widget_circle_size" />
+                android:height="@dimen/incoming_call_widget_circle_size"/>
         </shape>
     </item>
     <item

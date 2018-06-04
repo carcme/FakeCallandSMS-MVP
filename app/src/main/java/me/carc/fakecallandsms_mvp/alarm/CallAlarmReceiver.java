@@ -21,8 +21,8 @@ public class CallAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
-        CarcWakeLockHolder wl = new CarcWakeLockHolder(ctx);
-        wl.aquireWakeLock();
+//        CarcWakeLockHolder wl = new CarcWakeLockHolder(ctx);
+//        wl.aquireWakeLock();
 
         Intent callIntentService = new Intent(ctx, CallIncomingActivity.class);
         if(intent != null && intent.getExtras() != null) {
@@ -57,15 +57,16 @@ public class CallAlarmReceiver extends BroadcastReceiver {
 
     private void sendNotification(Context context) {
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context);
+
+        Notification.Builder nBuilder = new Notification.Builder(context);
 
         nBuilder.setDefaults(Notification.DEFAULT_ALL);
         nBuilder.setSmallIcon(R.drawable.ic_call, 1);
         nBuilder.setContentTitle("CallAlarmReceiver");
         nBuilder.setContentText("CallAlarmReceiver");
-        nBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        nBuilder.setPriority(Notification.PRIORITY_HIGH);
         nBuilder.setColor(ContextCompat.getColor(context, R.color.colorPrimary));//Color.rgb(255, 87, 34));
 
-        nm.notify(2002, nBuilder.build());
+        if (nm != null) nm.notify(2002, nBuilder.build());
     }
 }

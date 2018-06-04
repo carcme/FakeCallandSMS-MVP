@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "36b4cdb70fc17a639cc21aca1a725f00",
+    "identityHash": "93a3f5c0934bafe5117dbdcccbd02f46",
     "entities": [
       {
         "tableName": "FakeContact",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyID` INTEGER, `callType` INTEGER, `name` TEXT, `number` TEXT, `image` TEXT, `date` INTEGER, `time` INTEGER, `duration` INTEGER, `vibrate` INTEGER, `useCallLogs` INTEGER, `ringtone` TEXT, `smsMsg` TEXT, `smsType` TEXT, `databaseType` TEXT, PRIMARY KEY(`keyID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyID` INTEGER, `callType` INTEGER, `name` TEXT, `number` TEXT, `image` TEXT, `date` INTEGER, `time` INTEGER, `duration` INTEGER, `vibrate` INTEGER, `useCallLogs` INTEGER, `ringtone` TEXT, `smsMsg` TEXT, `smsType` TEXT, `mmsSubject` TEXT, `attachmentPath` TEXT, `databaseType` TEXT, PRIMARY KEY(`keyID`))",
         "fields": [
           {
             "fieldPath": "index",
@@ -74,6 +74,16 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "mmsSubject",
+            "columnName": "mmsSubject",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "attachmentPath",
+            "columnName": "attachmentPath",
+            "affinity": "TEXT"
+          },
+          {
             "fieldPath": "databaseType",
             "columnName": "databaseType",
             "affinity": "TEXT"
@@ -91,7 +101,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"36b4cdb70fc17a639cc21aca1a725f00\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"93a3f5c0934bafe5117dbdcccbd02f46\")"
     ]
   }
 }

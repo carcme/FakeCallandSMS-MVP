@@ -7,8 +7,11 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,16 +52,27 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
 
         holder.type.setText(data.getDatabaseType());
 
-        if (data.getDatabaseType().startsWith("SMS"))
+        if (data.getDatabaseType().startsWith("SMS") || data.getDatabaseType().startsWith("MMS")) {
             holder.smsMessage.setText(data.getSmsMsg());
-        else
+            if(data.isMMS()) {
+                Glide.with(holder.mmsImage.getContext())
+                        .load(data.getAttachmentPath())
+                        .override(100, 100)
+                        .into(holder.mmsImage);
+
+                if(TextUtils.isEmpty(data.getMmsSubject()))
+                    holder.subjectLayout.setVisibility(View.GONE);
+                else
+                    holder.msgSubject.setText(data.getMmsSubject());
+            }
+        } else
             holder.smsMessageLayout.setVisibility(View.GONE);
 
         if (TextUtils.isEmpty(data.getName())) {
             if (!TextUtils.isEmpty(data.getNumber()))
                 holder.contact.setText(data.getNumber());
             else
-                holder.contact.setText("Unknown Caller");
+                holder.contact.setText(R.string.unknown_caller2);
         } else
             holder.contact.setText(data.getName());
 
@@ -133,23 +147,20 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.msgType)
-        TextView type;
-        @BindView(R.id.msgContact)
-        TextView contact;
-        @BindView(R.id.msgDate)
-        TextView date;
-        @BindView(R.id.msgTime)
-        TextView time;
-        @BindView(R.id.pendingCard)
-        CardView elementHolder;
+        @BindView(R.id.msgType) TextView type;
+        @BindView(R.id.msgContact) TextView contact;
+        @BindView(R.id.msgDate) TextView date;
+        @BindView(R.id.msgTime) TextView time;
+        @BindView(R.id.pendingCard) CardView elementHolder;
 
-        @BindView(R.id.smsMessageLayout)
-        TableRow smsMessageLayout;
-        @BindView(R.id.smsMessage)
-        TextView smsMessage;
+        @BindView(R.id.msgSubject) TextView msgSubject;
+        @BindView(R.id.smsMessage) TextView smsMessage;
+        @BindView(R.id.mmsImage) ImageView mmsImage;
 
-        public ViewHolder(View itemView) {
+        @BindView(R.id.smsMessageLayout) TableRow smsMessageLayout;
+        @BindView(R.id.subjectLayout) TableRow subjectLayout;
+
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

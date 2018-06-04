@@ -15,12 +15,24 @@
       },
       "oauth_client": [
         {
+          "client_id": "592418280339-4q7kg41ek5lbkqfevumra4uffb11e9bh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.carc.fakecallandsms_mvp",
+            "certificate_hash": "f82f1a54a7f4c6fbb52d547dcf769e1ccbd1fd10"
+          }
+        },
+        {
           "client_id": "592418280339-ghoqminjqv0ng99ug7ipiv25tuma7c34.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "me.carc.fakecallandsms_mvp",
             "certificate_hash": "f24799dec44c4c12d09ceb2a519a07e93da41e3a"
           }
+        },
+        {
+          "client_id": "592418280339-knk4867aejasegmd3crdhretd543rlm6.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "592418280339-knk4867aejasegmd3crdhretd543rlm6.apps.googleusercontent.com",

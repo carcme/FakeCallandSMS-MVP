@@ -17,8 +17,8 @@ import android.os.Vibrator;
 import android.provider.CallLog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -38,16 +38,16 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.carc.fakecallandsms_mvp.alarm.CarcWakeLockHolder;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.CallLogUtil;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
-import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 
 public class CallIncomingActivity extends Base {
 
     private static final String TAG = C.DEBUG + U.getTag();
+
+    private static final long[] VIBRATE_PATTERN = {0, 700, 1000};
 
     private TinyDB tinyDb;
 
@@ -103,8 +103,8 @@ public class CallIncomingActivity extends Base {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CarcWakeLockHolder wl = new CarcWakeLockHolder(this);
-        wl.aquireWakeLock();
+//        CarcWakeLockHolder wl = new CarcWakeLockHolder(this);
+//        wl.aquireWakeLock();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -127,34 +127,37 @@ public class CallIncomingActivity extends Base {
         if (tinyDb == null)
             tinyDb = new TinyDB(this);
 
-        checkCallOngoing();
-        setupGlowPad();
-        retrieveContactInfo();
-        playIncomingNotification();
-        setCallScreenColor();
+        if (!isCallOngoing()) {
+            setupGlowPad();
+            retrieveContactInfo();
+            playIncomingNotification();
+            setCallScreenColor();
 //        showNotification();
+        }
     }
 
 
     private void showNotification() {
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this);
+        if (nm != null) {
+            Notification.Builder nBuilder = new Notification.Builder(this);
 
-        String mContact = getIntent().hasExtra(C.NAME) ? getIntent().getStringExtra(C.NAME) : "";
-        String mNumber = getIntent().hasExtra(C.NUMBER) ? getIntent().getStringExtra(C.NUMBER) : "";
+            String mContact = getIntent().hasExtra(C.NAME) ? getIntent().getStringExtra(C.NAME) : "";
+            String mNumber = getIntent().hasExtra(C.NUMBER) ? getIntent().getStringExtra(C.NUMBER) : "";
 
-        if (Common.isEmpty(mContact) && Common.isEmpty(mNumber))
-            mContact = getString(R.string.unknown_caller);
+            if (TextUtils.isEmpty(mContact) && TextUtils.isEmpty(mNumber))
+                mContact = getString(R.string.unknown_caller);
 
-        nBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-        nBuilder.setSmallIcon(R.drawable.ic_call, 1);
-        nBuilder.setContentTitle("Incoming Call");
-        nBuilder.setContentText(!Common.isEmpty(mContact) ? mContact : mNumber);
-        nBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        nBuilder.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        nBuilder.setOnlyAlertOnce(true);
+            nBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+            nBuilder.setSmallIcon(R.drawable.ic_call, 1);
+            nBuilder.setContentTitle("Incoming Call");
+            nBuilder.setContentText(!TextUtils.isEmpty(mContact) ? mContact : mNumber);
+            nBuilder.setPriority(Notification.PRIORITY_HIGH);
+            nBuilder.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            nBuilder.setOnlyAlertOnce(true);
 
-        nm.notify(2002, nBuilder.build());
+            nm.notify(2002, nBuilder.build());
+        }
     }
 
     /**
@@ -274,12 +277,12 @@ public class CallIncomingActivity extends Base {
         String name = getIntent().getStringExtra(C.NAME);
         String number = getIntent().getStringExtra(C.NUMBER);
 
-        if (!Common.isEmpty(name))
+        if (!TextUtils.isEmpty(name))
             callerName.setText(name);
         else
             callerName.setText(R.string.unknown_caller);
 
-        if (!Common.isEmpty(number))
+        if (!TextUtils.isEmpty(number))
             callerNumber.setText(number);
     }
 
@@ -295,9 +298,9 @@ public class CallIncomingActivity extends Base {
      *
      * @return Ongoing or pending call is present
      */
-    private boolean checkCallOngoing() {
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getCallState() != TelephonyManager.CALL_STATE_IDLE;
+    private boolean isCallOngoing() {
+        TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        return manager != null && manager.getCallState() != TelephonyManager.CALL_STATE_IDLE;
     }
 
 
@@ -309,7 +312,7 @@ public class CallIncomingActivity extends Base {
         Vibrator vibrator = null;
         if (getIntent().getBooleanExtra(C.VIBRATE, false)) {
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(C.VIBRATE_PATTERN, 0);
+            if (vibrator != null)  vibrator.vibrate(VIBRATE_PATTERN, 0);
         }
 
         String guiRingtone = getIntent().getStringExtra(C.RINGTONE);
@@ -372,7 +375,7 @@ public class CallIncomingActivity extends Base {
     private void startVoice() {
         String voice = tinyDb.getString(C.PREF_BACKGROUND_VOICE);
 
-        if (!Common.isEmpty(voice)) {
+        if (!TextUtils.isEmpty(voice)) {
 
             Uri voiceURI = Uri.parse(voice);
 
@@ -423,7 +426,10 @@ public class CallIncomingActivity extends Base {
         stopVoice();
 
         // Clear the wake lock - used to keep screen on while fake call occuring
-        CarcWakeLockHolder.getInstance().releaseWakeLock();
+/*
+        if(CarcWakeLockHolder.getInstance() != null)
+            CarcWakeLockHolder.getInstance().releaseWakeLock();
+*/
 
         // Show the launch Icon on home screen
         showLaunchIcon();

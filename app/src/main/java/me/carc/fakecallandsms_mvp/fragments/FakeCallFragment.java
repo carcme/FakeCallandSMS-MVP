@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.fabric.sdk.android.services.common.Crash;
+import me.carc.fakecallandsms_mvp.BuildConfig;
+import me.carc.fakecallandsms_mvp.MainTabActivity;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
@@ -56,6 +59,7 @@ public class FakeCallFragment extends Fragment {
     private static final String TAG = FakeCallFragment.class.getName();
     public static final String TAG_ID = "FakeCallFragment";
 
+    public static final int PENDING_INTENT_RINGTONE = 6000;
 
     public interface FakeCallListener {
         void onSetContactDetails(String contactName, String number, String image);
@@ -69,35 +73,17 @@ public class FakeCallFragment extends Fragment {
 
     private FakeCallListener callListener;
 
-
-    public static final int PERMISSION_WRITE_CALL_LOG_RESULT = 1502;
-
     final Calendar calendarInst = Calendar.getInstance();
     Calendar calPicker = Calendar.getInstance();
 
-    @BindView(R.id.contactBtn)
-    Button contactBtn;
-
-    @BindView(R.id.ringtoneBtn)
-    Button ringtoneBtn;
-
-    @BindView(R.id.toggleVibrate)
-    ToggleButton toggleVibrate;
-
-    @BindView(R.id.toggleLogs)
-    ToggleButton toggleLogs;
-
-    @BindView(R.id.dateBtn)
-    Button dateBtn;
-
-    @BindView(R.id.timeBtn)
-    Button timeBtn;
-
-    @BindView(R.id.quickTimeBtn)
-    ToggleButton quickTimeBtn;
-
-    @BindView(R.id.callTypeRadioGroup)
-    RadioGroup callTypeRadioGroup;
+    @BindView(R.id.contactBtn) Button contactBtn;
+    @BindView(R.id.ringtoneBtn) Button ringtoneBtn;
+    @BindView(R.id.toggleVibrate) ToggleButton toggleVibrate;
+    @BindView(R.id.toggleLogs) ToggleButton toggleLogs;
+    @BindView(R.id.dateBtn) Button dateBtn;
+    @BindView(R.id.timeBtn) Button timeBtn;
+    @BindView(R.id.quickTimeBtn) ToggleButton quickTimeBtn;
+    @BindView(R.id.callTypeRadioGroup) RadioGroup callTypeRadioGroup;
 
 
     public DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
@@ -118,7 +104,7 @@ public class FakeCallFragment extends Fragment {
             calPicker.set(Calendar.SECOND, 0);
 
             // format the time
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             String time = sdf.format(calPicker.getTime());
 
             // reset quickTime
@@ -166,7 +152,6 @@ public class FakeCallFragment extends Fragment {
 
 
     private void setDefaultValues() {
-
         TinyDB db = TinyDB.getTinyDB();
 
         String constant = db.getString(C.PREF_QUICK_TIME, String.valueOf(C.QUICK_TIME_DEFAULT));
@@ -201,7 +186,7 @@ public class FakeCallFragment extends Fragment {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.select_ringtone));
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-        startActivityForResult(intent, C.PENDING_INTENT_RINGTONE);
+        startActivityForResult(intent, PENDING_INTENT_RINGTONE);
     }
 
 
@@ -218,7 +203,7 @@ public class FakeCallFragment extends Fragment {
 
 
     private void setDateButton() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy", Locale.getDefault());
         String date = sdf.format(calPicker.getTime());
         dateBtn.setText(date);
         ViewUtils.setButtonDrawableColor(getActivity(), dateBtn, R.color.controlSet, 1);
@@ -282,7 +267,7 @@ public class FakeCallFragment extends Fragment {
             }
         } else {
             final String[] LOCATION_PERMISSIONS = {Manifest.permission.WRITE_CALL_LOG};
-            ActivityCompat.requestPermissions(getActivity(), LOCATION_PERMISSIONS, PERMISSION_WRITE_CALL_LOG_RESULT);
+            ActivityCompat.requestPermissions(getActivity(), LOCATION_PERMISSIONS, MainTabActivity.PERMISSION_WRITE_CALL_LOG_RESULT);
         }
     }
 
@@ -309,7 +294,7 @@ public class FakeCallFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
-            case PERMISSION_WRITE_CALL_LOG_RESULT:
+            case MainTabActivity.PERMISSION_WRITE_CALL_LOG_RESULT:
                 onToggleLogs();
                 break;
         }
@@ -321,13 +306,38 @@ public class FakeCallFragment extends Fragment {
         Log.i(TAG, "onActivityResult: " + requestCode);
 
         if (requestCode == C.PICK_CONTACT && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+            if (data != null && data.getData() != null) {
+                ContentResolver cr = getActivity().getContentResolver();
+                Cursor cursor = cr.query(data.getData(), null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
-                    // Fetch other Contact details to use
-                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    String image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+
+                    String name;
+                    String number = "";
+                    String image;
+
+                    // get contact info
+                    String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    Integer hasPhone = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                    image = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI));
+
+                    // get user number and image
+                    if (hasPhone > 0) {  // should always be true!!
+                        try {
+                            number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        } catch (IllegalStateException ise) {
+                            Cursor cp = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                            try {
+                                if (cp != null && cp.moveToFirst()) {
+                                    number = cp.getString(cp.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                    cp.close();
+                                }
+                            } catch (Exception e) {
+                                cp.close();
+                            }
+                        }
+                    }
 
                     contactBtn.setText(name);
                     ViewUtils.setButtonDrawableColor(getActivity(), contactBtn, R.color.controlSet, 1);
@@ -336,7 +346,7 @@ public class FakeCallFragment extends Fragment {
                     cursor.close();
                 }
             }
-        } else if (requestCode == C.PENDING_INTENT_RINGTONE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == PENDING_INTENT_RINGTONE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
@@ -347,7 +357,8 @@ public class FakeCallFragment extends Fragment {
                     ViewUtils.setButtonDrawableColor(getActivity(), ringtoneBtn, R.color.controlSet, 1);
                 } else {
                     Toast.makeText(getActivity(), "There was an error getting the ringtone path", Toast.LENGTH_SHORT).show();
-                    Answers.getInstance().onException(new Crash.LoggedException(TAG, "Uri path from intent failed"));
+                    if(BuildConfig.USE_CRASHLYTICS)
+                        Answers.getInstance().onException(new Crash.LoggedException(TAG, "Uri path from intent failed"));
                 }
             }
         }

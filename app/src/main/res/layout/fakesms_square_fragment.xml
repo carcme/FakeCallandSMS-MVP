@@ -1,166 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/fragment_background">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/fragment_background"
+        tools:ignore="UselessParent">
 
-        <GridLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnCount="1">
+            android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/smsMsg"
+            <GridLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="@dimen/margin_standard"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:background="@drawable/custom_border"
-                android:gravity="top|start"
-                android:hint="@string/type_your_message"
-                android:inputType="textMultiLine|textCapSentences"
-                android:padding="@dimen/margin_small"
-                android:textColorHint="@color/controlDisabled"
-                android:textSize="20sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:background="@drawable/custom_border"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:columnCount="1">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <!--
-
-                                        <Button
-                                            android:id="@+id/ringtoneBtn"
-                                            style="@style/Widget.AppCompat.Button.Borderless"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:drawableStart="@drawable/ic_music_lib"
-                                            android:text="@string/select_ringtone"
-                                            android:textColor="@color/controlDisabled"
-                                            android:textSize="20sp"/>
-                    -->
-
-                    <TextView
-                        android:id="@+id/contactNameTV"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_small"
-                        android:textSize="20sp"
-                        android:visibility="visible"
-                        tools:text="@string/contacts"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:background="@drawable/custom_border"
+                    android:orientation="horizontal">
 
                     <EditText
-                        android:id="@+id/smsNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/smsMsg"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
                         android:layout_margin="@dimen/margin_small"
-                        android:gravity="center_vertical"
-                        android:hint="@string/enter_number"
-                        android:inputType="phone"
-                        android:maxEms="20"
-                        android:maxLines="1"
+                        android:layout_weight="1"
+                        android:gravity="top|start"
+                        android:hint="@string/type_your_message"
+                        android:inputType="textMultiLine|textCapSentences"
                         android:textColorHint="@color/controlDisabled"
-                        android:textSize="20sp"/>
+                        android:textSize="18sp"
+                        tools:text="@tools:sample/lorem"/>
+
+                    <RelativeLayout
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_margin="@dimen/margin_small">
+
+                        <ImageView
+                            android:id="@+id/attachmentBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/img_desc_mms"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_attach_file"
+                            tools:src="@tools:sample/backgrounds/scenic"/>
+
+                        <android.support.v4.widget.ContentLoadingProgressBar
+                            android:id="@+id/attachmentLoading"
+                            style="?android:attr/progressBarStyleInverse"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/margin_standard"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/contactBtn"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:background="@drawable/custom_border"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/mmsSubject"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_tiny"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:gravity="top|start"
+                        android:hint="@string/add_subject"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:textColorHint="@color/controlDisabled"
+                        android:textSize="18sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:background="@drawable/custom_border"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/contactNameTV"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="@string/contacts"
+                            android:textSize="18sp"
+                            android:visibility="visible"/>
+
+                        <EditText
+                            android:id="@+id/smsNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_marginEnd="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:gravity="center_vertical"
+                            android:hint="@string/enter_number"
+                            android:inputType="phone"
+                            android:maxEms="20"
+                            android:maxLines="1"
+                            android:textColorHint="@color/controlDisabled"
+                            android:textSize="18sp"
+                            tools:text="@tools:sample/us_phones"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/contactBtn"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="@dimen/margin_small"
+                        android:contentDescription="@string/img_desc"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_person"/>
+
+                </LinearLayout>
+
+                <include
+                    layout="@layout/date_time_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"/>
+
+                <include
+                    layout="@layout/sms_buttons_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawablePadding="@dimen/margin_standard"
-                    android:drawableTop="@drawable/ic_person"
-                    android:text="@string/contacts"
-                    android:textColor="@color/controlDisabled"
-                    android:textSize="20sp"/>
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"/>
 
-            </LinearLayout>
+            </GridLayout>
 
-            <include
-                layout="@layout/date_time_layout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/smsCounter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"/>
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/margin_counter"
+                android:layout_marginTop="@dimen/margin_counter"
+                android:textColor="@color/colorEnabled"
+                tools:text="1/26"/>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:background="@drawable/custom_border"
-                android:orientation="horizontal">
-
-                <ToggleButton
-                    android:id="@+id/toggleInbox"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_inbox"
-                    android:textColor="@color/controlDisabled"
-                    android:textOn="@string/inbox"
-                    android:textSize="16sp"
-                    tools:checked="true"/>
-
-                <ToggleButton
-                    android:id="@+id/toggleSent"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_send"
-                    android:textColor="@color/controlDisabled"
-                    android:textOn="@string/sent"
-                    android:textSize="16sp"
-                    tools:checked="true"/>
-
-
-                <ToggleButton
-                    android:id="@+id/toggleDraft"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_draft"
-                    android:textColor="@color/controlDisabled"
-                    android:textOn="@string/draft"
-                    android:textSize="16sp"
-                    tools:checked="true"/>
-
-            </LinearLayout>
-
-        </GridLayout>
-
-        <TextView
-            android:id="@+id/smsCounter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/margin_counter"
-            android:layout_marginTop="@dimen/margin_counter"
-            android:textColor="@color/almostWhite"
-            tools:text="1/26"/>
-
-    </RelativeLayout>
-</ScrollView>
+        </RelativeLayout>
+    </ScrollView>
+</FrameLayout>

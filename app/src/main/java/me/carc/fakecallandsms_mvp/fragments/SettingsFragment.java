@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.provider.Telephony;
@@ -39,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import io.fabric.sdk.android.services.common.Crash;
+import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
@@ -52,36 +52,23 @@ public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getName();
     public static final String TAG_ID = "SettingsFragment";
 
+    private static final int PENDING_INTENT_SMS_RINGTONE = 6001;
+    private static final int NOTIFICATION_CHANGE = 6002;
+
+    public static final String PREF_FINISH_ACTIVITY_AFTER_CALL_SET = "PREF_FINISH_ACTIVITY_AFTER_CALL_SET";
+
     public static final int PERMISSION_STORAGE_RESULT = 1501;
     private static final int VOICE_FILE_SELECT = 1002;
 
-    @BindView(R.id.smsAppResetBtn)
-    Button smsAppResetBtn;
-
-    @BindView(R.id.voiceFileInput)
-    Button voiceFileInput;
-
-    @BindView(R.id.voiceSmsRingtone)
-    Button voiceSmsRingtone;
-
-    @BindView(R.id.closeAfterCallSetSw)
-    Switch closeAfterCallSetSw;
-
-    @BindView(R.id.hideLauncherIconSW)
-    Switch hideLauncherIconSW;
-
-    @BindView(R.id.resetSmsAppSW)
-    Switch resetSmsAppSW;
-
-    @BindView(R.id.quickTimeInput)
-    TextView quickTimeInput;
-
-    @BindView(R.id.launchCodeInput)
-    TextView launchCodeInput;
-
-    @BindView(R.id.callDurationInput)
-    TextView callDurationInput;
-
+    @BindView(R.id.smsAppResetBtn) Button smsAppResetBtn;
+    @BindView(R.id.voiceFileInput) Button voiceFileInput;
+    @BindView(R.id.smsRingtone) Button smsRingtone;
+    @BindView(R.id.closeAfterCallSetSw) Switch closeAfterCallSetSw;
+    @BindView(R.id.hideLauncherIconSW) Switch hideLauncherIconSW;
+    @BindView(R.id.resetSmsAppSW) Switch resetSmsAppSW;
+    @BindView(R.id.quickTimeInput) TextView quickTimeInput;
+    @BindView(R.id.launchCodeInput) TextView launchCodeInput;
+    @BindView(R.id.callDurationInput) TextView callDurationInput;
 
     private View rootView;
 
@@ -90,23 +77,20 @@ public class SettingsFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title);
 
-        // I'm using fragment here so I'm using getView() to provide ViewGroup
-        // but you can provide here any other instance of ViewGroup from your Fragment / Activity
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.alert_layout, (ViewGroup) getView(), false);
-        // Set up the input
         ((TextView) viewInflated.findViewById(R.id.text)).setText(text);
         final EditText input = viewInflated.findViewById(R.id.input);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         builder.setView(viewInflated);
-
         input.setHint(view.getText());
 
         // Set up the buttons
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                view.setText(input.getText().toString());
-                updatePref(view);
+                if(numberSanityCheck(input.getText().toString())) {
+                    view.setText(input.getText().toString());
+                    updatePref(view);
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -119,8 +103,17 @@ public class SettingsFragment extends Fragment {
         builder.show();
     }
 
-    private void updatePref(View v) {
+    private boolean numberSanityCheck(String strNummber) {
+        try {
+            int ignored = Integer.valueOf(strNummber);
+            return true;
+        } catch (NumberFormatException nfe) {
+            Toast.makeText(getActivity(), "That number is too large or just plain invalid :/", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
 
+    private void updatePref(View v) {
         TinyDB db = TinyDB.getTinyDB();
 
         switch (v.getId()) {
@@ -137,7 +130,6 @@ public class SettingsFragment extends Fragment {
                 break;
         }
     }
-
 
     @OnClick(R.id.callDurationInput)
     void setCallDuration() {
@@ -176,7 +168,7 @@ public class SettingsFragment extends Fragment {
 
         // DIAL PAD CODE
         String code = db.getString(C.PREF_DIAL_LAUNCHER);
-        if (Common.isEmpty(code)) {
+        if (TextUtils.isEmpty(code)) {
             launchCodeInput.setHint(C.DIAL_PAD_LAUNCH_DEF_CODE);
         } else {
             launchCodeInput.setEnabled(true);
@@ -189,9 +181,9 @@ public class SettingsFragment extends Fragment {
             ViewUtils.setButtonDrawableColor(getActivity(), voiceFileInput, R.color.controlSet, 1);
 
         // SMS RINGTONE
-        voiceSmsRingtone.setText(db.getString(C.PREF_SMS_RING_TONE_DISPLAY, getString(R.string.select_sms_ringtone)));
-        if(!voiceSmsRingtone.getText().equals(getString(R.string.select_sms_ringtone)))
-            ViewUtils.setButtonDrawableColor(getActivity(), voiceSmsRingtone, R.color.controlSet, 1);
+        smsRingtone.setText(db.getString(C.PREF_SMS_RING_TONE_DISPLAY, getString(R.string.select_sms_ringtone)));
+        if(!smsRingtone.getText().equals(getString(R.string.select_sms_ringtone)))
+            ViewUtils.setButtonDrawableColor(getActivity(), smsRingtone, R.color.controlSet, 1);
 
         /// CALL DURATION
         defaultValue = String.valueOf(C.MAX_CALL_DURATION_DEFAULT);
@@ -206,7 +198,7 @@ public class SettingsFragment extends Fragment {
         resetSmsAppSW.setChecked(db.getBoolean(C.PREF_RESET_SMS_ON_EXIT));
 
         // auto close app
-        closeAfterCallSetSw.setChecked(db.getBoolean(C.PREF_FINISH_ACTIVITY_AFTER_CALL_SET));
+        closeAfterCallSetSw.setChecked(db.getBoolean(PREF_FINISH_ACTIVITY_AFTER_CALL_SET));
 
 
         // HIDE LAUNCHER
@@ -224,10 +216,10 @@ public class SettingsFragment extends Fragment {
 
     @OnClick(R.id.clearSmsFile)
     void clearSmsRingtone() {
-        voiceSmsRingtone.setText(getString(R.string.select_sms_ringtone));
+        smsRingtone.setText(getString(R.string.select_sms_ringtone));
         TinyDB.getTinyDB().remove(C.PREF_SMS_RING_TONE_DISPLAY);
         TinyDB.getTinyDB().remove(C.PREF_SMS_RING_TONE);
-        ViewUtils.setButtonDrawableColor(getActivity(), voiceSmsRingtone, android.R.color.black, 1);
+        ViewUtils.setButtonDrawableColor(getActivity(), smsRingtone, android.R.color.black, 1);
     }
 
 
@@ -265,7 +257,7 @@ public class SettingsFragment extends Fragment {
         if(autoClose)
             Snackbar.make(rootView, "App will close when scheduling a new call", Toast.LENGTH_SHORT).show();
 
-        TinyDB.getTinyDB().putBoolean(C.PREF_FINISH_ACTIVITY_AFTER_CALL_SET, autoClose);
+        TinyDB.getTinyDB().putBoolean(PREF_FINISH_ACTIVITY_AFTER_CALL_SET, autoClose);
     }
 
     @OnClick(R.id.hideLauncherIconSW)
@@ -321,19 +313,19 @@ public class SettingsFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.voiceSmsRingtone)
+    @OnClick(R.id.smsRingtone)
     void onRingtoneButton() {
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (C.HAS_O) {
             Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationUtils.ANDROID_CHANNEL_ID);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-            startActivityForResult(intent, C.NOTIFICATION_CHANGE);
+            startActivityForResult(intent, NOTIFICATION_CHANGE);
         } else {
             Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.select_ringtone));
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-            startActivityForResult(intent, C.PENDING_INTENT_SMS_RINGTONE);
+            startActivityForResult(intent, PENDING_INTENT_SMS_RINGTONE);
         }
     }
 
@@ -366,7 +358,7 @@ public class SettingsFragment extends Fragment {
                         if (Common.isEmpty(artist) && Common.isEmpty(title))
                             voiceFileInput.setText(U.fileNameFromUrl(path));
                         else
-                            voiceFileInput.setText(artist + " | " + title);
+                            voiceFileInput.setText(String.format(getString(R.string.artist_title_divider), artist, title));
 
                         TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE_DISPLAY, voiceFileInput.getText().toString());
                         TinyDB.getTinyDB().putString(C.PREF_BACKGROUND_VOICE, path);
@@ -378,19 +370,20 @@ public class SettingsFragment extends Fragment {
                 }
                 break;
 
-            case C.PENDING_INTENT_SMS_RINGTONE:
+            case PENDING_INTENT_SMS_RINGTONE:
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                         if (!showSmsRingtoneName(uri)) {
                             Toast.makeText(getActivity(), "There was an error getting the ringtone path", Toast.LENGTH_SHORT).show();
-                            Answers.getInstance().onException(new Crash.LoggedException(TAG, "Uri path from intent failed"));
+                            if(BuildConfig.USE_CRASHLYTICS)
+                                Answers.getInstance().onException(new Crash.LoggedException(TAG, "Uri path from intent failed"));
                         }
                     }
                 }
                 break;
-            case C.NOTIFICATION_CHANGE:
-                if (Build.VERSION.SDK_INT >= 26) {
+            case NOTIFICATION_CHANGE:
+                if (C.HAS_O) {
                     NotificationUtils notificationUtils = new NotificationUtils(getActivity());
                     NotificationChannel channel = notificationUtils.getChannel();
                     showSmsRingtoneName(channel.getSound());
@@ -434,8 +427,8 @@ public class SettingsFragment extends Fragment {
         TinyDB.getTinyDB().putString(C.PREF_SMS_RING_TONE, uri.toString());
         TinyDB.getTinyDB().putString(C.PREF_SMS_RING_TONE_DISPLAY, smsToneDisplayText);
 
-        voiceSmsRingtone.setText(smsToneDisplayText);
-        ViewUtils.setButtonDrawableColor(getActivity(), voiceSmsRingtone, R.color.controlSet, 1);
+        smsRingtone.setText(smsToneDisplayText);
+        ViewUtils.setButtonDrawableColor(getActivity(), smsRingtone, R.color.controlSet, 1);
         return true;
     }
 

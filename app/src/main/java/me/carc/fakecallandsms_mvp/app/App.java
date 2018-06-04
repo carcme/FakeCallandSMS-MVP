@@ -7,10 +7,13 @@ import android.os.StrictMode;
 import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
+import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
+import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
 import me.carc.fakecallandsms_mvp.db.AppDatabase;
+import me.carc.fakecallandsms_mvp.db.Migrations;
 
 /**
  * The Application
@@ -41,17 +44,22 @@ public class App extends Application {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(C.DEBUG_ENABLED)
-                .build();
-        Fabric.with(fabric);
+        if(BuildConfig.USE_CRASHLYTICS) {
+            final Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics())
+                    .debuggable(C.DEBUG_ENABLED)
+                    .build();
+            Fabric.with(fabric);
+        }
 
         if (TinyDB.getTinyDB() == null) new TinyDB(this);
 
         AlarmHelper.getInstance().init(getApplicationContext());
 
         mDatabase = initDB();
+
+        if (C.HAS_O)
+            new NotificationUtils(this);
     }
 
     /**
@@ -59,7 +67,7 @@ public class App extends Application {
      */
     private AppDatabase initDB() {
         return Room.databaseBuilder(getApplicationContext(), AppDatabase.class, FAKECALL_DATABASE_NAME)
-                .fallbackToDestructiveMigration()
+                .addMigrations(Migrations.MIGRATION_1_2)
                 .build();
     }
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imageSrcFrame"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <RelativeLayout
+                android:id="@+id/cloud_holder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+            <ImageView
+                    android:id="@+id/cloud_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/img_desc"
+                    android:src="@drawable/ic_cloud_dl"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/gallery_holder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:gravity="center">
+
+            <ImageView
+                    android:id="@+id/gallery_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/img_desc"
+                    android:src="@drawable/ic_image"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+            android:id="@+id/camera_holder"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/camera_holder_circle">
+
+        <ImageView
+                android:id="@+id/camera_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/img_desc"
+                android:src="@drawable/ic_camera"
+                android:scaleType="fitXY"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

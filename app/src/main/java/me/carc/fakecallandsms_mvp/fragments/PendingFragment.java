@@ -38,15 +38,11 @@ public class PendingFragment extends Fragment {
 
     public interface ClickListener {
         void onClick(FakeContact item);
-
         void onLongClick(FakeContact item);
     }
 
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-
-    @BindView(R.id.emptyContainer)
-    LinearLayout emptyContainer;
+    @BindView(R.id.recyclerView) RecyclerView recyclerView;
+    @BindView(R.id.emptyContainer) LinearLayout emptyContainer;
 
     @Nullable
     @Override

@@ -32,7 +32,7 @@
                 android:gravity="end"
                 android:layout_alignParentEnd="true"
                 android:layout_toEndOf="@+id/callStatus"
-                tools:text="1.22"/>
+                tools:text="@tools:sample/date/hhmm"/>
 
         <TextView
                 android:id="@+id/callerName"
@@ -42,7 +42,7 @@
                 android:textSize="40sp"
                 android:layout_below="@+id/callStatus"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/unknown_caller"/>
+                tools:text="@tools:sample/full_names"/>
 
         <TextView
                 android:id="@+id/phoneNumber"
@@ -51,7 +51,7 @@
                 android:textColor="@color/almostWhite"
                 android:textSize="20sp"
                 android:layout_below="@+id/callerName"
-                tools:text="12345678"/>
+                tools:text="@tools:sample/us_phones"/>
 
     </RelativeLayout>
 
@@ -85,7 +85,6 @@
                 android:layout_alignParentStart="true"
                 android:background="@android:color/transparent"
                 android:padding="10dp"
-
                 android:layout_alignParentTop="true"
                 android:src="@drawable/ic_mic_off"
                 />
@@ -135,7 +134,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/icon_user_alpha"
                 android:visibility="invisible"
-                tools:visibility="gone"/>
+                tools:src="@tools:sample/backgrounds/scenic"/>
 
         <ImageView
                 android:id="@+id/contact_image"
@@ -151,25 +150,19 @@
             <net.frakbot.glowpadbackport.GlowPadView
                     android:id="@+id/incomingCallWidget"
                     android:layout_width="match_parent"
-                    android:layout_below="@+id/unknown_image"
                     android:layout_height="match_parent"
-
+                    android:layout_below="@+id/unknown_image"
                     app:feedbackCount="1"
-
                     app:glowRadius="@dimen/glowpadview_glow_radius"
                     app:innerRadius="@dimen/glowpadview_inner_radius"
                     app:outerRadius="@dimen/glowpadview_target_placement_radius"
                     app:snapMargin="@dimen/glowpadview_snap_margin"
-
                     app:targetDrawables="@array/incoming_call_widget_2way_targets"
-
                     app:handleDrawable="@drawable/ic_in_call_touch_handle"
                     app:outerRingDrawable="@drawable/ic_lockscreen_outerring"
-                    app:vibrationDuration="20"
+                    app:vibrationDuration="20"/>
 
-                    />
     </RelativeLayout>
-
 
     <ImageButton
             android:id="@+id/btnEndCall"
@@ -179,6 +172,7 @@
             android:scaleType="fitCenter"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@string/img_desc"
             android:background="@null"
             android:visibility="gone"
             tools:visibility="visible"

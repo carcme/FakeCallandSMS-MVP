@@ -10,12 +10,16 @@ import android.preference.PreferenceFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.codemybrainsout.ratingdialog.SimpleDialog;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ShareEvent;
 
+import de.cketti.library.changelog.ChangeLog;
+import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 
 /**
+ * Menu settings
  * Created by bamptonm on 7/11/17.
  */
 
@@ -51,6 +55,18 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                 return false;
             }
         });
+
+        // ABOUT listeners
+        final Preference changelog = findPreference("changelog");
+        changelog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ChangeLog cl = new ChangeLog(getActivity());
+                cl.getFullLogDialog().show();
+                return true;
+            }
+        });
+
     }
 
     private Preference.OnPreferenceClickListener feedbackPrefClick = new Preference.OnPreferenceClickListener() {
@@ -79,9 +95,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getString(R.string.settings_title_share)));
 
-            Bundle params = new Bundle();
-            params.putString("ACTION", "Share FakeCall");
-            FirebaseAnalytics.getInstance(getActivity()).logEvent(FirebaseAnalytics.Event.SHARE, params);
+            if(BuildConfig.USE_CRASHLYTICS) Answers.getInstance().logShare(new ShareEvent());
 
             return true;
         }

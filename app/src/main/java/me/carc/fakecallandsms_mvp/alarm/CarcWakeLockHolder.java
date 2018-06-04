@@ -9,7 +9,7 @@ import me.carc.fakecallandsms_mvp.common.C;
  * WakeLock Singleton
  * Created by bamptonm on 7/7/17.
  */
-
+@Deprecated
 public class CarcWakeLockHolder {
 
     private PowerManager.WakeLock wl = null;
@@ -18,13 +18,15 @@ public class CarcWakeLockHolder {
 
     public CarcWakeLockHolder(Context ctx) {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, C.WAKE_LOCK_TAG);
+        if (pm != null) {
+            wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, C.WAKE_LOCK_TAG);
+        }
         instance = this;
     }
 
     public static CarcWakeLockHolder getInstance() {
         if(instance == null)
-            throw new RuntimeException("initailise CarcWakeLockHolder before use");
+            return null;
         return instance;
     }
 
@@ -34,11 +36,11 @@ public class CarcWakeLockHolder {
 
     public void aquireWakeLock() {
         if (wl != null)
-            wl.acquire();
+            wl.acquire(60000);
     }
 
     public void releaseWakeLock() {
-        if (wl != null) {
+        if (wl != null && wl.isHeld()) {
             wl.release();
             wl = null;
         }
