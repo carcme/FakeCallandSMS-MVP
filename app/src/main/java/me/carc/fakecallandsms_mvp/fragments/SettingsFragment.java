@@ -226,7 +226,9 @@ public class SettingsFragment extends Fragment {
     @OnClick(R.id.smsAppResetBtn)
     void resetSMSApp() {
         String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
-        if (defaultSMS != null && Telephony.Sms.getDefaultSmsPackage(getActivity()).equals(getActivity().getPackageName())) {
+        String currentSMS = Telephony.Sms.getDefaultSmsPackage(getActivity());
+
+        if (!TextUtils.isEmpty(defaultSMS) && !TextUtils.isEmpty(currentSMS) && currentSMS.equals(getActivity().getPackageName())) {
             Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
             intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSMS);
             startActivity(intent);

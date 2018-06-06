@@ -22,6 +22,8 @@ import me.carc.fakecallandsms_mvp.common.TinyDB;
 @SuppressLint("Registered")
 public class Base extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         calculateDimensions();

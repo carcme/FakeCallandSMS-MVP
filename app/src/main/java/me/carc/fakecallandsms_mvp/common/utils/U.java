@@ -216,6 +216,7 @@ public class U {
     public static void featureRequest(final Context ctx, String hint) {
 
         String text = String.format(ctx.getString(R.string.feature_request), hint)
+                + "\n\nApp Ver: " + AndroidUtils.getVersion()
                 + "\n\nManufacturer: " + Build.MANUFACTURER
                 + "\nModel: " + Build.MODEL
                 + "\nVersion: " + Build.VERSION.SDK_INT

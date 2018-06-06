@@ -4,10 +4,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.codemybrainsout.ratingdialog.SimpleDialog;
 import com.crashlytics.android.answers.Answers;
@@ -16,6 +23,7 @@ import com.crashlytics.android.answers.ShareEvent;
 import de.cketti.library.changelog.ChangeLog;
 import me.carc.fakecallandsms_mvp.BuildConfig;
 import me.carc.fakecallandsms_mvp.R;
+import me.carc.fakecallandsms_mvp.common.utils.AndroidUtils;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 
 /**
@@ -55,6 +63,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                 return false;
             }
         });
+        aboutPref.setSummary(String.format(getString(R.string.app_version), AndroidUtils.getVersion()));
 
         // ABOUT listeners
         final Preference changelog = findPreference("changelog");
@@ -66,8 +75,16 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                 return true;
             }
         });
-
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        final ListView lv = v.findViewById(android.R.id.list);
+        lv.setDivider(new ColorDrawable(Color.TRANSPARENT));
+        return v;
+    }
+
 
     private Preference.OnPreferenceClickListener feedbackPrefClick = new Preference.OnPreferenceClickListener() {
         @Override

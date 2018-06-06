@@ -16,16 +16,19 @@
         android:key="share"
         android:summary="@string/settings_summary_share"/>
 
-    <Preference
-        android:title="@string/settings_title_about"
-        android:key="about"
-        android:summary="Open Source Libraries."
-        />
+    <PreferenceCategory
+        android:layout="@layout/divider"/>
 
     <Preference
         android:title="@string/settings_title_change_log"
         android:key="changelog"
         android:summary="See whats changed in Fake Call and SMS."
+        />
+
+    <Preference
+        android:title="@string/settings_title_about"
+        android:key="about"
+        android:summary="Open Source Libraries."
         />
 
 </PreferenceScreen>

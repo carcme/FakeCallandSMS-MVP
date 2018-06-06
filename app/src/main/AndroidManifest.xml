@@ -39,7 +39,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
 
                 <action android:name="android.intent.action.SEND"/>
@@ -58,12 +57,10 @@
 
         <activity-alias
             android:name=".Launcher"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:targetActivity=".MainTabActivity">
+            android:targetActivity=".MainTabActivity"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>

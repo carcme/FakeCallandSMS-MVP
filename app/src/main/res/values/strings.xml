@@ -3,6 +3,8 @@
     <string name="app_name_share">Share Fake Call and SMS</string>
     <string name="app_name_desc">Share Fake Call and SMS with friends and give them \"An excuse at their fingertips\"</string>
 
+    <string name="app_version">Current Version: %s</string>
+
     <string name="file_provider" templateMergeStrategy="preserve" translatable="false">me.carc.fakecallandsms_mvp.fileprovider</string>
 
     <string name="img_desc" translatable="false">Images</string>
@@ -135,5 +137,7 @@
     <string name="favourite">Favourite</string>
     <string name="artist_title_divider">%s | %s</string>
     <string name="cloud_photos_toolbar_title">Unsplash It</string>
+
+    <string name="no_link_for_app">You don\'t have any app that can open this link</string>
 
 </resources>

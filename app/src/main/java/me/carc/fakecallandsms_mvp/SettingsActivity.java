@@ -1,6 +1,5 @@
 package me.carc.fakecallandsms_mvp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
@@ -14,8 +13,6 @@ import me.carc.fakecallandsms_mvp.fragments.PrefFragment;
  */
 
 public class SettingsActivity extends PreferenceActivity {
-
-    public static boolean langChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +38,6 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        if(langChanged) {
-            Intent intent = getIntent();
-            intent.putExtra("lang", true);
-            setResult(RESULT_OK, intent);
-
-        }
         super.onBackPressed();
     }
-
 }

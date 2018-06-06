@@ -36,7 +36,6 @@ public class DetailViewPagerAdapter extends PagerAdapter {
                                   @NonNull DetailSharedElementEnterCallback callback) {
         layoutInflater = LayoutInflater.from(activity);
         allPhotos = photos;
-//        photoWidth = activity.getResources().getDisplayMetrics().widthPixels;
         host = activity;
         sharedElementCallback = callback;
     }
@@ -81,30 +80,6 @@ public class DetailViewPagerAdapter extends PagerAdapter {
         else
             btn.setImageDrawable(ViewUtils.changeIconColour(host, R.drawable.ic_heart, android.R.color.white));
     }
-
-/*
-
-    private View.OnClickListener  favListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            ImageButton btn = (ImageButton) v;
-            Photo image = getPhoto(pos);
-
-            Log.d("DEAD", "onClick: " + image.id);
-
-            if(checkIsFavourite()) {
-                setFavIcon(btn, false);
-                FavDB.getFavDB().del(image);
-            } else {
-                setFavIcon(btn, true);
-                FavDB.getFavDB().add(image);
-            }
-
-            List ss = FavDB.getFavDB().getList();
-            Log.d("DEAD", "onClick: " + ss.size());
-        }
-    };
-*/
 
     private void onViewBound(CloudDetailViewBinding binding) {
         Glide.with(host)

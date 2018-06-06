@@ -88,7 +88,8 @@ public class MainTabActivity extends Base implements
     public static final int REQUEST_CLOUD   = 656;
     public static final int REQUEST_CAMERA  = 657;
     public static final int REQUEST_GALLERY = 658;
-    public static final int UNSPLASH_ERROR  = 659;
+    public static final int REQUEST_GALLERY_ALT = 659;
+    public static final int UNSPLASH_ERROR  = 660;
 
     TinyDB tinyDb;
     private FakeContact fakeContact;
@@ -624,19 +625,8 @@ public class MainTabActivity extends Base implements
                                     super.onResourceReady(bitmap, anim);
 
                                     mAttachmentProgressRef.get().hide();
-
                                     String picturePath = TinyDB.getTinyDB().putImage(getFilesDir().toString(), photo.filename, bitmap);
                                     fakeContact.setAttachmentPath(picturePath);
-
-                                    // TODO: 31/05/2018 test this when internet is working again!!
-
-/*
-                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                        byte[] b = baos.toByteArray();
-                                        String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-                                        TinyDB.getTinyDB().putString(ref + C.SP_CROPIMAGE, encodedImage);
-*/
                                 }
 
                                 @Override
@@ -672,6 +662,28 @@ public class MainTabActivity extends Base implements
                     }
                 }
                 break;
+
+            case REQUEST_GALLERY_ALT:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    try {
+                        String path = U.getPath(this, Uri.parse(data.getDataString()));
+                        Glide.with(this)
+                                .load(path)
+                                .centerCrop()
+                                .into(mAttachmentImageRef.get());
+
+                        if (TextUtils.isEmpty(path)) {
+                            Toast.makeText(this, "Can not read file path!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        fakeContact.setAttachmentPath(path);
+
+                    } catch (RuntimeException rte ) {
+                        Toast.makeText(this, "Encountered an error parsing the image file. Please try a different file", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+
 
             case REQUEST_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
@@ -713,7 +725,9 @@ public class MainTabActivity extends Base implements
     protected void onDestroy() {
         if (TinyDB.getTinyDB().getBoolean(C.PREF_RESET_SMS_ON_EXIT)) {
             String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
-            if (defaultSMS != null && Telephony.Sms.getDefaultSmsPackage(this).equals(getPackageName())) {
+            String currentSMS = Telephony.Sms.getDefaultSmsPackage(this);
+
+            if (!TextUtils.isEmpty(defaultSMS) && !TextUtils.isEmpty(currentSMS) && currentSMS.equals(getPackageName())) {
                 Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
                 intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSMS);
                 startActivity(intent);
@@ -774,8 +788,15 @@ public class MainTabActivity extends Base implements
             case ImageSourceFragment.IMAGE_GALLERY:
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && !Environment.getExternalStorageState().equals(Environment.MEDIA_CHECKING)) {
 
-                    Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(i, REQUEST_GALLERY);
+                    try {
+                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(i, REQUEST_GALLERY);
+                    } catch (Exception e) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        startActivityForResult(Intent.createChooser(intent, "Select an Audio File"), REQUEST_GALLERY_ALT);
+                    }
 
                     if (BuildConfig.USE_CRASHLYTICS)
                         Answers.getInstance().logCustom(new CustomEvent("MMS Gallery Image"));

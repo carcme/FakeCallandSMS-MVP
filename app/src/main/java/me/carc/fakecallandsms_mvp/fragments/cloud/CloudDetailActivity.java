@@ -28,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.Toolbar;
 
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 
@@ -109,19 +109,16 @@ public class CloudDetailActivity extends Base {
         super.onCreate(savedInstanceState);
     }
 
-
     private void setUpViewPager(ArrayList<Photo> photos) {
         cloudPager = findViewById(R.id.cloud_pager);
         cloudPager.setAdapter(new DetailViewPagerAdapter(this, photos, sharedElementCallback));
         cloudPager.setCurrentItem(initialItem);
         cloudPager.setOffscreenPageLimit(5);
 
-
         cloudPager.setOnViewPagerClickListener(onPagerClickListener);
         CloudDetailActivity.InitAsync task = new CloudDetailActivity.InitAsync();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
 
     class InitAsync extends AsyncTask<Void, Void, Integer> {
 
@@ -164,9 +161,7 @@ public class CloudDetailActivity extends Base {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-
     private boolean checkIsFavourite(Photo image) {
-
         for (Photo photo : FavDB.getFavDB().getList()) {
             if (photo.id == image.id)
                 return true;
@@ -190,10 +185,7 @@ public class CloudDetailActivity extends Base {
             FavDB.getFavDB().del(image);
 
             if (BuildConfig.USE_CRASHLYTICS)
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Remove Favourite")
-                        .putContentType(image.author)
-                        .putContentId(String.valueOf(image.id)));
+                Answers.getInstance().logCustom(new CustomEvent("Remove Favourite"));
         } else {
 /*
             final FeedbackDialog fbDialog = new FeedbackDialog.Builder(this)
@@ -225,10 +217,7 @@ public class CloudDetailActivity extends Base {
             FavDB.getFavDB().add(image);
 
             if (BuildConfig.USE_CRASHLYTICS)
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Add Favourite")
-                        .putContentType(image.author)
-                        .putContentId(String.valueOf(image.id)));
+                Answers.getInstance().logCustom(new CustomEvent("Add Favourite"));
         }
     }
 
