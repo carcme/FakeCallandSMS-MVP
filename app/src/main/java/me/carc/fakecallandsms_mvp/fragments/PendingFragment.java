@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
@@ -21,7 +22,6 @@ import butterknife.ButterKnife;
 import me.carc.fakecallandsms_mvp.R;
 import me.carc.fakecallandsms_mvp.adapter.PendingAdapter;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
-import me.carc.fakecallandsms_mvp.app.App;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.db.AppDatabase;
 import me.carc.fakecallandsms_mvp.model.FakeContact;
@@ -70,32 +70,35 @@ public class PendingFragment extends Fragment {
     }
 
     private void getDatabaseEntries() {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                final List<FakeContact> entries = getDatabase().fakeContactDao().getAllEntries();
-                if (entries.size() > 0) {
+        final AppDatabase db = getDatabase();
+        if(db != null) {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    final List<FakeContact> entries = db.fakeContactDao().getAllEntries();
+                    if (entries.size() > 0) {
 
-                    // clean out old entries
-                    long currentTime = System.currentTimeMillis();
-                    for (Iterator<FakeContact> iterator = entries.iterator(); iterator.hasNext(); ) {
-                        FakeContact contact = iterator.next();
-                        if (contact.getTime() < currentTime) {
-                            getDatabase().fakeContactDao().delete(contact);
-                            iterator.remove();
+                        // clean out old entries
+                        long currentTime = System.currentTimeMillis();
+                        for (Iterator<FakeContact> iterator = entries.iterator(); iterator.hasNext(); ) {
+                            FakeContact contact = iterator.next();
+                            if (contact.getTime() < currentTime) {
+                                db.fakeContactDao().delete(contact);
+                                iterator.remove();
+                            }
                         }
+                        // show only the valid entries
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.addList(entries);
+                                checkIfEmpty();
+                            }
+                        });
                     }
-                    // show only the valid entries
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addList(entries);
-                            checkIfEmpty();
-                        }
-                    });
                 }
-            }
-        });
+            });
+        }
     }
 
 
@@ -107,12 +110,15 @@ public class PendingFragment extends Fragment {
     }
 
     private void deleteDatabaseEntry(final FakeContact contact) {
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                getDatabase().fakeContactDao().delete(contact);
-            }
-        });
+        final AppDatabase db = getDatabase();
+        if (db != null) {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    db.fakeContactDao().delete(contact);
+                }
+            });
+        }
     }
 
     private final ClickListener clickListener = new ClickListener() {
@@ -201,13 +207,16 @@ public class PendingFragment extends Fragment {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                getDatabase().fakeContactDao().nukeTable();
+                AppDatabase db = getDatabase();
+                if (db != null) {
+                    getDatabase().fakeContactDao().nukeTable();
+                }
             }
         });
         checkIfEmpty();
     }
 
     private AppDatabase getDatabase() {
-        return ((App) getActivity().getApplicationContext()).getDB();
+        return AppDatabase.getDatabase(Objects.requireNonNull(getActivity()).getApplicationContext());
     }
 }

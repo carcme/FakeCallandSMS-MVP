@@ -18,7 +18,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
@@ -41,6 +40,7 @@ public class FakeSmsReceiver extends BroadcastReceiver {
     private static final String TAG = C.DEBUG + U.getTag();
     private static final int NOTIFICATION_ID = 2;
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -52,9 +52,9 @@ public class FakeSmsReceiver extends BroadcastReceiver {
         insertSmsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ContextCompat.startForegroundService(context, insertSmsIntent);
 
-        if (Build.VERSION.SDK_INT < 26) {
+//        if (Build.VERSION.SDK_INT < 26) {
             smsNotification(context, intent);
-        }
+//        }
     }
 
     public static void smsNotification(Context context, Intent intent) {

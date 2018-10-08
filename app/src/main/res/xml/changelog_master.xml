@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
 
+    <release version="1.0.24" versioncode="34" >
+        <change>Feature Request: Add pre-defined SMS messages. You can add your own quick messages too.</change>
+        <change>Feature Request: Use the switch in Settngs tab to change app name and icon.</change>
+    </release>
+
     <release version="1.0.23" versioncode="33" >
         <change>Bug Fix: Thanks to Hank Rowland for pointing out that the Gallery could not be accessed</change>
-        <change>Couple of bug fixes for devices without calling ability (tablet)</change>
+        <change>Couple of bug fixes for devices without call function (tablets)</change>
         <change>Added new method to get images. Some devices are missing the standard image picker</change>
     </release>
 

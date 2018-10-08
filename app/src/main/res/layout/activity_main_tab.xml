@@ -10,7 +10,7 @@
     tools:context="me.carc.fakecallandsms_mvp.MainTabActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/quickMsgAppbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/appbar_padding_top"

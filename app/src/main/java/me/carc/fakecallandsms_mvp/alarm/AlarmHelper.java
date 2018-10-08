@@ -74,7 +74,10 @@ public class AlarmHelper {
         if (contact.getTime() < System.currentTimeMillis()) {
             intentSms.setClass(mContext, SmsIntentService.class);
             intentSms.putExtra(C.TIME, contact.getTime() != 0 ? contact.getTime() : System.currentTimeMillis());
-            mContext.startService(intentSms);
+            if(C.HAS_O)
+                mContext.startForegroundService(intentSms);
+            else
+                mContext.startService(intentSms);
 
             FakeSmsReceiver.smsNotification(mContext, intentSms);
 

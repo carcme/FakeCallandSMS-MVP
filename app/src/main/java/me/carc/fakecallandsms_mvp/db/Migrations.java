@@ -2,6 +2,7 @@ package me.carc.fakecallandsms_mvp.db;
 
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.migration.Migration;
+import android.support.annotation.NonNull;
 
 /**
  * Room DB migrations
@@ -10,9 +11,9 @@ import android.arch.persistence.room.migration.Migration;
 
 public class Migrations {
 
-    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    public static final Migration MIGRATION_1_3 = new Migration(1, 3) {
         @Override
-        public void migrate(SupportSQLiteDatabase database) {
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE FakeContact ADD COLUMN mmsSubject TEXT");
             database.execSQL("ALTER TABLE FakeContact ADD COLUMN attachmentPath TEXT");
         }

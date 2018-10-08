@@ -4,10 +4,15 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.widget.Button;
 
 import me.carc.fakecallandsms_mvp.common.C;
@@ -60,4 +65,17 @@ public class ViewUtils {
         }
         return result;
     }
+
+    public static Drawable changeIconColor(Context context, @DrawableRes int res, @ColorRes int color) {
+        Drawable mDrawable = ContextCompat.getDrawable(context, res);
+        int mColor = ContextCompat.getColor(context, color);
+        mDrawable.setColorFilter(new PorterDuffColorFilter(mColor, PorterDuff.Mode.MULTIPLY));
+        return mDrawable;
+    }
+
+    public static ViewPropertyAnimator createAlphaAnimator(View v, boolean show, int dur) {
+        float alpha = show ? 1.0f : 0.0f;
+        return v.animate().alpha(alpha).setDuration(dur);
+    }
+
 }

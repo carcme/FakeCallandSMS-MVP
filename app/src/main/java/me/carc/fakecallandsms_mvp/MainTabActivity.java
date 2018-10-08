@@ -44,6 +44,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
@@ -53,7 +54,6 @@ import butterknife.OnClick;
 import de.cketti.library.changelog.ChangeLog;
 import me.carc.fakecallandsms_mvp.adapter.TabbedPagerAdapter;
 import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
-import me.carc.fakecallandsms_mvp.app.App;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.CallLogUtil;
 import me.carc.fakecallandsms_mvp.common.ImageSize;
@@ -284,7 +284,7 @@ public class MainTabActivity extends Base implements
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                AppDatabase db = ((App) getApplicationContext()).getDB();
+                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
 
                 fakeContact.setIndex(U.currentTimeInteger(fakeContact.getTime()));
                 fakeContact.setDatabaseType("CALL (RECEIVE)");
@@ -308,7 +308,7 @@ public class MainTabActivity extends Base implements
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                AppDatabase db = ((App) getApplicationContext()).getDB();
+                AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
 
                 fakeContact.setIndex(U.currentTimeInteger(fakeContact.getTime()));
                 fakeContact.setDatabaseType(fakeContact.isMMS() ? "MMS (RECEIVE)" : "SMS (RECEIVE)");
@@ -396,6 +396,13 @@ public class MainTabActivity extends Base implements
      */
     private void init() {
         setSupportActionBar(toolbar);
+
+        if(Objects.requireNonNull(getIntent().getComponent()).getClassName().equals("me.carc.fakecallandsms_mvp.Incognito")) {
+            setTitle(R.string.incogAppName);
+            if(toolbar != null)
+                toolbar.setNavigationIcon(R.drawable.ic_dialpad);
+        }
+
         setupViewPager();
         showRatingDialog();
 
@@ -516,7 +523,7 @@ public class MainTabActivity extends Base implements
     }
 
     private void addToPendingFragment(FakeContact contact) {
-        PendingFragment pending = (PendingFragment) ((TabbedPagerAdapter) mViewPager.getAdapter()).getItem(2);
+        PendingFragment pending = (PendingFragment) ((TabbedPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getItem(2);
         pending.addNewPending(contact);
     }
 
@@ -588,7 +595,6 @@ public class MainTabActivity extends Base implements
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -622,7 +628,7 @@ public class MainTabActivity extends Base implements
                             .into(new BitmapImageViewTarget(mAttachmentImageRef.get()) {
                                 @Override
                                 public void onResourceReady(Bitmap bitmap, @Nullable GlideAnimation anim) {
-                                    super.onResourceReady(bitmap, anim);
+                                    super.onResourceReady(bitmap, null);
 
                                     mAttachmentProgressRef.get().hide();
                                     String picturePath = TinyDB.getTinyDB().putImage(getFilesDir().toString(), photo.filename, bitmap);

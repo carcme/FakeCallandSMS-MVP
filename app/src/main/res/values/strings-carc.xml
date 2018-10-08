@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="carc_app_base_url" formatted="false">https://play.google.com/store/apps/details?id=me.carc.%s</string>
+
+    <string name="appTitleStone">Stolpersteine Berlin</string>
+    <string name="appDescStone">Here Lived | Commemorating Victims of Nazi Germany One Block At a Time</string>
+
+    <string name="appTitleITimer">Interval Timer | Simple, Easy, Intuitive</string>
+    <string name="appDescITimer">Interval Timer suitable for: Running, Boxing, Calisthenics, Circuit Training, HIIT, Tabata and more!</string>
+
+    <string name="appTitleBtown">B-Town | Berlin Tours and Maps</string>
+    <string name="appDescBtown">The ultimate Berlin guide.\nExplore Berlin better with B-Town!</string>
+
+    <string name="appTitleAGD">Any Given Date | Event Counter</string>
+    <string name="appDescAGB">Never miss another birthday, valentines, dinner date or meeting. Keep track of how long until your next holiday, birthday or anniversary.</string>
+
+    <string name="appTitleBlackBooks">BlackBooks Stories</string>
+    <string name="appDescBlackBooks">Brain puzzles to play with friends.\nFind the situation behind the short story with just yes and no answers</string>
+
+    <string name="appTitleFakeCall">Fake Call and SMS</string>
+    <string name="appDescFakeCall">An excuse at your fingertips. No adverts and completely free</string>
+
+
+    <string name="shared_string_extra">Extra</string>
+
+
+</resources>

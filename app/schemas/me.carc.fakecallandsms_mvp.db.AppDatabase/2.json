@@ -2,91 +2,107 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "93a3f5c0934bafe5117dbdcccbd02f46",
+    "identityHash": "80b1ac007f6f06c26aeaf899224a23f5",
     "entities": [
       {
         "tableName": "FakeContact",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyID` INTEGER, `callType` INTEGER, `name` TEXT, `number` TEXT, `image` TEXT, `date` INTEGER, `time` INTEGER, `duration` INTEGER, `vibrate` INTEGER, `useCallLogs` INTEGER, `ringtone` TEXT, `smsMsg` TEXT, `smsType` TEXT, `mmsSubject` TEXT, `attachmentPath` TEXT, `databaseType` TEXT, PRIMARY KEY(`keyID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyID` INTEGER NOT NULL, `callType` INTEGER NOT NULL, `name` TEXT, `number` TEXT, `image` TEXT, `date` INTEGER NOT NULL, `time` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `vibrate` INTEGER NOT NULL, `useCallLogs` INTEGER NOT NULL, `ringtone` TEXT, `smsMsg` TEXT, `smsType` TEXT, `mmsSubject` TEXT, `attachmentPath` TEXT, `databaseType` TEXT, PRIMARY KEY(`keyID`))",
         "fields": [
           {
             "fieldPath": "index",
             "columnName": "keyID",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "callType",
             "columnName": "callType",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
             "columnName": "name",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "number",
             "columnName": "number",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "image",
             "columnName": "image",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "date",
             "columnName": "date",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "time",
             "columnName": "time",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "duration",
             "columnName": "duration",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "vibrate",
             "columnName": "vibrate",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "useCallLogs",
             "columnName": "useCallLogs",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "ringtone",
             "columnName": "ringtone",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "smsMsg",
             "columnName": "smsMsg",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "smsType",
             "columnName": "smsType",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "mmsSubject",
             "columnName": "mmsSubject",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "attachmentPath",
             "columnName": "attachmentPath",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "databaseType",
             "columnName": "databaseType",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -101,7 +117,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"93a3f5c0934bafe5117dbdcccbd02f46\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"80b1ac007f6f06c26aeaf899224a23f5\")"
     ]
   }
 }

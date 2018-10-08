@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_small">
+
+    <ImageView
+        android:id="@+id/quickMsgListIcon"
+        android:layout_width="43dp"
+        android:layout_height="63dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/tintStandard"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/quickMsgName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"/>
+
+    <ImageView
+        android:id="@+id/quickMsgMore"
+        android:layout_width="32dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/backgroud_round_image_button"
+        android:contentDescription="@null"
+        android:padding="@dimen/margin_tiny"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintBottom_toBottomOf="@+id/quickMsgName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <me.carc.fakecallandsms_mvp.widgets.CapitalisedTextView
+        android:id="@+id/quickMsgMsg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/quickMsgMore"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/quickMsgListIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@tools:sample/lorem/random"/>
+
+    <me.carc.fakecallandsms_mvp.widgets.CapitalisedTextView
+        android:id="@+id/quickMsgName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quickMsgMsg"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="0dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/quickMsgMore"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/quickMsgMsg"
+        app:layout_constraintTop_toBottomOf="@+id/quickMsgMsg"
+        tools:text="@tools:sample/lorem"/>
+
+</android.support.constraint.ConstraintLayout>

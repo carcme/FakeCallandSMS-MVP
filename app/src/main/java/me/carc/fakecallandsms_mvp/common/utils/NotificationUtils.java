@@ -37,7 +37,7 @@ public class NotificationUtils extends ContextWrapper {
         androidChannel.enableLights(true);
         androidChannel.enableVibration(true);
         androidChannel.setLightColor(Color.GREEN);
-        androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
         String uriTone = TinyDB.getTinyDB().getString(C.PREF_SMS_RING_TONE);
         if(!TextUtils.isEmpty(uriTone)) {

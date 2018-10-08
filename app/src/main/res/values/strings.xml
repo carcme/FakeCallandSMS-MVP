@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Fake Call and SMS</string>
+    <string name="incogAppName">FCS</string>
+
     <string name="app_name_share">Share Fake Call and SMS</string>
     <string name="app_name_desc">Share Fake Call and SMS with friends and give them \"An excuse at their fingertips\"</string>
 
@@ -35,7 +37,7 @@
     <string name="minutes_tv">Minutes</string>
     <string name="minutes">%1$s Minutes</string>
     <string name="change_dial_pad_launch_code">Change Dial Pad Launch Code</string>
-    <string name="hide_the_launcher_icon">Hide the launcher icon</string>
+    <string name="hide_the_launcher_icon">Change launcher icon and name</string>
     <string name="reset_default_sms_application">Reset default SMS application</string>
     <string name="application">Application</string>
     <string name="experimental">Experimental</string>
@@ -85,21 +87,6 @@
         ckChangeLog\n  - Android Library to display a Change Log
     </string>
 
-
-    <string name="carc_app_base_url" formatted="false">https://play.google.com/store/apps/details?id=me.carc.%s</string>
-
-    <string name="appTitleITimer">Interval Timer | Simple, Easy, Intuitive</string>
-    <string name="appDescITimer">Interval Timer suitable for: Running, Boxing, Calisthenics, Circuit Training, HIIT, Tabata and more!</string>
-
-    <string name="appTitleBtown">B-Town | Berlin Tours and Maps</string>
-    <string name="appDescBtown">The ultimate Berlin guide.\nExplore Berlin better with B-Town!</string>
-
-    <string name="appTitleAGD">Any Given Date | Event Counter</string>
-    <string name="appDescAGB">Never miss another birthday, valentines, dinner date or meeting. Keep track of how long until your next holiday, birthday or anniversary.</string>
-
-    <string name="appTitleBlackBooks">BlackBooks Stories</string>
-    <string name="appDescBlackBooks">Brain puzzles to play with friends.\nFind the situation behind the short story with just yes and no answers</string>
-
     <string name="error_wrong_screen">You can\'t start a phone call or SMS from this screen!!</string>
     <string name="added_db_entry">Added to Database</string>
     <string name="close_when_call_set">Close when call or SMS set</string>
@@ -139,5 +126,33 @@
     <string name="cloud_photos_toolbar_title">Unsplash It</string>
 
     <string name="no_link_for_app">You don\'t have any app that can open this link</string>
+
+    <string name="sms_msg_default_title">Pick a message</string>
+
+
+    <string name="sms_msg_call_back_urgent">Call me… URGENT!!</string>
+    <string name="sms_msg_ignore_last_call">Don\'t worry, its sorted</string>
+    <string name="sms_msg_add_own_msg">Add your own</string>
+
+    <string name="sms_msg_sender_mum">Mum</string>
+    <string name="sms_msg_sender_dad">Dad</string>
+    <string name="empty_quick_msg_list_text">Add your own messages</string>
+
+
+    <!--
+        <string name="sms_msg_add_own_msg">
+    <![CDATA[
+    Hows it going 😍️💕😍
+    ]]>
+    </string>
+
+        <string name="sms_msg_sender_mum">Mum</string>
+        <string name="sms_msg_sender_dad">Dad</string>
+        <string name="sms_msg_sender_anon"><![CDATA[
+    😍😍😍
+    ]]>
+    </string>
+    -->
+
 
 </resources>

@@ -205,6 +205,30 @@
                 tools:text="1/26"
                 tools:ignore="RelativeOverlap"/>
 
+            <ImageButton
+                android:id="@+id/smsDefaultMsgBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/margin_more_btn"
+                android:layout_marginTop="@dimen/margin_counter"
+                android:background="@color/white"
+                android:src="@drawable/ic_more_horiz"/>
+
+            <ImageButton
+                android:id="@+id/smsMsgClearBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/smsCounter"
+                android:contentDescription="@null"
+                android:layout_marginTop="18dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_clear"
+                android:tint="@color/md_red_800"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
         </RelativeLayout>
 
     </ScrollView>

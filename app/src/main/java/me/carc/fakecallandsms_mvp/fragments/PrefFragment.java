@@ -118,7 +118,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         }
     };
 
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 

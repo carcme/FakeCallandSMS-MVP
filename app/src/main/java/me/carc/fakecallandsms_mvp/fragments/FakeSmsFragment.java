@@ -7,17 +7,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.crashlytics.android.answers.Answers;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +62,8 @@ public class FakeSmsFragment extends Fragment {
     private static final String TAG = FakeSmsFragment.class.getName();
     public static final String TAG_ID = "FakeSmsFragment";
 
+    public static int REQ_QUICK_MSG = 1;
+
     Calendar calPicker = Calendar.getInstance();
 
     @BindView(R.id.smsMsg) EditText smsMsg;
@@ -68,6 +73,9 @@ public class FakeSmsFragment extends Fragment {
     @BindView(R.id.smsNumber) EditText smsNumber;
     @BindView(R.id.contactNameTV) TextView contactNameTV;
     @BindView(R.id.smsCounter) TextView smsCounter;
+    @BindView(R.id.smsDefaultMsgBtn) ImageButton smsDefaultMsgBtn;
+    @BindView(R.id.smsMsgClearBtn) ImageButton smsMsgClearBtn;
+
     @BindView(R.id.contactBtn) ImageView contactBtn;
     @BindView(R.id.toggleInbox) ToggleButton toggleInbox;
     @BindView(R.id.toggleSent) ToggleButton toggleSent;
@@ -108,7 +116,6 @@ public class FakeSmsFragment extends Fragment {
         }
     };
 
-
     public interface FakeSmsListener {
         void onSmsContact(String contactName, String number, String image);
         void onMmsSubject(String subject);
@@ -141,7 +148,7 @@ public class FakeSmsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fakesms_square_fragment, container, false);
         ButterKnife.bind(this, rootView);
         setRetainInstance(true);
@@ -174,27 +181,41 @@ public class FakeSmsFragment extends Fragment {
     }
 
     @OnTextChanged(R.id.mmsSubject)
-    void onSubjectTextChanged(CharSequence subject, int start) {
+    void onSubjectTextChanged(CharSequence subject) {
         smsListener.onMmsSubject(subject.toString());
     }
 
     @OnTextChanged(R.id.smsMsg)
     void onMsgTextChanged(CharSequence msg) {
 
-        int smsCount = msg.length() / 160;
-        int charCount = msg.length() % 160;
-        String output = smsCount + "/" + charCount;
-        smsCounter.setText(output);
+        if(smsMsg.getText().length() == 0) {
+            smsDefaultMsgBtn.setVisibility(View.VISIBLE);
+            smsMsgClearBtn.setVisibility(View.GONE);
+            smsCounter.setText("");
+        } else {
+            smsDefaultMsgBtn.setVisibility(View.GONE);
+            smsMsgClearBtn.setVisibility(View.VISIBLE);
 
+            int smsCount = msg.length() / 160;
+            int charCount = msg.length() % 160;
+            String output = smsCount + "/" + charCount;
+            smsCounter.setText(output);
+        }
         smsListener.onSmsMessage(msg.toString());
+    }
+
+    @OnClick(R.id.smsMsgClearBtn)
+    void clearMessage() {
+        smsMsg.setText("");
+        smsCounter.setText("");
     }
 
     @OnClick(R.id.attachmentBtn)
     void attachImage() {
-        AndroidUtils.hideSoftKeyboard(getActivity(), attachmentBtn);
+        AndroidUtils.hideSoftKeyboard(Objects.requireNonNull(getActivity()), attachmentBtn);
 
         ImageSourceFragment imageSrc = new ImageSourceFragment();
-        this.getFragmentManager().beginTransaction()
+        Objects.requireNonNull(this.getFragmentManager()).beginTransaction()
                 .add(R.id.fragment_container, imageSrc, ImageSourceFragment.TAG_ID)
                 .addToBackStack(ImageSourceFragment.TAG_ID)
                 .commit();
@@ -217,7 +238,7 @@ public class FakeSmsFragment extends Fragment {
     @OnClick({R.id.contactBtn, R.id.contactNameTV})
     void onContactSelectButton() {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        if(U.isIntentAvailable(getActivity(), intent)) {
+        if(U.isIntentAvailable(Objects.requireNonNull(getActivity()), intent)) {
             intent.putExtra(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, true);
             startActivityForResult(intent, C.PICK_CONTACT);
         } else {
@@ -231,6 +252,21 @@ public class FakeSmsFragment extends Fragment {
         }
     }
 
+    private QuickMsgListDialogFragment getQuickMsgDialogFragment() {
+        Fragment fragment = Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentByTag(QuickMsgListDialogFragment.ID_TAG);
+        return fragment != null && !fragment.isDetached() && !fragment.isRemoving() ? (QuickMsgListDialogFragment) fragment : null;
+    }
+
+    @OnClick(R.id.smsDefaultMsgBtn)
+    void defaultMsgPicker(){
+        QuickMsgListDialogFragment fragment = getQuickMsgDialogFragment();
+
+        if(fragment != null) {
+            fragment.show();
+        } else {
+            QuickMsgListDialogFragment.showInstance((AppCompatActivity) getActivity(), this);
+        }
+    }
 
     @OnClick(R.id.toggleInbox)
     void onToggleInbox() {
@@ -282,12 +318,13 @@ public class FakeSmsFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.i(TAG, "onActivityResult: " + requestCode);
-
-        if (requestCode == C.PICK_CONTACT && resultCode == RESULT_OK) {
+        if(requestCode == REQ_QUICK_MSG && data != null) {
+            smsMsg.setText(data.getStringExtra(QuickMsgListDialogFragment.QUICK_MSG_MSG));
+            smsNumber.setText(data.getStringExtra(QuickMsgListDialogFragment.QUICK_MSG_FROM));
+        } else if (requestCode == C.PICK_CONTACT && resultCode == RESULT_OK) {
             if (data != null && data.getData() != null) {
-                Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+                Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver()
+                        .query(data.getData(), null, null, null, null);
                 if(cursor != null) {
                     if (cursor.moveToFirst()) {
                         // Fetch other Contact details to use

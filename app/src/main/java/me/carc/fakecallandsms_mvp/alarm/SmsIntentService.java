@@ -2,6 +2,8 @@ package me.carc.fakecallandsms_mvp.alarm;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +14,16 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import me.carc.fakecallandsms_mvp.common.C;
+import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.sms.FakeSmsReceiver;
 
@@ -48,7 +53,17 @@ public class SmsIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(NOTIFY_ID, new Notification());
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            new NotificationUtils(this);
+
+            Notification notification = new NotificationCompat.Builder(this, NotificationUtils.ANDROID_CHANNEL_ID)
+                    .setContentTitle("")
+                    .setContentText("").build();
+
+            startForeground(NOTIFY_ID, notification);
+        } else
+            startForeground(NOTIFY_ID, new Notification());
     }
 
     @Override

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="default_sms_messages">
+        <item>@string/sms_msg_call_back_urgent</item>
+        <item>@string/sms_msg_ignore_last_call</item>
+    </string-array>
+
+    <string-array name="default_sms_messages_sender">
+        <item>@string/sms_msg_sender_mum</item>
+        <item>@string/sms_msg_sender_dad</item>
+    </string-array>
+
     <array name="incoming_call_widget_2way_targets">
         <item>@drawable/ic_lockscreen_answer</item>
         <item>@null</item>

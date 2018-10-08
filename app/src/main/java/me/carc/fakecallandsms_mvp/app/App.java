@@ -1,7 +1,6 @@
 package me.carc.fakecallandsms_mvp.app;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
 import android.os.StrictMode;
 
 import com.crashlytics.android.Crashlytics;
@@ -12,8 +11,6 @@ import me.carc.fakecallandsms_mvp.alarm.AlarmHelper;
 import me.carc.fakecallandsms_mvp.common.C;
 import me.carc.fakecallandsms_mvp.common.TinyDB;
 import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
-import me.carc.fakecallandsms_mvp.db.AppDatabase;
-import me.carc.fakecallandsms_mvp.db.Migrations;
 
 /**
  * The Application
@@ -23,16 +20,7 @@ import me.carc.fakecallandsms_mvp.db.Migrations;
 
 public class App extends Application {
 
-    private static final String FAKECALL_DATABASE_NAME = "fakecallandsms_mvp.db";
-
-    private AppDatabase mDatabase;
-
-    public synchronized AppDatabase getDB() {
-        if (mDatabase == null)
-            mDatabase = initDB();
-        return mDatabase;
-    }
-
+    public static final String DATABASE_NAME = "fakecallandsms_mvp.db";
 
     @Override
     public void onCreate() {
@@ -56,18 +44,8 @@ public class App extends Application {
 
         AlarmHelper.getInstance().init(getApplicationContext());
 
-        mDatabase = initDB();
-
         if (C.HAS_O)
             new NotificationUtils(this);
     }
 
-    /**
-     * Init database
-     */
-    private AppDatabase initDB() {
-        return Room.databaseBuilder(getApplicationContext(), AppDatabase.class, FAKECALL_DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_1_2)
-                .build();
-    }
 }

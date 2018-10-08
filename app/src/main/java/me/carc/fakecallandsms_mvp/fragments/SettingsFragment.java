@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,7 +48,6 @@ import me.carc.fakecallandsms_mvp.common.utils.Common;
 import me.carc.fakecallandsms_mvp.common.utils.NotificationUtils;
 import me.carc.fakecallandsms_mvp.common.utils.U;
 import me.carc.fakecallandsms_mvp.common.utils.ViewUtils;
-
 
 public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getName();
@@ -74,7 +75,7 @@ public class SettingsFragment extends Fragment {
 
     private void showDlg(String title, String text, final TextView view) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setTitle(title);
 
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.alert_layout, (ViewGroup) getView(), false);
@@ -151,7 +152,7 @@ public class SettingsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         ButterKnife.bind(this, rootView);
         setRetainInstance(true);
@@ -228,7 +229,7 @@ public class SettingsFragment extends Fragment {
         String defaultSMS = TinyDB.getTinyDB().getString(C.SMS_DEFAULT_PACKAGE_KEY);
         String currentSMS = Telephony.Sms.getDefaultSmsPackage(getActivity());
 
-        if (!TextUtils.isEmpty(defaultSMS) && !TextUtils.isEmpty(currentSMS) && currentSMS.equals(getActivity().getPackageName())) {
+        if (!TextUtils.isEmpty(defaultSMS) && !TextUtils.isEmpty(currentSMS) && currentSMS.equals(Objects.requireNonNull(getActivity()).getPackageName())) {
             Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
             intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, defaultSMS);
             startActivity(intent);
@@ -291,10 +292,21 @@ public class SettingsFragment extends Fragment {
 
 
     private void showLauncher(int state) {
-        final ComponentName LAUNCHER_COMPONENT_NAME = new ComponentName("me.carc.fakecallandsms_mvp",
-                "me.carc.fakecallandsms_mvp.Launcher");
-        PackageManager packageManager = getActivity().getPackageManager();
-        packageManager.setComponentEnabledSetting(LAUNCHER_COMPONENT_NAME, state, PackageManager.DONT_KILL_APP);
+
+        String packageName = Objects.requireNonNull(getActivity()).getPackageName();
+        PackageManager packageManager = Objects.requireNonNull(getActivity()).getPackageManager();
+
+        final ComponentName LAUNCHER_COMPONENT_NAME = new ComponentName(packageName,packageName + ".Launcher");
+        final ComponentName INCOG_COMPONENT_NAME = new ComponentName(packageName,packageName + ".Incognito");
+
+        if(state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            packageManager.setComponentEnabledSetting(LAUNCHER_COMPONENT_NAME, state, PackageManager.DONT_KILL_APP);
+            packageManager.setComponentEnabledSetting(INCOG_COMPONENT_NAME, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+        } else if(state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            packageManager.setComponentEnabledSetting(LAUNCHER_COMPONENT_NAME, state, PackageManager.DONT_KILL_APP);
+            packageManager.setComponentEnabledSetting(INCOG_COMPONENT_NAME, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        }
     }
 
 
@@ -320,7 +332,7 @@ public class SettingsFragment extends Fragment {
         if (C.HAS_O) {
             Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_CHANNEL_ID, NotificationUtils.ANDROID_CHANNEL_ID);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, Objects.requireNonNull(getActivity()).getPackageName());
             startActivityForResult(intent, NOTIFICATION_CHANGE);
         } else {
             Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -409,7 +421,7 @@ public class SettingsFragment extends Fragment {
             if(TextUtils.isEmpty(artist)) {
                 String filePath;
                 if ("content".equals(uri.getScheme())) {
-                    Cursor cursor = getActivity().getContentResolver().query(uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+                    Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
                     assert cursor != null;
                     cursor.moveToFirst();
                     filePath = cursor.getString(0);
@@ -435,7 +447,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private boolean requestPermissions() {
-        if (C.HAS_M && PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (C.HAS_M && PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             final String[] STORAGE_PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(STORAGE_PERMISSIONS, PERMISSION_STORAGE_RESULT);
             return false;

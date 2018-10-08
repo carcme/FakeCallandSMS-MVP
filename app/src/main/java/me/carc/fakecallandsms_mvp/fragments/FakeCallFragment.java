@@ -35,8 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 import io.fabric.sdk.android.services.common.Crash;
 import me.carc.fakecallandsms_mvp.BuildConfig;
